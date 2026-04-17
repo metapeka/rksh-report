@@ -14,38 +14,45 @@
       <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
       <nav class="nav">
         <a href="../index.html" class="nav__link">Дашборд</a>
-        <a href="../progress.html" class="nav__link nav__link--active">Ход проекта</a>
+        <a href="#" class="nav__link nav__link--active">Ход проекта</a>
         <a href="../index.html#pages" class="nav__link">Страницы</a>
         <a href="../index.html#components" class="nav__link">Компоненты</a>
         <a href="../index.html#cms" class="nav__link">CMS</a>
       </nav>
     </div>
   </header>
-  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><span>Ход проекта</span></nav>
-  <div class="md-content">
-    
-    <h1>Ход проекта</h1>
-    <p>Все задачи трекера Beads — 55 задач, сгруппированы по направлениям</p>
 
-    <div class="task-board__summary">
-      <div class="task-stat"><span class="task-stat__dot task-stat__dot--done"></span> Выполнено: <span class="task-stat__count">55</span></div>
-      <div class="task-stat"><span class="task-stat__dot task-stat__dot--wip"></span> В работе: <span class="task-stat__count">0</span></div>
-      <div class="task-stat"><span class="task-stat__dot task-stat__dot--open"></span> Открыто: <span class="task-stat__count">0</span></div>
-      <div class="task-stat">Всего: <span class="task-stat__count">55</span></div>
-    </div>
+  <section class="hero">
+    <h1 class="hero__title">Ход проекта</h1>
+    <p class="hero__subtitle">55 задач, сгруппированы по направлениям</p>
+    <p class="hero__date">Выполнено 100% · 55 из 55</p>
+  </section>
 
-    <div class="progress-item" style="margin-bottom: 2rem;">
-      <div class="progress-item__header">
-        <span class="progress-item__label">Общий прогресс</span>
-        <span class="progress-item__stats">55/55 (100%)</span>
+  <section class="section">
+    <div class="container">
+      <div class="task-board__summary">
+        <div class="task-stat"><span class="task-stat__dot task-stat__dot--done"></span> Выполнено: <span class="task-stat__count">55</span></div>
+        <div class="task-stat"><span class="task-stat__dot task-stat__dot--wip"></span> В работе: <span class="task-stat__count">0</span></div>
+        <div class="task-stat"><span class="task-stat__dot task-stat__dot--open"></span> Открыто: <span class="task-stat__count">0</span></div>
+        <div class="task-stat">Всего: <span class="task-stat__count">55</span></div>
       </div>
-      <div class="progress-item__bar">
-        <div class="progress-item__fill progress-item__fill--done" style="width: 100%"></div>
+
+      <div class="progress-item" style="margin-bottom: 2rem;">
+        <div class="progress-item__header">
+          <span class="progress-item__label">Общий прогресс</span>
+          <span class="progress-item__stats">55/55 (100%)</span>
+        </div>
+        <div class="progress-item__bar">
+          <div class="progress-item__fill progress-item__fill--done" style="width: 100%"></div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="task-board__groups">
-      
+  <section class="section" style="background: var(--surface-alt);">
+    <div class="container">
+      <div class="task-board__groups">
+        
       <div class="task-group">
         <div class="task-group__header" onclick="this.parentElement.classList.toggle('task-group--collapsed')">
           <span class="task-group__title"><span class="task-group__icon">▼</span> ⚙️ Инфраструктура</span>
@@ -827,10 +834,12 @@
       
         </div>
       </div>
+      </div>
     </div>
-  </div>
+  </section>
+
   <footer class="footer">
-    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 19:09
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 19:14
   </footer>
 </body>
 </html>
