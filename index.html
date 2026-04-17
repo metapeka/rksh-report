@@ -24,7 +24,7 @@
   <section class="hero">
     <h1 class="hero__title">Отчёт по проекту сайта РКШ</h1>
     <p class="hero__subtitle">Русская Классическая Школа — rksh-msk.ru</p>
-    <p class="hero__date">Дата отчёта: 17 апреля 2026 г. в 18:29</p>
+    <p class="hero__date">Дата отчёта: 17 апреля 2026 г. в 18:36</p>
   </section>
 
   <section class="section" id="metrics">
@@ -77,7 +77,7 @@
         </div>
         <div class="metric-card">
           <div class="metric-card__icon">&#128187;</div>
-          <div class="metric-card__value">~10 339</div>
+          <div class="metric-card__value">~10 474</div>
           <div class="metric-card__label">строк кода</div>
           <div class="metric-card__detail">src/ (astro, ts, css)</div>
         </div>
@@ -123,7 +123,7 @@
         <div class="progress-item">
           <div class="progress-item__header">
             <span class="progress-item__label">Код</span>
-            <span class="progress-item__stats">~10 339 строк</span>
+            <span class="progress-item__stats">~10 474 строк</span>
           </div>
           <div class="progress-item__bar">
             <div class="progress-item__fill progress-item__fill--done" style="width: 100%"></div>
@@ -132,7 +132,7 @@
             <span>Компоненты: 2 745</span>
             <span>Страницы: 6 492</span>
             <span>Иконки: 181</span>
-            <span>Стили: 853</span>
+            <span>Стили: 988</span>
           </div>
         </div>
       </div>
@@ -141,7 +141,174 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section__title">Не из коробки — каждый элемент создан вручную</h2>
+      <h2 class="section__title">Структура сайта</h2>
+      <p class="section__desc">Иерархия всех страниц проекта — статические, динамические (CMS), вложенные</p>
+
+      <div class="site-tree">
+        <div class="site-tree__group">
+          <div class="site-tree__group-title">Общие страницы</div>
+          <ul class="site-tree__list">
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/</span>
+                <span class="site-tree__name">Главная</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/news</span>
+                <span class="site-tree__name">Новости</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+              <ul class="site-tree__sublist">
+                <li class="site-tree__item">
+                  <span class="site-tree__page">
+                    <span class="site-tree__url">/news/[id]</span>
+                    <span class="site-tree__name">Статья новости</span>
+                    <span class="site-tree__tag site-tree__tag--dynamic">dynamic × 6</span>
+                  </span>
+                </li>
+              </ul>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/o-shkole</span>
+                <span class="site-tree__name">О школе</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/preimushhestva</span>
+                <span class="site-tree__name">Преимущества</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/czeny</span>
+                <span class="site-tree__name">Цены</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/prepodavateli</span>
+                <span class="site-tree__name">Преподаватели</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/otzyvy</span>
+                <span class="site-tree__name">Отзывы</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/raspisanie</span>
+                <span class="site-tree__name">Расписание</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/kontakty</span>
+                <span class="site-tree__name">Контакты</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/sveden</span>
+                <span class="site-tree__name">Сведения</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/media</span>
+                <span class="site-tree__name">Медиа (фото + видео)</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/pages/[slug]</span>
+                <span class="site-tree__name">CMS-страницы</span>
+                <span class="site-tree__tag site-tree__tag--cms">CMS × 4</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="site-tree__group">
+          <div class="site-tree__group-title">Обучение</div>
+          <ul class="site-tree__list">
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/0klass</span>
+                <span class="site-tree__name">0 класс</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/nachalnaya-shkola</span>
+                <span class="site-tree__name">Начальная школа (1–4)</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/srednyaya-shkola</span>
+                <span class="site-tree__name">Средняя школа (5–9)</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="site-tree__group">
+          <div class="site-tree__group-title">Курсы и программы</div>
+          <ul class="site-tree__list">
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/doshkolniki</span>
+                <span class="site-tree__name">Курсы для дошкольников</span>
+                <span class="site-tree__tag site-tree__tag--static">static</span>
+              </span>
+              <p class="site-tree__summary">Подготовка к школе · Логопед · Живопись · Шахматы · Кулинарный · Я Сам(а)</p>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/shkolniki</span>
+                <span class="site-tree__name">Курсы для школьников</span>
+                <span class="site-tree__tag site-tree__tag--wip">🔨 В работе</span>
+              </span>
+              <p class="site-tree__summary">Каллиграфия · Русский · Таблица умножения · Шахматы · Продлёнка · Живопись · Техника чтения</p>
+            </li>
+            <li class="site-tree__item">
+              <span class="site-tree__page">
+                <span class="site-tree__url">/podgotovka-attestacii</span>
+                <span class="site-tree__name">Подготовка к аттестации</span>
+                <span class="site-tree__tag site-tree__tag--wip">🔨 В работе</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 1.5rem;">
+          <div class="highlight-box__title">Итого URL на сайте: 25</div>
+          <p>15 статических страниц + 6 страниц новостей (CMS) + 4 CMS-страниц (о школе, преимущества и др.) = <strong>25 уникальных URL</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
       <p class="section__desc">Проект не использует готовые шаблоны или темы. Все компоненты, страницы и иконки разработаны с нуля под требования школы.</p>
 
       <div class="highlight-box">
@@ -174,8 +341,8 @@
           <tr><td>UI-компоненты (src/components/)</td><td>~2 745</td></tr>
           <tr><td>Страницы (src/pages/)</td><td>~6 492</td></tr>
           <tr><td>Иконки (src/icons/)</td><td>~181</td></tr>
-          <tr><td>Стили (src/styles/)</td><td>~853</td></tr>
-          <tr><td><strong>Итого (src/)</strong></td><td><strong>~10 339</strong></td></tr>
+          <tr><td>Стили (src/styles/)</td><td>~988</td></tr>
+          <tr><td><strong>Итого (src/)</strong></td><td><strong>~10 474</strong></td></tr>
         </tbody>
       </table>
     </div>
@@ -444,7 +611,7 @@
   </section>
 
   <footer class="footer">
-    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:29 · Исходники: <code>docs/</code>
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:36 · Исходники: <code>docs/</code>
   </footer>
 </body>
 </html>
