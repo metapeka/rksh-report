@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menus taxonomies — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Menus taxonomies</span></nav>
+  <div class="md-content">
+    <h1>Меню и таксономии</h1>
+<h2>Основное меню (primary)</h2>
+<p><strong>Имя в EmDash:</strong> <code>primary</code><br><strong>Тип:</strong> horizontal navigation<br><strong>Расположение:</strong> шапка сайта (Header.astro)</p>
+<h3>Структура (актуальная)</h3>
+<pre><code>Главная (/) 
+Новости (/news/)
+О школе ▼ ( /o-shkole/ )
+  ├─ Расписание (/raspisanie/)
+  ├─ Наши преподаватели (/prepodavateli/)
+  └─ Преимущества (/preimushhestva/)
+Цены (/czeny/)
+Медиа ▼ (/media/)
+  ├─ Фотогалерея (/fotogalereya/)
+  └─ Видеоархив (/videoarhiv/)
+Отзывы (/otzyvy/)
+Контакты (/kontakty/)
+Сведения (/sveden/) [выделено справа]
+</code></pre>
+<h3>Управление</h3>
+<ul>
+<li><strong>Админка:</strong> Настройки сайта → Меню → «Основное меню»</li>
+<li>Можно перетаскивать пункты, добавлять/удалять</li>
+<li>Дочерние пункты создаются через «+ Добавить дочерний»</li>
+<li>URL — вручную или выбор из существующих страниц</li>
+</ul>
+<hr>
+<h2>Второе меню (secondary)</h2>
+<p><strong>Имя в EmDash:</strong> <code>secondary</code><br><strong>Расположение:</strong> тёмная полоса сразу под основным меню (SecondMenu.astro)</p>
+<h3>Структура (запланированная)</h3>
+<pre><code>0 класс (/0klass/)
+Начальная школа (/nachalnaya-shkola/)
+Средняя школа (/srednyaya-shkola/)
+Курсы для дошкольников ▼ (/doshkolniki/)
+  ├─ Подготовка к школе от 4 до 7 лет
+  ├─ Подготовка к школе по программе РКШ от 5 до 7 лет
+  ├─ Курс «Я Сам(а)» 2.5–4 года
+  ├─ Кулинарный курс
+  ├─ Шахматы
+  ├─ Живопись
+  └─ Логопед
+Курсы для школьников ▼ (/shkolniki/)
+  ├─ Техника чтения
+  ├─ Каллиграфия «Пишу красиво»
+  ├─ Таблица умножения
+  ├─ Русский без проблем
+  ├─ Продлёнка на 5
+  ├─ Математика, решение задач
+  ├─ Живопись
+  ├─ Шахматы
+  └─ Логопед
+Подготовка к аттестации (/podgotovka-attestacii/)
+</code></pre>
+<p><strong>Важно:</strong> Второе меню всегда видимо на десктопе (тёмный фон, не сворачивается).</p>
+<hr>
+<h2>Футер (footer)</h2>
+<p><strong>Имя в EmDash:</strong> <code>footer</code><br><strong>Расположение:</strong> нижняя часть сайта (Footer.astro)</p>
+<h3>Текущие пункты (предполагаемые)</h3>
+<ul>
+<li>Политика обработки персональных данных (<code>/politika</code>)</li>
+<li>Сведения об образовательной организации (<code>/sveden</code>)</li>
+<li>(дополнительно) Карта сайта</li>
+<li>(дополнительно) Контакты (повтор)</li>
+</ul>
+<hr>
+<h2>Таксономии (теги, категории)</h2>
+<p>EmDash поддерживает таксономии (taxonomies) — классификаторы контента. В текущем проекте не используются, но могут понадобиться.</p>
+<h3>Предлагаемая таксономия для новостей</h3>
+<p><strong>Имя:</strong> <code>news_category</code><br><strong>Тип:</strong> hierarchical (иерархические категории)</p>
+<pre><code>Новости (news)
+└─ Собрания (meetings)
+</code></pre>
+<p><strong>Как используется:</strong></p>
+<ul>
+<li>Каждой новости можно присвоить категорию «Новости» или «Собрания»</li>
+<li>На странице <code>/news/</code> можно отфильтровать по категории</li>
+<li>URL: <code>/news/category/novosti/</code></li>
+</ul>
+<h3>Как добавить таксономию</h3>
+<ol>
+<li>В <code>seed/seed.json</code>:</li>
+</ol>
+<pre><code class="language-json">&quot;taxonomies&quot;: [
+  {
+    &quot;name&quot;: &quot;news_category&quot;,
+    &quot;label&quot;: &quot;Категории новостей&quot;,
+    &quot;hierarchical&quot;: true,
+    &quot;fields&quot;: [...]
+  }
+]
+</code></pre>
+<ol start="2">
+<li>Запустить <code>npx emdash dev</code> — создаст таблицуterms`</li>
+<li>В админке: Настройки сайта → Таксономии → добавить термины</li>
+</ol>
+<hr>
+<h2>Связь меню с коллекциями</h2>
+<p>Меню <code>primary</code> и <code>secondary</code> содержат <strong>ссылки</strong> (URL). Они не связаны напрямую с коллекциями EmDash, а просто ведут на маршруты:</p>
+<ul>
+<li><code>custom</code> — произвольный URL (например <code>/</code>, <code>/news/</code>)</li>
+<li><code>collection</code> — автоматическая ссылка на запись из коллекции (пока не поддерживается EmDash? Уточнить)</li>
+<li><code>taxonomy</code> — на архив таксономии</li>
+</ul>
+<p><strong>Рекомендация:</strong> использовать slugs как URL:</p>
+<ul>
+<li>Страница «О школе» → slug=<code>o-shkole</code> → URL <code>/o-shkole/</code></li>
+<li>Коллекция <code>teachers</code> → список на <code>/prepodavateli/</code> (но как указать? через custom)</li>
+</ul>
+<hr>
+<h2>SSR vs Static</h2>
+<p>Все страницы с меню — SSR. Меню запрашиваются через <code>getMenu()</code> на сервере:</p>
+<pre><code class="language-typescript">import { getMenu } from &quot;emdash&quot;;
+const menu = await getMenu(&quot;primary&quot;); // returns { items: [...] }
+</code></pre>
+<p>Меню кэшируются вместе со страницей (через <code>cacheHint</code>). При изменении меню в админке — инвалидация кэша.</p>
+<hr>
+<h2>Динамические меню (будущее)</h2>
+<p>Сейчас меню управляются вручную. Можно автоматизировать:</p>
+<ul>
+<li><strong>Автоматическое второе меню</strong> — собирать из收藏 (collection) «Программы»</li>
+<li><strong>Меню &quot;Уровни школы&quot;</strong> — динамически генерировать из <code>school_levels</code></li>
+<li><strong>Бreadcrumbs</strong> — на основе <code>parent_page</code> связи</li>
+</ul>
+<p>Для этого нужно:</p>
+<ol>
+<li>Создать коллекцию <code>menu_items</code> (или использовать существующую <code>pages</code> с parent)</li>
+<li>В <code>SecondMenu.astro</code> заменить <code>getMenu(&quot;secondary&quot;)</code> на запрос коллекции</li>
+<li>Добавить drag-and-drop сортировку в админке</li>
+</ol>
+<hr>
+<h2>Практические задачи</h2>
+<h3>Задача 1: Добавить пункт «Сведения» в основное меню</h3>
+<ol>
+<li>Админка → Настройки сайта → Меню → <code>primary</code></li>
+<li>Нажать «+ Добавить пункт»</li>
+<li>Label: <code>Сведения об образовательной организации</code></li>
+<li>URL: <code>/sveden/</code></li>
+<li>Сохранить</li>
+<li>Проверить на фронте — появился пункт меню</li>
+</ol>
+<h3>Задача 2: Создать выпадающий «Курсы для дошкольников»</h3>
+<ol>
+<li>В меню <code>primary</code> (или <code>secondary</code>) создать родительский пункт:<ul>
+<li>Label: «Курсы для дошкольников»</li>
+<li>Тип: custom, URL: <code>/doshkolniki/</code></li>
+<li>Отметить «Has children»</li>
+</ul>
+</li>
+<li>Добавить дочерние пункты:<ul>
+<li>«Подготовка к школе от 4 до 7 лет» → <code>/doshkolniki/podgotovka-k-shkole-ot-4-do-7-let/</code></li>
+<li>...</li>
+</ul>
+</li>
+<li>Сохранить → на фронте должно появиться dropdown</li>
+</ol>
+<h3>Задача 3: Сортировка меню</h3>
+<p>В админке: drag &amp; drop. Порядок в <code>seed.json</code> — это порядок отображения.</p>
+<hr>
+<h2>SEO и доступность</h2>
+<ul>
+<li>Меню должны быть семантичными: <code>&lt;nav aria-label=&quot;Основное меню&quot;&gt;</code></li>
+<li>Dropdown-кнопки: <code>aria-expanded</code>, <code>aria-controls</code> — уже в Header.astro</li>
+<li>Фокус-статы: есть в <code>global.css</code> (<code>:focus-visible</code>)</li>
+<li>На мобильных: hamburger menu (пока не реализован, есть только кнопка)</li>
+</ul>
+<hr>
+<h2>Частые проблемы</h2>
+<table>
+<thead>
+<tr>
+<th>Проблема</th>
+<th>Причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Пункт меню не кликабелен</td>
+<td><code>href=&quot;#&quot;</code> или пустой URL</td>
+<td>Указать корректный slug</td>
+</tr>
+<tr>
+<td>Dropdown не открывается</td>
+<td>JS error в Base.astro</td>
+<td>Проверить консоль, ARIA attrs</td>
+</tr>
+<tr>
+<td>Меню не обновляется после изменений</td>
+<td>Кэш не инвалидировался</td>
+<td>Перезапустить dev или очистить кэш</td>
+</tr>
+<tr>
+<td>Второе меню не отображается</td>
+<td><code>secondary</code> пусто в БД</td>
+<td>Заполнить через админку</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Миграция со старого сайта</h2>
+<p>Структура меню сгенерирована из <code>docs/site-structure.md</code> (старый сайт rksh-msk.ru). Нужно:</p>
+<ol>
+<li>Создать все пункты через админку</li>
+<li>Убедиться, что slugs совпадают со страницами</li>
+<li>Прописать redirects для старых URL (через <code>_redirects</code> или middleware)</li>
+</ol>
+<hr>
+<p><strong>Следующие шаги:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Заполнить <code>primary</code> меню всеми пунктами</li>
+<li><input disabled="" type="checkbox"> Заполнить <code>secondary</code> меню (курсы)</li>
+<li><input disabled="" type="checkbox"> Заполнить <code>footer</code> меню (документы, политика)</li>
+<li><input disabled="" type="checkbox"> Протестировать dropdown на десктопе и touch-устройствах</li>
+<li><input disabled="" type="checkbox"> Реализовать мобильное меню (hamburger)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>News</span></nav>
+  <div class="md-content">
+    <h1>Новости (/news)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: PostCard, Badge, SectionTitle (косвенно)</p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Посты (список)</td>
+<td>CMS <code>posts</code> collection</td>
+</tr>
+<tr>
+<td>Категории новостей</td>
+<td>Taxonomy <code>news_category</code> (термы: Новости, Собрания)</td>
+</tr>
+<tr>
+<td>Категория поста</td>
+<td><code>getEntryTerms(&quot;posts&quot;, id, &quot;news_category&quot;)</code></td>
+</tr>
+<tr>
+<td>Связанные посты (детальная)</td>
+<td><code>getEmDashCollection(&quot;posts&quot;, { limit: 3, orderBy: { published_at: &quot;desc&quot; } })</code></td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>posts</code></h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Заголовок новости</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>✅</td>
+<td>URL-слаг (авто из title)</td>
+</tr>
+<tr>
+<td><code>featured_image</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Обложка (<code>{ src, alt }</code>)</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>portableText</td>
+<td>❌</td>
+<td>Тело новости (блоки)</td>
+</tr>
+<tr>
+<td><code>excerpt</code></td>
+<td>text</td>
+<td>❌</td>
+<td>Краткое описание для карточки</td>
+</tr>
+<tr>
+<td><code>publishedAt</code></td>
+<td>datetime</td>
+<td>✅</td>
+<td>Дата публикации</td>
+</tr>
+</tbody></table>
+<h3>Taxonomy <code>news_category</code></h3>
+<table>
+<thead>
+<tr>
+<th>Терм</th>
+<th>Slug</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Новости</td>
+<td><code>novosti</code></td>
+<td>Обычные новости</td>
+</tr>
+<tr>
+<td>Собрания</td>
+<td><code>sobraniia</code></td>
+<td>Родительские собрания</td>
+</tr>
+</tbody></table>
+<h3>Структура страницы — Список (/news)</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  news-hero (text-align center)               │
+│  h1: Новости (Playfair 5xl primary)          │
+│  p: События и объявления нашей школы (muted) │
+├─────────────────────────────────────────────┤
+│  news-filters (flex-wrap, gap sm)            │
+│  [Все] [Новости] [Собрания]                  │
+│  (button.news-filters__btn, active=primary bg)│
+│  ← client-side JS фильтрация по data-category│
+├─────────────────────────────────────────────┤
+│  news-list (padding 2xl → 4xl)              │
+│  Grid 3×: PostCard                           │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐     │
+│  │ 🖼 image │ │ 🖼 image │ │ 🖼 image │     │
+│  │ 📅 badge │ │ 📅 badge │ │ 📅 badge │     │
+│  │  Title   │ │  Title   │ │  Title   │     │
+│  │  Excerpt │ │  Excerpt │ │  Excerpt │     │
+│  └──────────┘ └──────────┘ └──────────┘     │
+│  (2× on ≤1024px, 1× on ≤768px)              │
+│  data-category slug для фильтрации           │
+│                                              │
+│  Если постов нет: «Пока нет новостей.»       │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p>Сортировка: по <code>publishedAt</code> (новые первыми). Лимит: 20.</p>
+<h3>Структура страницы — Детальная (/news/[id])</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  news-detail__header (bg surface-alt)        │
+│  ← Все новости (link accent → /news)        │
+│  📅 дата | 🏷 category badge                 │
+│  h1: Title (Playfair 4xl primary)            │
+│  p: Excerpt (muted, lg)                     │
+├─────────────────────────────────────────────┤
+│  🖼 featured_image (narrow, radius xl)      │
+├─────────────────────────────────────────────┤
+│  news-detail__content (narrow, lg, relaxed) │
+│  PortableText → h2, h3, p, ul, ol,          │
+│  blockquote (border-left accent-warm 4px)   │
+├─────────────────────────────────────────────┤
+│  news-related (bg surface-alt)               │
+│  h2: Другие новости                          │
+│  Grid 2×: PostCard (2 последних, ≠ текущий) │
+│  (1× на мобилке)                            │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p>SEO: <code>getSeoMeta(post, { siteTitle, siteUrl, path })</code>.</p>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PostCard</td>
+<td><code>ui/PostCard.astro</code></td>
+<td>Список (3×), Детальная — «Другие новости» (2×)</td>
+</tr>
+<tr>
+<td>Badge</td>
+<td><code>ui/Badge.astro</code></td>
+<td>Внутри PostCard — категория новости</td>
+</tr>
+<tr>
+<td>Image</td>
+<td><code>emdash/ui</code></td>
+<td>Детальная — featured_image</td>
+</tr>
+<tr>
+<td>PortableText</td>
+<td><code>emdash/ui</code></td>
+<td>Детальная — тело новости</td>
+</tr>
+<tr>
+<td>Base</td>
+<td><code>layouts/Base.astro</code></td>
+<td>Обёртка обеих страниц</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили — Список (/news)</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.news-hero</code></td>
+<td>Hero-секция (padding 4xl→2xl, text-align center)</td>
+</tr>
+<tr>
+<td><code>.news-hero__title</code></td>
+<td>h1 Playfair 5xl primary</td>
+</tr>
+<tr>
+<td><code>.news-hero__subtitle</code></td>
+<td>Подзаголовок muted lg narrow</td>
+</tr>
+<tr>
+<td><code>.news-filters</code></td>
+<td>Панель фильтров (padding-bottom xl)</td>
+</tr>
+<tr>
+<td><code>.news-filters__list</code></td>
+<td>Flex-wrap, gap sm</td>
+</tr>
+<tr>
+<td><code>.news-filters__btn</code></td>
+<td>Кнопка фильтра (bg surface, border primary-line, radius lg)</td>
+</tr>
+<tr>
+<td><code>.news-filters__btn--active</code></td>
+<td>Активная кнопка (bg primary, text surface)</td>
+</tr>
+<tr>
+<td><code>.news-list</code></td>
+<td>Контейнер карточек (padding 2xl→4xl)</td>
+</tr>
+<tr>
+<td><code>.news-grid</code></td>
+<td>Grid 3× (2× на ≤1024px, 1× на ≤768px)</td>
+</tr>
+<tr>
+<td><code>.news-grid__item--hidden</code></td>
+<td>display:none (JS фильтрация)</td>
+</tr>
+<tr>
+<td><code>.news-empty</code></td>
+<td>Заглушка (padding 4xl, center)</td>
+</tr>
+</tbody></table>
+<h2>Уникальные стили — Детальная (/news/[id])</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.news-detail__header</code></td>
+<td>Шапка статьи (bg surface-alt, padding 2xl→xl)</td>
+</tr>
+<tr>
+<td><code>.news-detail__header-inner</code></td>
+<td>narrow max-width</td>
+</tr>
+<tr>
+<td><code>.news-detail__back</code></td>
+<td>«← Все новости» (accent, hover primary-hover)</td>
+</tr>
+<tr>
+<td><code>.news-detail__meta</code></td>
+<td>Flex дата+категория (gap sm)</td>
+</tr>
+<tr>
+<td><code>.news-detail__date</code></td>
+<td>Дата (sm, muted)</td>
+</tr>
+<tr>
+<td><code>.news-detail__category</code></td>
+<td>Бейдж категории (sm, primary, bg primary-soft, radius md)</td>
+</tr>
+<tr>
+<td><code>.news-detail__title</code></td>
+<td>h1 Playfair 4xl→3xl primary</td>
+</tr>
+<tr>
+<td><code>.news-detail__excerpt</code></td>
+<td>Лид (muted, lg, relaxed)</td>
+</tr>
+<tr>
+<td><code>.news-detail__image-wrap</code></td>
+<td>Обёртка изображения (narrow, radius xl, overflow hidden)</td>
+</tr>
+<tr>
+<td><code>.news-detail__image</code></td>
+<td>Изображение (width 100%, radius xl)</td>
+</tr>
+<tr>
+<td><code>.news-detail__content</code></td>
+<td>Тело (narrow, lg→base, relaxed, padding 2xl→4xl)</td>
+</tr>
+<tr>
+<td><code>.news-detail__content :global(h2)</code></td>
+<td>h2 PortableText (heading 2xl primary)</td>
+</tr>
+<tr>
+<td><code>.news-detail__content :global(h3)</code></td>
+<td>h3 PortableText (heading xl primary)</td>
+</tr>
+<tr>
+<td><code>.news-detail__content :global(blockquote)</code></td>
+<td>Цитата (border-left accent-warm 4px, italic, muted)</td>
+</tr>
+<tr>
+<td><code>.news-related</code></td>
+<td>Связанные новости (bg surface-alt)</td>
+</tr>
+<tr>
+<td><code>.news-related__title</code></td>
+<td>h2 heading 2xl primary</td>
+</tr>
+<tr>
+<td><code>.news-related__grid</code></td>
+<td>Grid 2× (1× на мобилке)</td>
+</tr>
+</tbody></table>
+<h3>Client-side JavaScript</h3>
+<p>Фильтрация по категориям (встроенный <code>&lt;script&gt;</code> в news.astro):</p>
+<ul>
+<li>Кнопки <code>.news-filters__btn</code> переключают активный класс</li>
+<li>Элементы <code>.news-grid__item</code> фильтруются через <code>data-category</code></li>
+<li><code>data-category</code> заполняется из терма таксономии или fallback <code>novosti</code></li>
+<li>Кнопка «Все» показывает все элементы</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/news/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MACRO Структура</td>
+<td>Простой список заголовков</td>
+<td>Hero + фильтры + Grid 3× PostCard</td>
+</tr>
+<tr>
+<td>Изображения</td>
+<td>Есть у некоторых новостей</td>
+<td>featured_image через CMS</td>
+</tr>
+<tr>
+<td>Категории</td>
+<td>Нет</td>
+<td>Таксономия <code>news_category</code> (Новости/Собрания)</td>
+</tr>
+<tr>
+<td>Фильтрация</td>
+<td>Нет</td>
+<td>Client-side JS по категориям</td>
+</tr>
+<tr>
+<td>Excerpt</td>
+<td>Нет (только заголовок+дата)</td>
+<td>Поле <code>excerpt</code> в CMS</td>
+</tr>
+<tr>
+<td>Детальная страница</td>
+<td>Простой текст</td>
+<td>Header + image + PortableText + related posts</td>
+</tr>
+<tr>
+<td>Связанные новости</td>
+<td>Нет</td>
+<td>2 последних поста внизу</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td>Нет</td>
+<td>getSeoMeta (title, description, og)</td>
+</tr>
+<tr>
+<td>Количество новостей</td>
+<td>6</td>
+<td>20 на страницу (limit: 20)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Добавить пагинацию (при &gt; 20 новостей)</li>
+<li><input disabled="" type="checkbox"> Рассмотреть серверную фильтрацию вместо client-side JS</li>
+<li><input disabled="" type="checkbox"> Добавить страницу-заглушку для 404 при неверном slug</li>
+<li><input disabled="" type="checkbox"> Создать больше новостей в CMS для демонстрации</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

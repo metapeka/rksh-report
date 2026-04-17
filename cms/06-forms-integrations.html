@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forms integrations — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Forms integrations</span></nav>
+  <div class="md-content">
+    <h1>Формы и интеграции</h1>
+<h2>Обзор</h2>
+<p>Формы на сайте РКШ используются для:</p>
+<ul>
+<li>Записи на экскурсию/представление</li>
+<li>Заявки на обучение</li>
+<li>Консультаций</li>
+<li>Отзывов</li>
+</ul>
+<p><strong>Требование:</strong> отправка в email и CRM. Пока нет реализации, только архитектура.</p>
+<hr>
+<h2>Типы форм</h2>
+<h3>1. Форма записи на экскурсию</h3>
+<p><strong>Расположение:</strong> главная страница (CTA «Получить презентацию»), страница Контакты</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>parent_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Имя родителя</td>
+</tr>
+<tr>
+<td><code>student_name</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Имя ребёнка (или &quot;Родитель&quot; для курсов)</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Телефон (+7...)</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>email</td>
+<td>❌</td>
+<td>Email для связи</td>
+</tr>
+<tr>
+<td><code>course</code></td>
+<td>select</td>
+<td>❌</td>
+<td>Выбранная программа («1 класс», «Шахматы»)</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>text</td>
+<td>❌</td>
+<td>Комментарий/вопрос</td>
+</tr>
+<tr>
+<td><code>consent</code></td>
+<td>boolean</td>
+<td>✅</td>
+<td>Согласие на обработку ПДн</td>
+</tr>
+</tbody></table>
+<p><strong>Действие:</strong> при отправке → email на <code>info@rksh-msk.ru</code> + запись в CRM (Bitrix24)</p>
+<hr>
+<h3>2. Форма заявки на обучение</h3>
+<p><strong>Расположение:</strong> страницы Цены, страницы курсов</p>
+<p><strong>Поля:</strong></p>
+<ul>
+<li><code>parent_name</code> (string, required)</li>
+<li><code>phone</code> (string, required)</li>
+<li><code>email</code> (email)</li>
+<li><code>child_birth_year</code> (number) — год рождения ребёнка</li>
+<li><code>program</code> (string) — выбранная программа</li>
+<li><code>comment</code> (text)</li>
+</ul>
+<p><strong>Отправка:</strong> email + CRM → автоматическое создание лида</p>
+<hr>
+<h3>3. Форма консультации</h3>
+<p><strong>Расположение:</strong> страница Контакты</p>
+<p><strong>Поля:</strong></p>
+<ul>
+<li><code>name</code> (string)</li>
+<li><code>email</code> (email, required)</li>
+<li><code>subject</code> (string) — тема вопроса</li>
+<li><code>message</code> (textarea, required)</li>
+</ul>
+<hr>
+<h3>4. Форма отзыва</h3>
+<p><strong>Расположение:</strong> страница Отзывы</p>
+<p><strong>Поля:</strong></p>
+<ul>
+<li><code>author_name</code> (string, required)</li>
+<li><code>author_photo</code> (image) — необязательно</li>
+<li><code>rating</code> (number 1-5) — оценка</li>
+<li><code>content</code> (portableText) — текст отзыва</li>
+<li><code>children_grade</code> (string) — класс ребёнка</li>
+</ul>
+<p><strong>Модерация:</strong> перед публикацией проходит проверку администратором</p>
+<hr>
+<h2>Архитектура обработки форм</h2>
+<pre><code>
+┌─────────────┐
+│   Frontend  │  (Astro component: &lt;ContactForm /&gt;)
+│  - валидация│  - required, email format
+│  - отрисовка│  - CAPTCHA (пока нет)
+└──────┬──────┘
+       │ POST /_emdash/api/forms/submit
+       ▼
+┌─────────────────┐
+│  EmDash Plugin  │  (хук или route handler)
+│  - валидация    │  - reCAPTCHA (позже)
+│  - спам-фильтр  │  - хук content:afterSave для reviews
+│  - отправка     │
+└────────┬────────┘
+         │
+    ┌────┴─────┐
+    │          │
+    ▼          ▼
+┌───────┐  ┌──────────┐
+│ Email │  │   CRM    │  (Bitrix24, AmoCRM, Notion)
+│SMTP   │  │  Webhook │
+└───────┘  └──────────┘
+</code></pre>
+<hr>
+<h2>Реализация (текущий статус)</h2>
+<p><strong>Формы не реализованы.</strong> Нужно создать:</p>
+<ol>
+<li><p><strong>Плагин <code>@rksh/forms</code></strong> (или расширить <code>@rksh/blocks</code>)</p>
+<ul>
+<li>Admin UI: настройка форм, получателей</li>
+<li>API route: <code>POST /_emdash/api/forms/submit</code></li>
+<li>Хук: при создании записи в <code>reviews</code> — уведомление</li>
+</ul>
+</li>
+<li><p><strong>Astro-компоненты форм:</strong></p>
+<ul>
+<li><code>src/components/ContactForm.astro</code></li>
+<li><code>src/components/EnrollmentForm.astro</code></li>
+<li>Валидация на клиенте (HTML5 <code>required</code>, <code>type=&quot;email&quot;</code>)</li>
+<li>Защита от CSRF (токен из сессии)</li>
+</ul>
+</li>
+<li><p><strong>Backend-обработчик:</strong></p>
+</li>
+</ol>
+<pre><code class="language-typescript">// plugins/forms/src/api/submit.ts
+export const POST = async (ctx) =&gt; {
+  const data = await ctx.request.json();
+  // валидация
+  // отправка email через nodemailer
+  // POST в CRM
+  // сохранение в collection `applications`
+  return { success: true };
+};
+</code></pre>
+<hr>
+<h2>Интеграция с CRM</h2>
+<h3>Bitrix24</h3>
+<p><strong>Webhook:</strong> <code>https://&lt;domain&gt;.bitrix24.ru/rest/1/&lt;token&gt;/crm.lead.add.json</code></p>
+<p><strong>Поля:</strong></p>
+<pre><code class="language-json">{
+  &quot;fields&quot;: {
+    &quot;TITLE&quot;: &quot;Заявка с сайта РКШ&quot;,
+    &quot;NAME&quot;: &quot;{parent_name}&quot;,
+    &quot;PHONE&quot;: [{ &quot;VALUE&quot;: &quot;{phone}&quot;, &quot;VALUE_TYPE&quot;: &quot;MOBILE&quot; }],
+    &quot;EMAIL&quot;: [{ &quot;VALUE&quot;: &quot;{email}&quot;, &quot;VALUE_TYPE&quot;: &quot;WORK&quot; }],
+    &quot;COMMENTS&quot;: &quot;{message}\n\nПрограмма: {course}&quot;,
+    &quot;SOURCE_ID&quot;: &quot;WEB&quot;
+  }
+}
+</code></pre>
+<h3>AmoCRM</h3>
+<p><strong>POST</strong> <code>https://&lt;domain&gt;.amocrm.ru/api/v4/leads</code></p>
+<p><strong>Custom fields:</strong> нужно настроить в amo → сопоставить ID полей</p>
+<hr>
+<h2>Email шаблоны</h2>
+<p><strong>Тема:</strong> «Новая заявка с сайта РКШ — {parent_name}»</p>
+<p><strong>Тело письма (HTML):</strong></p>
+<pre><code class="language-html">&lt;p&gt;Поступила новая заявка:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Родитель:&lt;/strong&gt; {parent_name}&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Телефон:&lt;/strong&gt; {phone}&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Email:&lt;/strong&gt; {email}&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Программа:&lt;/strong&gt; {course}&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Комментарий:&lt;/strong&gt; {message}&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;---&lt;br&gt;Это автоматическое письмо с сайта rksh-msk.ru&lt;/p&gt;
+</code></pre>
+<p><strong>Получатель:</strong> <code>info@rksh-msk.ru</code>, копия <code>director@rksh-msk.ru</code></p>
+<hr>
+<h2>Валидация форм</h2>
+<p><strong>Клиентская:</strong></p>
+<pre><code class="language-html">&lt;input type=&quot;text&quot; name=&quot;phone&quot; pattern=&quot;[+][0-9]{10,15}&quot; required /&gt;
+&lt;input type=&quot;email&quot; name=&quot;email&quot; required /&gt;
+</code></pre>
+<p><strong>Серверная:</strong></p>
+<pre><code class="language-typescript">if (!data.phone || !/^\+?[0-9]{10,15}$/.test(data.phone)) {
+  return new Response(JSON.stringify({ error: &quot;Invalid phone&quot; }), { status: 400 });
+}
+</code></pre>
+<hr>
+<h2>Защита от спама</h2>
+<h3>Сроки:</h3>
+<ol>
+<li><strong>CAPTCHA</strong> — добавить потом (reCAPTCHA v3 или hCaptcha)</li>
+<li><strong>Honeypot</strong> — скрытое поле, которое должен остаться пустым</li>
+<li><strong>Rate limiting</strong> — не более 3 отправок с IP в минуту</li>
+</ol>
+<p><strong>Honeypot пример:</strong></p>
+<pre><code class="language-astro">&lt;input type=&quot;text&quot; name=&quot;website&quot; style=&quot;display:none&quot; /&gt;
+</code></pre>
+<p>Если <code>website</code> не пустое → игнорировать отправку (бот).</p>
+<hr>
+<h2>Хранение заявок</h2>
+<p><strong>Коллекция:</strong> <code>applications</code> (можно создать)</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>form_type</code></td>
+<td>string</td>
+<td><code>contact</code>, <code>enrollment</code>, <code>review</code></td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>json</td>
+<td>Все поля формы как объект</td>
+</tr>
+<tr>
+<td><code>submitted_at</code></td>
+<td>datetime</td>
+<td>Дата отправки</td>
+</tr>
+<tr>
+<td><code>ip_address</code></td>
+<td>string</td>
+<td>IP пользователя (анонимизировать)</td>
+</tr>
+<tr>
+<td><code>processed</code></td>
+<td>boolean</td>
+<td>Обработана ли заявка</td>
+</tr>
+</tbody></table>
+<p><strong>Использование:</strong> можно просматривать в админке → Контент → Applications</p>
+<hr>
+<h2>Webhook-интеграция</h2>
+<p><strong>Общий подход:</strong></p>
+<pre><code class="language-typescript">const webhookUrl = EMV_WEBHOOK_URL; // из .env
+await fetch(webhookUrl, {
+  method: &quot;POST&quot;,
+  headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  body: JSON.stringify(payload),
+});
+</code></pre>
+<p><strong>Retry logic:</strong> при ошибке 5xx — повторить через 5 сек, максимум 3 попытки</p>
+<hr>
+<h2>Настройка через админку</h2>
+<p><strong>Желаемый UI (будущий):</strong></p>
+<ul>
+<li>Настройки → Формы</li>
+<li>Для каждой формы: получатель email, webhook URL, поля</li>
+<li>Включение/выключение CAPTCHA</li>
+<li>Уведомления в реальном времени</li>
+</ul>
+<p><strong>Пока:</strong> хардкод в конфиге плагина.</p>
+<hr>
+<h2>Пример компонента формы (Astro)</h2>
+<pre><code class="language-astro">---
+// src/components/ContactForm.astro
+interface Props {
+  title?: string;
+  course?: string; // предвыбранный курс
+}
+
+const { title = &quot;Оставить заявку&quot;, course = &quot;&quot; } = Astro.props;
+
+if (Astro.request.method === &quot;POST&quot;) {
+  // обработка отправки
+  const formData = await Astro.request.formData();
+  const data = Object.fromEntries(formData);
+  // отправка на API
+  const res = await fetch(&quot;/_emdash/api/forms/submit&quot;, {
+    method: &quot;POST&quot;,
+    body: JSON.stringify(data),
+    headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  });
+  if (res.ok) {
+    // успех
+  } else {
+    // ошибка
+  }
+}
+---
+&lt;form method=&quot;POST&quot; class=&quot;contact-form&quot;&gt;
+  &lt;div class=&quot;field&quot;&gt;
+    &lt;label for=&quot;parent_name&quot;&gt;Ваше имя *&lt;/label&gt;
+    &lt;input id=&quot;parent_name&quot; name=&quot;parent_name&quot; type=&quot;text&quot; required /&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;field&quot;&gt;
+    &lt;label for=&quot;phone&quot;&gt;Телефон *&lt;/label&gt;
+    &lt;input id=&quot;phone&quot; name=&quot;phone&quot; type=&quot;tel&quot; required pattern=&quot;[+][0-9]{10,15}&quot; /&gt;
+  &lt;/div&gt;
+  &lt;!-- honeypot --&gt;
+  &lt;input type=&quot;text&quot; name=&quot;website&quot; style=&quot;display:none&quot; /&gt;
+  &lt;button type=&quot;submit&quot;&gt;Отправить&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<hr>
+<h2>Тестирование форм</h2>
+<ol>
+<li>Заполнить все поля корректно → отправить</li>
+<li>Проверить email (входящие)</li>
+<li>Проверить CRM (создался ли лид)</li>
+<li>Проверить, что дубли не создаются (同一个 номер/IP)</li>
+<li>Проверить, что пустые обязательные поля блокируют отправку</li>
+</ol>
+<hr>
+<h2>План внедрения</h2>
+<table>
+<thead>
+<tr>
+<th>Этап</th>
+<th>Что делаем</th>
+<th>Срок</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Создать коллекцию <code>applications</code></td>
+<td>день 1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Написать плагин <code>@rksh/forms</code> с API route</td>
+<td>день 1-2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Создать компоненты форм (<code>ContactForm</code>, <code>EnrollmentForm</code>)</td>
+<td>день 2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Интегрировать на страницы (Контакты, Цены)</td>
+<td>день 2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Настроить email (SMTP) и CRM webhook</td>
+<td>день 3</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Добавить валидацию, honeypot</td>
+<td>день 3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Тестирование</td>
+<td>день 4</td>
+</tr>
+<tr>
+<td>8</td>
+<td>CAPTCHA (в самом конце)</td>
+<td>день 10</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Чек-лист</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Коллекция <code>applications</code> создана в <code>seed.json</code></li>
+<li><input disabled="" type="checkbox"> Плагин <code>@rksh/forms</code> зарегистрирован в <code>astro.config.mjs</code></li>
+<li><input disabled="" type="checkbox"> API route <code>/_emdash/api/forms/submit</code> работает (POST)</li>
+<li><input disabled="" type="checkbox"> Email отправляется (настройки SMTP в <code>.env</code>)</li>
+<li><input disabled="" type="checkbox"> CRM получает webhook (логи в Bitrix24)</li>
+<li><input disabled="" type="checkbox"> Валидация на клиенте и сервере</li>
+<li><input disabled="" type="checkbox"> Хoneypot защита активна</li>
+<li><input disabled="" type="checkbox"> Rate limiting (3/min на IP)</li>
+<li><input disabled="" type="checkbox"> Заявки отображаются в админке</li>
+<li><input disabled="" type="checkbox"> Уведомление администраторам (email + admin UI badge)</li>
+</ul>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><code>06-forms-integrations.md</code> — этот файл</li>
+<li><code>01-schema-collections.md</code> — коллекция <code>applications</code></li>
+<li><code>02-blocks-plugin.md</code> — как создавать плагины</li>
+<li><a href="https://docs.emdashcms.com/plugins/hooks/">EmDash Hooks</a> — если нужны хуки</li>
+</ul>
+<hr>
+<h2>Open Questions</h2>
+<ul>
+<li>Какая CRM? Bitrix24, AmoCRM, или своя?</li>
+<li>Шаблон email утверждает заказчик?</li>
+<li>Хранить заявки вечно или удалять через N месяцев?</li>
+<li>Нужен ли личный кабинет родителя (просмотр заявок)?</li>
+<li>Как тестировать без отправки реальных email? → stub-режим</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

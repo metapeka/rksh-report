@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Czeny — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Czeny</span></nav>
+  <div class="md-content">
+    <h1>Цены (/czeny)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: <a href="../components/14-price-card.html">14-price-card.md</a>, <a href="../components/15-package-table.html">15-package-table.md</a>, <a href="../components/16-service-table.html">16-service-table.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Все тарифы и цены</td>
+<td>Захардкожены в шаблоне (<code>src/pages/czeny.astro</code>)</td>
+</tr>
+<tr>
+<td>CMS страница</td>
+<td><code>pages</code>, slug <code>czeny</code> — заголовок/SEO</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Цены не вынесены в CMS — обновляются вручную в шаблоне. Причина: сложная структура (пакетные предложения, таблицы, плоские блоки).</p>
+</blockquote>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  SectionTitle h1: Цены (center)           │
+│  p: Стоимость обучения...                   │
+├─────────────────────────────────────────────┤
+│  SectionTitle h2: 0 класс (center)         │
+│  Таблица тарифов (3/5/полный день)          │
+├─────────────────────────────────────────────┤
+│  SectionTitle h2: Начальная и средняя школа│
+│  Grid 2×: PriceCard × 2                    │
+├─────────────────────────────────────────────┤
+│  SectionTitle h2: Курсы для дошкольников    │
+│  ┌─────────────────────────────────────────┐│
+│  │ SectionTitle h3 underline: Подготовка   ││
+│  │ PackageTable «Базовое» × tiers          ││
+│  │ PackageTable «Стандарт» × tiers         ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Логопед      ││
+│  │ ServiceTable (10 строк)                  ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Живопись     ││
+│  │ PackageTable                             ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Я Сам(а)      ││
+│  │ PackageTable                             ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Кулинарный    ││
+│  │ PackageTable                             ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Шахматы       ││
+│  │ PackageTable × 2                        ││
+│  └─────────────────────────────────────────┘│
+├─────────────────────────────────────────────┤
+│  SectionTitle h2: Курсы для школьников      │
+│  ┌─────────────────────────────────────────┐│
+│  │ SectionTitle h3 underline: Каллиграфия  ││
+│  │ PackageTable                             ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Русский       ││
+│  │ prices-flat: 10 занятий — 12 000 р.     ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Таблица умн. ││
+│  │ prices-flat: 10 занятий — 9 500 р.      ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Шахматы       ││
+│  │ PackageTable × 2                        ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Продлёнка     ││
+│  │ PackageTable                             ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Живопись      ││
+│  │ PackageTable                             ││
+│  ├─────────────────────────────────────────┤│
+│  │ SectionTitle h3 underline: Техника чтен.││
+│  │ prices-flat--empty: «Информация уточн.»  ││
+│  └─────────────────────────────────────────┘│
+├─────────────────────────────────────────────┤
+│  CTA: «Хотите узнать больше?» + Button     │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>h1, h2 (center), h3 (underline)</td>
+</tr>
+<tr>
+<td>PriceCard</td>
+<td><code>ui/PriceCard.astro</code></td>
+<td>«Начальная школа», «Средняя школа»</td>
+</tr>
+<tr>
+<td>PackageTable</td>
+<td><code>ui/PackageTable.astro</code></td>
+<td>Все пакетные предложения</td>
+</tr>
+<tr>
+<td>ServiceTable</td>
+<td><code>ui/ServiceTable.astro</code></td>
+<td>Логопед</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию»</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.prices</code></td>
+<td>Hero-секция (padding, center)</td>
+</tr>
+<tr>
+<td><code>.prices-section</code></td>
+<td>Секция курса (padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.prices-section--alt</code></td>
+<td>Чётная секция (bg surface-alt)</td>
+</tr>
+<tr>
+<td><code>.prices-section__scroll</code></td>
+<td>overflow-x: auto для таблиц</td>
+</tr>
+<tr>
+<td><code>.prices-table</code></td>
+<td>Таблица тарифов 0 класса</td>
+</tr>
+<tr>
+<td><code>.prices-school-grid</code></td>
+<td>Grid 2× для PriceCard</td>
+</tr>
+<tr>
+<td><code>.prices-flat</code></td>
+<td>Плоский блок с ценой (border, radius)</td>
+</tr>
+<tr>
+<td><code>.prices-flat--empty</code></td>
+<td>Заглушка «Информация уточняется» (dashed)</td>
+</tr>
+<tr>
+<td><code>.prices-cta</code></td>
+<td>CTA-баннер (bg primary, text surface)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/czeny/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Структура</td>
+<td>Длинная страница с вложенными секциями</td>
+<td>То же, но с SectionTitle</td>
+</tr>
+<tr>
+<td>Таблицы</td>
+<td>HTML-table</td>
+<td>ServiceTable / PackageTable компоненты</td>
+</tr>
+<tr>
+<td>Подзаголовки</td>
+<td>h3 с CSS классом</td>
+<td>SectionTitle variant=underline</td>
+</tr>
+<tr>
+<td>Пакетные предложения</td>
+<td>Тоже таблица</td>
+<td>PackageTable с подсветкой выгоды</td>
+</tr>
+<tr>
+<td>Плоские цены</td>
+<td>Обычный div</td>
+<td>prices-flat с border и radius</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите узнать больше?» + Button warm</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Вынести цены в CMS для динамичности</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

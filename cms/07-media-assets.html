@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media assets — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Media assets</span></nav>
+  <div class="md-content">
+    <h1>Медиафайлы: загрузка, хранение, использование</h1>
+<h2>Обзор</h2>
+<p>EmDash предоставляет встроенную систему медиа-хранения:</p>
+<ul>
+<li><strong>Локальное хранение:</strong> файлы сохраняются в папку <code>uploads/</code></li>
+<li><strong>База данных:</strong> записи о файлах в коллекции <code>media</code> (автоматически)</li>
+<li><strong>Доступ:</strong> через API <code>/_emdash/api/media/file/&lt;id&gt;</code></li>
+<li><strong>Админка:</strong> UI для загрузки (Медиа → Загрузить)</li>
+</ul>
+<hr>
+<h2>Хранение</h2>
+<h3>Файловая система</h3>
+<pre><code>project/
+├── uploads/
+│   ├── 2025/
+│   │   ├── 04/
+│   │   │   ├── 15/
+│   │   │   │   ├── photo1.jpg
+│   │   │   │   ├── photo2.png
+│   │   │   │   └── doc1.pdf
+│   │   │   └── ...
+│   └── ...
+</code></pre>
+<p><strong>Структура папок:</strong> <code>uploads/{year}/{month}/{day}/{filename}</code><br><strong>Зачем:</strong> организац</p>
+<h3>База данных</h3>
+<p>Таблица <code>media</code> (автоматически создаётся EmDash):</p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>ULID</td>
+<td>Уникальный ID</td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td>string</td>
+<td>Оригинальное имя файла</td>
+</tr>
+<tr>
+<td><code>mime_type</code></td>
+<td>string</td>
+<td><code>image/jpeg</code>, <code>video/mp4</code>, <code>application/pdf</code></td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>number</td>
+<td>Размер в байтах</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>Путь на диске (относительно <code>uploads/</code>)</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>Публичный URL (<code>/_emdash/api/media/file/&lt;id&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>alt</code></td>
+<td>string</td>
+<td>Альтернативный текст (для изображений)</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td>number</td>
+<td>Ширина (для изображений)</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>number</td>
+<td>Высота</td>
+</tr>
+<tr>
+<td><code>uploaded_by</code></td>
+<td>string</td>
+<td>ID пользователя</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>datetime</td>
+<td>Дата загрузки</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Поддерживаемые форматы</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Расширения</th>
+<th>Ограничения</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Изображения</td>
+<td><code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.gif</code>, <code>.webp</code>, <code>.svg</code></td>
+<td>Макс. размер: 10 МБ (можно настроить)</td>
+</tr>
+<tr>
+<td>Видео</td>
+<td><code>.mp4</code>, <code>.webm</code>, <code>.mov</code></td>
+<td>Макс. 100 МБ, рекомендуется &lt; 50 МБ</td>
+</tr>
+<tr>
+<td>Документы</td>
+<td><code>.pdf</code>, <code>.doc</code>, <code>.docx</code></td>
+<td>Макс. 25 МБ</td>
+</tr>
+<tr>
+<td>Аудио</td>
+<td><code>.mp3</code>, <code>.wav</code>, <code>.ogg</code></td>
+<td>Макс. 50 МБ</td>
+</tr>
+</tbody></table>
+<p><strong>Важно:</strong></p>
+<ul>
+<li>SVG возможно содержит XSS — EmDash sanitizes?</li>
+<li><code>sharp</code> (опционально) для ресайза/конвертации изображений</li>
+</ul>
+<hr>
+<h2>Загрузка файлов</h2>
+<h3>Через админку (ручная)</h3>
+<ol>
+<li><code>/_emdash/admin</code> → Медиа → Загрузить</li>
+<li>Выбрать файл (drag &amp; drop или клик)</li>
+<li>Заполнить метаданные:<ul>
+<li><strong>Название</strong> (title)</li>
+<li><strong>Alt-текст</strong> (для изображений, обязательно для доступности)</li>
+<li><strong>Описание</strong> (необязательно)</li>
+</ul>
+</li>
+<li>Нажать «Сохранить»</li>
+</ol>
+<p>Файл появится в библиотеке, получив <code>id</code> и <code>url</code>.</p>
+<hr>
+<h3>Через API (программно)</h3>
+<pre><code class="language-bash">POST /_emdash/api/media/upload
+Content-Type: multipart/form-data
+
+file: &lt;binary&gt;
+</code></pre>
+<p><strong>Ответ:</strong></p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;01J...&quot;,
+  &quot;url&quot;: &quot;/_emdash/api/media/file/01J...&quot;,
+  &quot;filename&quot;: &quot;photo.jpg&quot;,
+  &quot;mime_type&quot;: &quot;image/jpeg&quot;,
+  &quot;size&quot;: 245760,
+  &quot;width&quot;: 1920,
+  &quot;height&quot;: 1080
+}
+</code></pre>
+<hr>
+<h2>Использование в контенте</h2>
+<h3>В Portable Text (редактор)</h3>
+<ol>
+<li>В редакторе нажать <code>/</code> → выбрать «Image»</li>
+<li>Выбрать из библиотеки или загрузить новое</li>
+<li>Заполнить <code>Alt</code> и <code>Caption</code></li>
+<li>Вставленный блок:</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;_type&quot;: &quot;image&quot;,
+  &quot;asset&quot;: { &quot;_id&quot;: &quot;01J...&quot; },
+  &quot;alt&quot;: &quot;Логотип РКШ&quot;,
+  &quot;caption&quot;: &quot;Основной логотип&quot;
+}
+</code></pre>
+<h3>В Astro-компонентах</h3>
+<pre><code class="language-astro">import { Image } from &quot;emdash/ui&quot;;
+
+const { entry } = await getEmDashEntry(&quot;pages&quot;, &quot;home&quot;);
+&lt;Image image={entry.data.logo} alt={entry.data.logo.alt} /&gt;
+</code></pre>
+<p><strong>Image компонент</strong> оптимизирует:</p>
+<ul>
+<li>lazy loading (<code>loading=&quot;lazy&quot;</code>)</li>
+<li>responsive srcset (если несколько размеров)</li>
+<li>WebP fallback (если включён <code>sharp</code>)</li>
+</ul>
+<p><strong>Важно:</strong> <code>image</code> — это объект <code>{ src, alt, width, height }</code>, не строка.</p>
+<hr>
+<h2>Оптимизация изображений</h2>
+<h3>Автоматическая оптимизация (если установлен <code>sharp</code>)</h3>
+<p>EmDash может генерировать несколько размеров:</p>
+<pre><code>Original:  photo.jpg (4000x3000)
+↓ resize
+large:    photo.jpg?width=1200 (1200x900)
+medium:   photo.jpg?width=800  (800x600)
+small:    photo.jpg?width=400  (400x300)
+thumb:    photo.jpg?width=200  (200x150)
+</code></pre>
+<p><strong>Использование:</strong></p>
+<pre><code class="language-astro">&lt;Image
+  image={entry.data.photo}
+  widths={[400, 800, 1200]}
+  sizes=&quot;(max-width: 768px) 100vw, 800px&quot;
+/&gt;
+</code></pre>
+<h3>Конвертация в WebP</h3>
+<p>Если браузер поддерживает:</p>
+<pre><code class="language-html">&lt;picture&gt;
+  &lt;source srcset=&quot;photo.webp&quot; type=&quot;image/webp&quot; /&gt;
+  &lt;img src=&quot;photo.jpg&quot; alt=&quot;...&quot; /&gt;
+&lt;/picture&gt;
+</code></pre>
+<p>EmDash автоматически (если <code>sharp</code> установлен).</p>
+<hr>
+<h2>Видео</h2>
+<h3>Загрузка</h3>
+<ol>
+<li>Через админку (ограничение 100 МБ)</li>
+<li>Или через внешний хостинг (YouTube, Vimeo) — предпочтительнее</li>
+</ol>
+<h3>Рендеринг</h3>
+<p><strong>Локальный видеофайл:</strong></p>
+<pre><code class="language-astro">&lt;video controls poster={thumb}&gt;
+  &lt;source src={video.url} type=&quot;video/mp4&quot; /&gt;
+  Your browser does not support video.
+&lt;/video&gt;
+</code></pre>
+<p><strong>YouTube/Vimeo:</strong></p>
+<pre><code class="language-astro">&lt;iframe
+  src=&quot;https://www.youtube.com/embed/VIDEO_ID&quot;
+  title=&quot;...&quot;
+  allowfullscreen
+&gt;&lt;/iframe&gt;
+</code></pre>
+<p><strong>Рекомендация:</strong> использовать YouTube/Vimeo для больших файлов. Локальные видео — только для коротких роликов (&lt; 30 сек).</p>
+<hr>
+<h2>Документы (PDF, DOC)</h2>
+<h3>Загрузка</h3>
+<p>Через админку или API.</p>
+<h3>Отображение</h3>
+<pre><code class="language-astro">&lt;a href={file.url} download class=&quot;doc-link&quot;&gt;
+  📄 {file.filename}
+&lt;/a&gt;
+</code></pre>
+<p>Или встроить PDF:</p>
+<pre><code class="language-astro">&lt;embed src={file.url} type=&quot;application/pdf&quot; width=&quot;100%&quot; height=&quot;600px&quot; /&gt;
+</code></pre>
+<hr>
+<h2>CDN и production</h2>
+<h3>Production-деплой</h3>
+<p>Файлы хранятся:</p>
+<ol>
+<li><strong>Локально</strong> (если Docker volume)</li>
+<li><strong>Или в облаке:</strong> S3, Yandex Cloud Object Storage</li>
+</ol>
+<p><strong>Настройка в <code>astro.config.mjs</code>:</strong></p>
+<pre><code class="language-javascript">storage: local({
+  directory: &quot;./uploads&quot;,
+  baseUrl: &quot;/_emdash/api/media/file&quot;, // dev
+  // prod: &quot;https://cdn.rksh-msk.ru/media&quot;
+})
+</code></pre>
+<h3>Cloud storage (S3)</h3>
+<pre><code class="language-javascript">import { s3 } from &quot;emdash/storage&quot;;
+emdash({
+  storage: s3({
+    bucket: &quot;rksh-media&quot;,
+    region: &quot;ru-central1&quot;,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET,
+    },
+  }),
+});
+</code></pre>
+<hr>
+<h2>Безопасность</h2>
+<h3>Защита от вредоносных файлов</h3>
+<ol>
+<li><strong>Валидация MIME-типа</strong> (не только по расширению)</li>
+<li><strong>Сканирование антивирусом</strong> (ClamAV, опционально)</li>
+<li><strong>Размер файла:</strong> лимиты в <code>astro.config.mjs</code> или Nginx</li>
+<li><strong>CORS:</strong> <code>/_emdash/api/media/*</code> — доступные для всех (публичные)</li>
+</ol>
+<h3>Доступ</h3>
+<ul>
+<li><strong>Публичные файлы:</strong> <code>/media/*</code> — доступны без авторизации</li>
+<li><strong>Приватные:</strong> через signed URLs (если нужно) — опция в storage</li>
+</ul>
+<hr>
+<h2>Оптимизация производительности</h2>
+<h3>Ленивая загрузка изображений</h3>
+<pre><code class="language-astro">&lt;Image
+  image={photo}
+  loading=&quot;lazy&quot;
+  decoding=&quot;async&quot;
+  fetchpriority=&quot;low&quot;
+/&gt;
+</code></pre>
+<h3>Предзагрузка kritischer Bilder</h3>
+<pre><code class="language-html">&lt;link rel=&quot;preload&quot; as=&quot;image&quot; href=&quot;/media/logo.png&quot; /&gt;
+</code></pre>
+<h3>Кэширование на CDN</h3>
+<p><strong>Headers:</strong></p>
+<pre><code>Cache-Control: public, max-age=31536000, immutable
+</code></pre>
+<p>Для медиафайлов — год, потому они неизменяемы.</p>
+<hr>
+<h2>Миграция медиа со старого сайта</h2>
+<p>Сайт rksh-msk.ru использует WordPress. Нужно:</p>
+<ol>
+<li><strong>Скачать все файлы</strong> из <code>wp-content/uploads/</code></li>
+<li><strong>Переименовать/реорганизовать</strong> под структуру <code>uploads/{year}/{month}/{day}/</code></li>
+<li><strong>Импортировать в EmDash:</strong><ul>
+<li>Скрипт на Node.js читает папку</li>
+<li>Для каждого файла создаёт запись в <code>media</code> collection через API</li>
+<li>Сохраняет оригинальный путь в <code>alt</code> или custom field</li>
+</ul>
+</li>
+<li><strong>Обновить URL в контенте:</strong><ul>
+<li>Было: <code>https://rksh-msk.ru/wp-content/uploads/...</code></li>
+<li>Стало: <code>/_emdash/api/media/file/&lt;id&gt;</code></li>
+<li>Или: <code>/media/...</code> (если CDN)</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Удаление файлов</h2>
+<h3>Через админку</h3>
+<ul>
+<li>Медиа → выбрать файл → Удалить</li>
+<li>Удаляется запись из БД и файл с диска</li>
+</ul>
+<h3>Через API</h3>
+<pre><code class="language-bash">DELETE /_emdash/api/media/file/&lt;id&gt;
+</code></pre>
+<p><strong>Важно:</strong> проверять, не используется ли файл в других записях (каскадное удаление?).</p>
+<hr>
+<h2>Ограничения и проблемы</h2>
+<table>
+<thead>
+<tr>
+<th>Проблема</th>
+<th>Причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Файл не загружается</td>
+<td>Превышен лимит размера</td>
+<td>Увеличить <code>maxSize</code> в конфиге storage</td>
+</tr>
+<tr>
+<td>Изображение не отображается</td>
+<td>Нет <code>sharp</code> → нет ресайза</td>
+<td>Установить <code>sharp</code>: <code>npm i sharp</code></td>
+</tr>
+<tr>
+<td>Медленная загрузка больших файлов</td>
+<td>Синхронная запись на диск</td>
+<td>Использовать очередь (bullmq)</td>
+</tr>
+<tr>
+<td>Конфликты имён</td>
+<td>Два файла с одинаковым именем</td>
+<td>EmDash добавляет timestamp?</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Checklist для разработчика</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Установлен <code>sharp</code> (для изображений) — <code>npm i sharp --save-optional</code></li>
+<li><input disabled="" type="checkbox"> Папка <code>uploads/</code> существует и доступна для записи</li>
+<li><input disabled="" type="checkbox"> В <code>astro.config.mjs</code> указан правильный <code>storage: local(...)</code></li>
+<li><input disabled="" type="checkbox"> Размеры файлов ограничены (10 МБ изображения, 100 МБ видео)</li>
+<li><input disabled="" type="checkbox"> На production настроен CDN или Nginx кэширование</li>
+<li><input disabled="" type="checkbox"> URL-ы в контенте используют <code>/_emdash/api/media/file/...</code></li>
+<li><input disabled="" type="checkbox"> Все изображения имеют <code>alt</code> текст (проверить через валидатор)</li>
+</ul>
+<hr>
+<h2>Полезные команды</h2>
+<pre><code class="language-bash"># Очистить медиабиблиотеку (удалить все файлы)
+rm -rf uploads/*
+
+# Посчитать размер медиа
+du -sh uploads/
+
+# Проверить целостность (нет битых ссылок)
+sqlite3 data.db &quot;SELECT id, url FROM media WHERE ...&quot;
+</code></pre>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><code>01-schema-collections.md</code> — коллекция <code>media</code> (если будет)</li>
+<li><code>05-content-workflow.md</code> — загрузка через админку</li>
+<li><a href="https://docs.emdashcms.com/storage/local/">EmDash Media Storage</a></li>
+<li><a href="https://docs.astro.build/en/guides/image-optimization/">Astro Image Component</a></li>
+</ul>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Создать коллекцию <code>media</code> в seed.json (если нужны доп. поля)</li>
+<li><input disabled="" type="checkbox"> Настроить CDN (Yandex Cloud / S3) для prod</li>
+<li><input disabled="" type="checkbox"> Добавить watermark для изображений (опционально)</li>
+<li><input disabled="" type="checkbox"> Автоматическая генерация thumbnail для видео</li>
+<li><input disabled="" type="checkbox"> Batch upload (archives)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

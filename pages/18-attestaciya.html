@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attestaciya — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Attestaciya</span></nav>
+  <div class="md-content">
+    <h1>Подготовка к аттестации — <code>/podgotovka-attestacii</code></h1>
+<p><strong>Статус:</strong> 🔨 В работе (страница не создана)</p>
+<p><strong>Дизайн-гайд:</strong> <code>docs/rksh-emdash-theme-spec.md</code> — палитра, типографика, компоненты</p>
+<hr>
+<h2>Контент</h2>
+<h3>Источники данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Источник</th>
+<th>Формат</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Таблица предметов</td>
+<td>CMS-коллекция <code>prep_attestation</code> (план) или frontmatter</td>
+<td>Массив объектов</td>
+</tr>
+<tr>
+<td>Заголовок hero</td>
+<td>Хардкод</td>
+<td>Строка</td>
+</tr>
+<tr>
+<td>Описание hero</td>
+<td>Хардкод</td>
+<td>Строка</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Хардкод</td>
+<td>Кнопка на <code>/kontakty</code></td>
+</tr>
+</tbody></table>
+<h3>Структура предмета</h3>
+<pre><code>{
+  subject: string   — Название предмета
+  price: string      — Стоимость (единообразно &quot;15 000 ₽&quot;)
+  lessons: number    — Количество занятий (единообразно 10)
+}
+</code></pre>
+<h3>Предметы (12 шт., по данным rksh-msk.ru)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Предмет</th>
+<th>Стоимость</th>
+<th>Занятий</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Русский язык</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Литература</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Иностранный язык</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Окружающий мир</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>5</td>
+<td>История</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Обществознание</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Физика</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Биология</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Химия</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>10</td>
+<td>География</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Математика</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Информатика</td>
+<td>15 000 ₽</td>
+<td>10</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────────┐
+│ .att-hero                                       │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h1&gt; Подготовка к аттестации               │ │
+│ │  &lt;p&gt;  Индивидуальная подготовка по всем        │ │
+│ │       предметам для прохождения                │ │
+│ │       государственной аттестации               │ │
+│ │  [Записаться] → /kontakty                    │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .att-info          bg: --color-surface-alt        │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h2&gt; Как проходит подготовка   (center)     │ │
+│ │                                             │ │
+│ │  ┌──────────┐ ┌──────────┐ ┌──────────┐   │ │
+│ │  │ Шаг 1    │ │ Шаг 2    │ │ Шаг 3    │   │ │
+│ │  │ Выбор    │ │ 10 заня- │ │ Аттесто- │   │ │
+│ │  │ предмета │ │ тий с    │ │ вание    │   │ │
+│ │  │          │ │ педагогом│ │          │   │ │
+│ │  └──────────┘ └──────────┘ └──────────┘   │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .att-table                                      │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h2&gt; Предметы и стоимость      (center)     │ │
+│ │                                             │ │
+│ │  ┌──────────────────────────────────────┐   │ │
+│ │  │ Предмет      │ Стоимость  │ Занятий   │   │ │
+│ │  ├──────────────┼────────────┼──────────┤   │ │
+│ │  │ Русский язык │ 15 000 ₽   │ 10       │   │ │
+│ │  │ Литература   │ 15 000 ₽   │ 10       │   │ │
+│ │  │ ...          │ ...        │ ...      │   │ │
+│ │  └──────────────────────────────────────┘   │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .att-cta                                        │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;p&gt;  Запишитесь на подготовку уже сейчас    │ │
+│ │  [Записаться] → /kontakty                    │ │
+│ │  [Узнать цены] → /czeny                      │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+</code></pre>
+<h3>Секции по порядку</h3>
+<ol>
+<li><strong>Hero</strong> — заголовок h1, описание, CTA-кнопка «Записаться»</li>
+<li><strong>Как проходит подготовка</strong> — 3 шага в карточках (выбор предмета → занятия → аттестация)</li>
+<li><strong>Предметы и стоимость</strong> — таблица с 12 предметами, единообразной ценой и количеством занятий</li>
+<li><strong>CTA-блок</strong> — призыв к записи с двумя кнопками</li>
+</ol>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Base</code></td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Все страницы (layout)</td>
+</tr>
+<tr>
+<td><code>SectionTitle</code></td>
+<td><code>src/components/ui/SectionTitle.astro</code></td>
+<td>Hero h1, h2 секций</td>
+</tr>
+<tr>
+<td><code>Badge</code></td>
+<td><code>src/components/ui/Badge.astro</code></td>
+<td>Бейджи в блоке шагов (номер шага)</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>src/components/ui/Button.astro</code></td>
+<td>«Записаться» (variant=warm), «Узнать цены» (variant=outline)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<p>Стили — scoped в <code>podgotovka-attestacii.astro</code> (тег <code>&lt;style&gt;</code>). Префикс <code>att-</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.att-hero</code></td>
+<td>Hero-секция: padding 4xl/2xl, text-align center</td>
+</tr>
+<tr>
+<td><code>.att-hero__inner</code></td>
+<td>Ограничение ширины: <code>--container-narrow</code></td>
+</tr>
+<tr>
+<td><code>.att-hero__lead</code></td>
+<td>Подзаголовок: font-size lg, muted text</td>
+</tr>
+<tr>
+<td><code>.att-info</code></td>
+<td>Секция шагов: bg <code>--color-surface-alt</code>, padding 4xl</td>
+</tr>
+<tr>
+<td><code>.att-info__grid</code></td>
+<td>3-col CSS grid для карточек шагов</td>
+</tr>
+<tr>
+<td><code>.att-info__step</code></td>
+<td>Карточка шага: bg surface, border primary-line, radius lg, padding xl, text center</td>
+</tr>
+<tr>
+<td><code>.att-info__num</code></td>
+<td>Номер шага: large font, color primary, bold</td>
+</tr>
+<tr>
+<td><code>.att-info__text</code></td>
+<td>Описание шага: font-size base, muted</td>
+</tr>
+<tr>
+<td><code>.att-table</code></td>
+<td>Секция таблицы: padding 4xl</td>
+</tr>
+<tr>
+<td><code>.att-table__grid</code></td>
+<td>Таблица предметов: full-width, bordered</td>
+</tr>
+<tr>
+<td><code>.att-table__row</code></td>
+<td>Строка таблицы: border-bottom</td>
+</tr>
+<tr>
+<td><code>.att-table__cell</code></td>
+<td>Ячейка: padding md, вертикальное выравнивание</td>
+</tr>
+<tr>
+<td><code>.att-table__subject</code></td>
+<td>Название предмета: font-weight semibold</td>
+</tr>
+<tr>
+<td><code>.att-table__price</code></td>
+<td>Цена: font-weight bold, color accent-warm</td>
+</tr>
+<tr>
+<td><code>.att-table__lessons</code></td>
+<td>Количество занятий: muted</td>
+</tr>
+<tr>
+<td><code>.att-cta</code></td>
+<td>CTA-секция: padding 4xl, text-align center</td>
+</tr>
+<tr>
+<td><code>.att-cta__inner</code></td>
+<td>Max-width narrow</td>
+</tr>
+<tr>
+<td><code>.att-cta__text</code></td>
+<td>Призыв: font-size lg, margin-bottom xl</td>
+</tr>
+<tr>
+<td><code>.att-cta__buttons</code></td>
+<td>Flex, gap, center (2 кнопки)</td>
+</tr>
+</tbody></table>
+<h3>Медиа-запрос (≤768px)</h3>
+<ul>
+<li>Hero padding → 2xl/lg</li>
+<li>Info grid → 1 колонка</li>
+<li>Table: горизонтальная прокрутка или карточки вместо строк</li>
+<li>CTA padding → 2xl</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>EmDash (план)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Структура страницы</td>
+<td>Только таблица предметов в виде простого списка</td>
+<td>Полноценная страница: hero, шаги, таблица, CTA</td>
+</tr>
+<tr>
+<td>Блок «Как проходит»</td>
+<td>Отсутствует</td>
+<td>Добавлен блок с 3 шагами подготовки</td>
+</tr>
+<tr>
+<td>Визуал таблицы</td>
+<td>Простая таблица без стилизации</td>
+<td>Стилизованная таблица с акцентом на цену</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет явного призыва к действию</td>
+<td>Добавлен нижний CTA-блок с двумя кнопками</td>
+</tr>
+<tr>
+<td>Цена</td>
+<td>Показана сухо в таблице</td>
+<td>Выделена цветом <code>--color-accent-warm</code></td>
+</tr>
+<tr>
+<td>Hero</td>
+<td>Нет</td>
+<td>Добавлен hero с описанием и кнопкой</td>
+</tr>
+<tr>
+<td>Контекст</td>
+<td>Страница голая, без пояснений</td>
+<td>Добавлен поясняющий lead-текст о сути аттестации</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Создать файл <code>src/pages/podgotovka-attestacii.astro</code></li>
+<li><input disabled="" type="checkbox"> Перенести предметы из frontmatter в CMS-коллекцию <code>prep_attestation</code> при готовности seed</li>
+<li><input disabled="" type="checkbox"> Добавить текст для блока «Как проходит подготовка» (3 шага: выбор предмета, занятия с педагогом, сдача аттестации)</li>
+<li><input disabled="" type="checkbox"> Решить: делать ли таблицу адаптивной (горизонтальный скролл или карточки на мобилке)</li>
+<li><input disabled="" type="checkbox"> SEO: добавить meta-теги (description, og) для страницы аттестации</li>
+<li><input disabled="" type="checkbox"> Рассмотреть добавление FAQ-секции (с какого класса нужна аттестация, какие документы нужны, сроки)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

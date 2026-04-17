@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badge — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Badge</span></nav>
+  <div class="md-content">
+    <h1>03 · Badge · Базовый</h1>
+<p>Бейдж-метка. Компактная цветная плашка для обозначения возраста, вместимости, статуса.</p>
+<p>→ Дизайн-гайд: <a href="../page-specs/01-design-guide.html">../page-specs/01-design-guide.md</a>
+→ Код: <code>src/components/ui/Badge.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Варианты</h2>
+<table>
+<thead>
+<tr>
+<th>Вариант</th>
+<th>Когда</th>
+<th>Цвет текста</th>
+<th>Фон</th>
+<th>Дефолт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>default</strong></td>
+<td>Нейтральная метка (возраст, вместимость)</td>
+<td><code>--color-text-muted</code></td>
+<td><code>--color-primary-soft</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>success</strong></td>
+<td>Позитивный статус (есть места)</td>
+<td><code>--color-success</code></td>
+<td>#E8F5E9</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>error</strong></td>
+<td>Негативный статус (мест нет)</td>
+<td><code>--color-error</code></td>
+<td>#FFEBEE</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import Badge from &#39;../components/ui/Badge.astro&#39;;
+---
+
+&lt;Badge&gt;3–7 лет&lt;/Badge&gt;
+&lt;Badge&gt;до 6 человек&lt;/Badge&gt;
+&lt;Badge variant=&quot;success&quot;&gt;5 мест&lt;/Badge&gt;
+&lt;Badge variant=&quot;error&quot;&gt;Мест нет&lt;/Badge&gt;
+</code></pre>
+<hr>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>variant</code></td>
+<td><code>&#39;default&#39; | &#39;success&#39; | &#39;error&#39;</code></td>
+<td><code>&#39;default&#39;</code></td>
+<td>Визуальный вариант</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Дополнительные CSS-классы</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/Badge.astro</code>.</p>
+</blockquote>
+<pre><code>.badge              /* корень */
+.badge--success     /* зелёный */
+.badge--error       /* красный */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>font-size: <code>--font-size-sm</code> (0.875rem)</li>
+<li>padding: <code>--spacing-2xs --spacing-sm</code> (0.25rem 0.75rem)</li>
+<li>border-radius: <code>--radius-md</code> (0.5rem)</li>
+<li>success bg: #E8F5E9, error bg: #FFEBEE</li>
+</ul>
+<hr>
+<h2>Где используется</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+<th>Вариант</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Главная (/)</td>
+<td>ProgramCard</td>
+<td>default</td>
+</tr>
+<tr>
+<td>Главная (/)</td>
+<td>SeatsCard</td>
+<td>success / error</td>
+</tr>
+<tr>
+<td>Styleguide</td>
+<td>Все варианты</td>
+<td>default, success, error</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="01-card.html">01 · Card</a> — контейнер для ProgramCard</li>
+<li><a href="04-button.html">04 · Button</a> — кнопки внутри Card</li>
+<li><a href="10-program-card.html">10 · ProgramCard</a> — Card + Badge × 2</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0klass — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>0klass</span></nav>
+  <div class="md-content">
+    <h1>0 класс (/0klass)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>все данные</td>
+<td>Захардкожены в шаблоне (<code>src/pages/0klass.astro</code>)</td>
+</tr>
+<tr>
+<td>Hero-факты</td>
+<td>Массив <code>facts</code> (возраст, размер группы, цена)</td>
+</tr>
+<tr>
+<td>Программа</td>
+<td>Массив <code>programs</code> (15 предметов-тегов)</td>
+</tr>
+<tr>
+<td>Расписание</td>
+<td>Массив <code>schedule</code> (5 строк × 5 дней + время)</td>
+</tr>
+<tr>
+<td>Тарифы</td>
+<td>HTML-таблица (4 тарифа)</td>
+</tr>
+<tr>
+<td>FAQ</td>
+<td>Массив <code>faq</code> (5 вопросов)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Данные не вынесены в CMS — обновляются вручную в шаблоне.</p>
+</blockquote>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────┐
+│  klass-hero                                │
+│  SectionTitle h1: 0 класс                  │
+│  p: Подготовительный класс...              │
+│  3× Fact (возраст / группа / цена)         │
+│  Button warm: Записаться на экскурсию      │
+├─────────────────────────────────────────────┤
+│  klass-program  (bg: surface-alt)          │
+│  SectionTitle h2 center: Программа         │
+│  15× klass-tag (pill-теги предметов)       │
+│  p: Дополнительно: ...                      │
+├─────────────────────────────────────────────┤
+│  klass-schedule                            │
+│  SectionTitle h2 center: Расписание         │
+│  table.klass-table (5×5 + заголовки)       │
+├─────────────────────────────────────────────┤
+│  klass-prices  (bg: surface-alt)            │
+│  SectionTitle h2 center: Стоимость          │
+│  table.klass-table (4 тарифа + цены)       │
+│  p: ссылка на /czeny                        │
+├─────────────────────────────────────────────┤
+│  klass-faq                                 │
+│  SectionTitle h2 center: Часто задаваемые…  │
+│  5× details/summary (аккордеон)             │
+├─────────────────────────────────────────────┤
+│  klass-cta  (bg: primary, text: surface)    │
+│  h2: Запишите ребёнка в 0 класс            │
+│  p: Приходите на экскурсию…                │
+│  Button warm lg: Записаться на экскурсию    │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base layout</td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Обёртка</td>
+</tr>
+<tr>
+<td>SectionTitle</td>
+<td><code>src/components/ui/SectionTitle.astro</code></td>
+<td>h1, h2 (center)</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>src/components/ui/Button.astro</code></td>
+<td>Hero CTA, нижний CTA</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Расписание, тарифы, FAQ — нативный HTML (<code>&lt;table&gt;</code>, <code>&lt;details&gt;/&lt;summary&gt;</code>), не отдельные компоненты.</p>
+</blockquote>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.klass-hero</code></td>
+<td>Hero-секция, text-align center, padding 4xl/2xl</td>
+</tr>
+<tr>
+<td><code>.klass-hero__facts</code></td>
+<td>Flex-ряд для 3 fact-блоков (gap 2xl)</td>
+</tr>
+<tr>
+<td><code>.klass-fact__val</code></td>
+<td>Playfair Display, 2xl, bold, color primary</td>
+</tr>
+<tr>
+<td><code>.klass-fact__label</code></td>
+<td>sm, muted</td>
+</tr>
+<tr>
+<td><code>.klass-program</code></td>
+<td>Секция программы, bg surface-alt</td>
+</tr>
+<tr>
+<td><code>.klass-tag</code></td>
+<td>Pill-тег предмета (border-radius 9999, border primary-line, bg surface)</td>
+</tr>
+<tr>
+<td><code>.klass-program__extra</code></td>
+<td>Centered текст «Дополнительно»</td>
+</tr>
+<tr>
+<td><code>.klass-schedule__scroll</code></td>
+<td>overflow-x: auto для таблиц</td>
+</tr>
+<tr>
+<td><code>.klass-table</code></td>
+<td>Общая таблица (schedule + prices): border-collapse, primary-line borders</td>
+</tr>
+<tr>
+<td><code>.klass-table th</code></td>
+<td>bg primary, color surface, semibold</td>
+</tr>
+<tr>
+<td><code>.klass-table tr:nth-child(even) td</code></td>
+<td>bg surface-alt</td>
+</tr>
+<tr>
+<td><code>.klass-table__price</code></td>
+<td>nowrap, bold, color accent-warm</td>
+</tr>
+<tr>
+<td><code>.klass-prices</code></td>
+<td>Секция тарифов, bg surface-alt</td>
+</tr>
+<tr>
+<td><code>.klass-prices__link a</code></td>
+<td>color accent, semibold</td>
+</tr>
+<tr>
+<td><code>.klass-faq__item</code></td>
+<td>border-top/bottom primary-line</td>
+</tr>
+<tr>
+<td><code>.klass-faq__q::before</code></td>
+<td>&quot;+&quot; / &quot;−&quot; prefix, color accent-warm</td>
+</tr>
+<tr>
+<td><code>.klass-cta</code></td>
+<td>CTA-баннер, bg primary, color surface</td>
+</tr>
+</tbody></table>
+<h3>Адаптив (≤768px)</h3>
+<ul>
+<li><code>.klass-hero</code> → padding 2xl/lg</li>
+<li><code>.klass-program</code>, <code>.klass-schedule</code>, <code>.klass-faq</code>, <code>.klass-prices</code> → padding 2xl</li>
+<li><code>.klass-cta</code> → padding 2xl</li>
+<li><code>.btn</code> внутри <code>.klass-cta</code> → width 100%</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/0klass/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Количество тарифов</td>
+<td>6 тарифов (3д/5д + полный день варианты)</td>
+<td>4 тарифа (упрощённая структура)</td>
+</tr>
+<tr>
+<td>Цены</td>
+<td>31 900 – 55 000 ₽</td>
+<td>26 400 – 44 500 ₽ (актуальные)</td>
+</tr>
+<tr>
+<td>FAQ-аккордеон</td>
+<td>Простой список</td>
+<td><code>&lt;details&gt;/&lt;summary&gt;</code> с &quot;+&quot; / &quot;−&quot;</td>
+</tr>
+<tr>
+<td>Программа</td>
+<td>Список</td>
+<td>Pill-теги (klass-tag)</td>
+</tr>
+<tr>
+<td>CTA-баннер</td>
+<td>Нет</td>
+<td>Финальная секция с Button warm</td>
+</tr>
+<tr>
+<td>Шрифты</td>
+<td>Roboto Slab / Source Sans Pro</td>
+<td>Playfair Display / Inter</td>
+</tr>
+<tr>
+<td>Таблицы</td>
+<td>Базовые</td>
+<td>klass-table с primary thead, surface-alt зебра</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Рассмотреть вынос расписания и тарифов в CMS</li>
+<li><input disabled="" type="checkbox"> Синхронизировать цены с /czeny при изменениях</li>
+<li><input disabled="" type="checkbox"> Рассмотреть создание ScheduleTable компонента (общий с другими страницами)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doshkolniki — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Doshkolniki</span></nav>
+  <div class="md-content">
+    <h1>Курсы для дошкольников — <code>/doshkolniki</code></h1>
+<p><strong>Статус:</strong> ✅ Готова</p>
+<p><strong>Дизайн-гайд:</strong> <code>docs/rksh-emdash-theme-spec.md</code> — палитра, типографика, компоненты</p>
+<hr>
+<h2>Контент</h2>
+<h3>Источники данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Источник</th>
+<th>Формат</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Список курсов</td>
+<td>Frontmatter <code>courses</code> в <code>doshkolniki.astro</code></td>
+<td>Массив объектов</td>
+</tr>
+<tr>
+<td>Заголовок hero</td>
+<td>Хардкод</td>
+<td>Строка</td>
+</tr>
+<tr>
+<td>Описание hero</td>
+<td>Хардкод</td>
+<td>Строка</td>
+</tr>
+<tr>
+<td>Ссылка на цены</td>
+<td>Хардкод на <code>/czeny</code></td>
+<td>URL</td>
+</tr>
+</tbody></table>
+<h3>Структура courses (frontmatter)</h3>
+<pre><code>{
+  title: string      — Название курса
+  link: string       — URL дочерней страницы
+  badges: string[]   — Массив бейджей (возраст, размер группы)
+  desc: string       — Краткое описание
+}
+</code></pre>
+<h3>Курсы (7 шт.)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Курс</th>
+<th>Link</th>
+<th>Badges</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Подготовка к школе (4–7 лет)</td>
+<td><code>/doshkolniki/podgotovka-k-shkole-ot-4-do-7-let/</code></td>
+<td><code>4–7 лет</code>, <code>до 6 чел.</code></td>
+<td>6 блоков: чтение, математика, развитие речи, интеллект, творчество, окружающий мир</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Подготовка РКШ (5–7 лет)</td>
+<td><code>/doshkolniki/podgotovka-k-shkole-po-programme-rksh/</code></td>
+<td><code>5–7 лет</code>, <code>до 6 чел.</code></td>
+<td>Подготовка по классической программе Русской классической школы</td>
+</tr>
+<tr>
+<td>3</td>
+<td>«Я Сам(а)» (2,5–4 года)</td>
+<td><code>/doshkolniki/ya-sam/</code></td>
+<td><code>2,5–4 года</code>, <code>до 6 чел.</code></td>
+<td>Развитие усидчивости, раскрытие талантов, опыт общения</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Кулинарный курс</td>
+<td><code>/doshkolniki/kulinarnyj-kurs/</code></td>
+<td><code>от 4 лет</code>, <code>до 10 чел.</code></td>
+<td>Глазомер, мелкая моторика, внимание, шаг к самостоятельности</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Шахматы</td>
+<td><code>/doshkolniki/shahmaty/</code></td>
+<td><code>4–7 лет</code>, <code>до 8 чел.</code></td>
+<td>Стратегическое мышление, дисциплина, умение решать задачи</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Живопись</td>
+<td><code>/doshkolniki/zhivopis/</code></td>
+<td><code>от 4 лет</code>, <code>до 8 чел.</code></td>
+<td>Мелкая моторика, воображение, самооценка, творческое осмысление мира</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Логопед</td>
+<td><code>/doshkolniki/logoped/</code></td>
+<td><code>4–9 лет</code>, <code>индивидуально/группа</code></td>
+<td>Постановка звуков, коррекция речи, подготовка к школе, диагностика</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────────┐
+│ .dk-hero                                        │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h1&gt; Курсы для дошкольников                │ │
+│ │  &lt;p&gt;  Развивающие занятия для детей от 2,5   │ │
+│ │       лет — подготовка к школе, творчество,  │ │
+│ │       логопед                                │ │
+│ │  [Записаться] → /kontakty                   │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .dk-courses        bg: --color-surface-alt      │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h2&gt; Все курсы                 (center)   │ │
+│ │                                             │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 1 │ │ Course 2 │   2-col grid    │ │
+│ │  │ badges   │ │ badges   │                 │ │
+│ │  │ title    │ │ title    │                 │ │
+│ │  │ desc     │ │ desc     │                 │ │
+│ │  │ Подробнее│ │ Подробнее│                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 3 │ │ Course 4 │                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 5 │ │ Course 6 │                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ │  ┌──────────┐                              │ │
+│ │  │ Course 7 │  (нечётный — одна в ряду)    │ │
+│ │  └──────────┘                              │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .dk-prices-link                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h2&gt; Стоимость курсов                      │ │
+│ │  &lt;p&gt;  Подробные цены на все курсы —          │ │
+│ │       на странице «Цены»                     │ │
+│ │  [Перейти к ценам] → /czeny                 │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+</code></pre>
+<h3>Секции по порядку</h3>
+<ol>
+<li><strong>Hero</strong> — заголовок h1, описание, CTA-кнопка «Записаться»</li>
+<li><strong>Все курсы</strong> — 2-колоночная сетка карточек курсов с бейджами, заголовком и описанием</li>
+<li><strong>Стоимость курсов</strong> — центрированный блок со ссылкой на страницу цен</li>
+</ol>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Base</code></td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Все страницы (layout)</td>
+</tr>
+<tr>
+<td><code>SectionTitle</code></td>
+<td><code>src/components/ui/SectionTitle.astro</code></td>
+<td>Hero h1, «Все курсы» h2</td>
+</tr>
+<tr>
+<td><code>Badge</code></td>
+<td><code>src/components/ui/Badge.astro</code></td>
+<td>Бейджи возраста и размера группы в карточках</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>src/components/ui/Button.astro</code></td>
+<td>«Записаться» (variant=warm), «Перейти к ценам» (default)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<p>Все стили — scoped в <code>doshkolniki.astro</code> (тег <code>&lt;style&gt;</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.dk-hero</code></td>
+<td>Hero-секция: padding 4xl/2xl, text-align center</td>
+</tr>
+<tr>
+<td><code>.dk-hero__inner</code></td>
+<td>Ограничение ширины: <code>--container-narrow</code></td>
+</tr>
+<tr>
+<td><code>.dk-hero__lead</code></td>
+<td>Подзаголовок: font-size lg, muted text</td>
+</tr>
+<tr>
+<td><code>.dk-courses</code></td>
+<td>Секция курсов: bg <code>--color-surface-alt</code>, padding 4xl</td>
+</tr>
+<tr>
+<td><code>.dk-courses__grid</code></td>
+<td>2-col CSS grid, gap lg</td>
+</tr>
+<tr>
+<td><code>.dk-course</code></td>
+<td>Карточка курса: flex column, bg surface, border primary-line, radius lg, padding xl, hover shadow/border-accent</td>
+</tr>
+<tr>
+<td><code>.dk-course__badges</code></td>
+<td>Flex wrap для бейджей</td>
+</tr>
+<tr>
+<td><code>.dk-course__title</code></td>
+<td>Заголовок карточки: font-weight semibold, size lg</td>
+</tr>
+<tr>
+<td><code>.dk-course__desc</code></td>
+<td>Описание: font-size sm, muted text, flex-grow</td>
+</tr>
+<tr>
+<td><code>.dk-course__link</code></td>
+<td>Ссылка «Подробнее →»: font-weight semibold, color accent</td>
+</tr>
+<tr>
+<td><code>.dk-prices-link</code></td>
+<td>Секция цен: padding 4xl</td>
+</tr>
+<tr>
+<td><code>.dk-prices__inner</code></td>
+<td>Center, max-width narrow</td>
+</tr>
+<tr>
+<td><code>.dk-prices__title</code></td>
+<td>h2 цены: font-family heading, bold, size 3xl, color primary</td>
+</tr>
+<tr>
+<td><code>.dk-prices__desc</code></td>
+<td>Описание цены: size lg, muted</td>
+</tr>
+</tbody></table>
+<h3>Медиа-запрос (≤768px)</h3>
+<ul>
+<li>Hero padding уменьшен до 2xl/lg</li>
+<li>Courses padding уменьшен до 2xl</li>
+<li>Grid переключается на 1 колонку</li>
+<li>Prices padding уменьшен до 2xl</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>EmDash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Макет</td>
+<td>Список курсов в виде вертикального меню с иконками</td>
+<td>2-колоночная сетка карточек с бейджами</td>
+</tr>
+<tr>
+<td>Бейджи</td>
+<td>Нет бейджей возраста/группы</td>
+<td>Добавлены Badge для возраста и размера группы</td>
+</tr>
+<tr>
+<td>Hero</td>
+<td>Нет отдельного hero-блока</td>
+<td>Есть hero с h1, lead-текстом и CTA-кнопкой</td>
+</tr>
+<tr>
+<td>Ссылка на цены</td>
+<td>Нет явного блока «Стоимость»</td>
+<td>Добавлен блок-линк на страницу цен с кнопкой</td>
+</tr>
+<tr>
+<td>Карточки</td>
+<td>Простые ссылки-пункты</td>
+<td>Карточки с описанием, hover-эффектом, бейджами</td>
+</tr>
+<tr>
+<td>Ссылка «Подробнее»</td>
+<td>Нет</td>
+<td>Добавлена ссылка «Подробнее →» на каждой карточке</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Перенести courses из frontmatter в CMS-коллекцию <code>courses_preschool</code> при готовности seed</li>
+<li><input disabled="" type="checkbox"> Добавить иконки/изображения к карточкам курсов, когда появятся медиа</li>
+<li><input disabled="" type="checkbox"> Проверить, что последняя карточка (Логопед) корректно отображается одна в ряду на мобильных</li>
+<li><input disabled="" type="checkbox"> SEO: добавить meta-теги (description, og) для страницы курсов дошкольников</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

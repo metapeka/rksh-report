@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prepodavateli — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Prepodavateli</span></nav>
+  <div class="md-content">
+    <h1>Преподаватели (/prepodavateli)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: <a href="../components/11-teacher-card.html">11-teacher-card.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Преподаватели</td>
+<td>CMS <code>teachers</code> collection (full_name, position, description, photo)</td>
+</tr>
+<tr>
+<td>CMS страница</td>
+<td><code>pages</code>, slug <code>prepodavateli</code> — TODO</td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>teachers</code></h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>full_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>ФИО преподавателя</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Должность</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>portableText</td>
+<td>❌</td>
+<td>Описание / биография</td>
+</tr>
+<tr>
+<td><code>photo</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Фотография</td>
+</tr>
+</tbody></table>
+<p>Текущие записи: chertkova, mishina, korytkova (фото и описание не заполнены).</p>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  h1: Наши преподаватели (Playfair Display)   │
+│  p: Опытные и чуткие педагоги...            │
+├─────────────────────────────────────────────┤
+│  Grid 3×: TeacherCard                       │
+│  (avatar/initials + name + position +       │
+│   description)                              │
+├─────────────────────────────────────────────┤
+│  CTA: «Хотите познакомиться лично?» + Btn  │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p>Grid на десктопе: 3 колонки. Мобилка: 1 колонка.</p>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TeacherCard</td>
+<td><code>ui/TeacherCard.astro</code></td>
+<td>Все преподаватели из CMS</td>
+</tr>
+<tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>Не используется (собственный h1)</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию»</td>
+</tr>
+</tbody></table>
+<h3>Описание преподавателя</h3>
+<p>Если у записи <code>description</code> заполнено (portableText) — рендерится через <code>&lt;PortableText&gt;</code> под карточкой. Если пусто — показывается только карточка с именем и должностью.</p>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.teachers-page-hero</code></td>
+<td>Hero-секция (padding, center)</td>
+</tr>
+<tr>
+<td><code>.teachers-page-hero__title</code></td>
+<td>h1 Playfair 5xl</td>
+</tr>
+<tr>
+<td><code>.teachers-page-hero__subtitle</code></td>
+<td>Подзаголовок muted</td>
+</tr>
+<tr>
+<td><code>.teachers-page-grid</code></td>
+<td>Grid 3× преподавателей (1× мобилка)</td>
+</tr>
+<tr>
+<td><code>.teacher-card-wrapper__desc</code></td>
+<td>Описание под карточкой (sm, relaxed)</td>
+</tr>
+<tr>
+<td><code>.teachers-page-cta</code></td>
+<td>CTA-баннер (bg primary)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/prepodavateli/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Данные</td>
+<td>1 преподаватель (Черткова И.Н.)</td>
+<td>CMS <code>teachers</code> (3 записи)</td>
+</tr>
+<tr>
+<td>Описание</td>
+<td>Длинный текст</td>
+<td>PortableText из CMS</td>
+</tr>
+<tr>
+<td>Вид</td>
+<td>Текст+фото</td>
+<td>TeacherCard grid + описание</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите познакомиться лично?»</td>
+</tr>
+<tr>
+<td>Фото</td>
+<td>Не загружены</td>
+<td>Будут загружены через Admin UI</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Загрузить фотографии преподавателей в CMS</li>
+<li><input disabled="" type="checkbox"> Заполнить <code>description</code> для всех преподавателей</li>
+<li><input disabled="" type="checkbox"> Создать запись <code>pages/prepodavateli</code> в CMS</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>README — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>README</span></nav>
+  <div class="md-content">
+    <h1>Документация по EmDash CMS</h1>
+<p>Справочник по CMS для проекта РКШ.</p>
+<p><strong>Главный документ:</strong> <a href="../WORKFLOW.html"><code>docs/WORKFLOW.md</code></a> — правила работы, seed, команды.</p>
+<hr>
+<h2>Файлы</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="00-overview.html">00-overview.md</a></td>
+<td>Архитектура: стек, ключевые файлы, потоки данных</td>
+</tr>
+<tr>
+<td><a href="01-schema-collections.html">01-schema-collections.md</a></td>
+<td>Все коллекции, поля, типы, связи</td>
+</tr>
+<tr>
+<td><a href="02-blocks-plugin.html">02-blocks-plugin.md</a></td>
+<td>Плагин <code>@rksh/blocks</code>: блоки Portable Text</td>
+</tr>
+<tr>
+<td><a href="03-menus-taxonomies.html">03-menus-taxonomies.md</a></td>
+<td>Меню (primary, secondary, footer) и таксономии</td>
+</tr>
+<tr>
+<td><a href="04-pages-templates.html">04-pages-templates.md</a></td>
+<td>Шаблоны страниц, роутинг, slug</td>
+</tr>
+<tr>
+<td><a href="05-content-workflow.html">05-content-workflow.md</a></td>
+<td>Работа с контентом в админке</td>
+</tr>
+<tr>
+<td><a href="06-forms-integrations.html">06-forms-integrations.md</a></td>
+<td>Формы, отправка в email/CRM</td>
+</tr>
+<tr>
+<td><a href="07-media-assets.html">07-media-assets.md</a></td>
+<td>Медиафайлы: загрузка, хранение</td>
+</tr>
+<tr>
+<td><a href="08-seo-meta.html">08-seo-meta.md</a></td>
+<td>SEO: мета-теги, sitemap, robots.txt</td>
+</tr>
+<tr>
+<td><a href="09-permissions-users.html">09-permissions-users.md</a></td>
+<td>Пользователи, роли, права</td>
+</tr>
+<tr>
+<td><a href="10-deployment-config.html">10-deployment-config.md</a></td>
+<td>Деплой: Docker, Nginx</td>
+</tr>
+<tr>
+<td><a href="11-troubleshooting.html">11-troubleshooting.md</a></td>
+<td>Решение частых ошибок</td>
+</tr>
+<tr>
+<td><a href="api-reference.html">api-reference.md</a></td>
+<td>API EmDash (Content, Site Features, Storage, Hooks)</td>
+</tr>
+<tr>
+<td><a href="migration-guide.html">migration-guide.md</a></td>
+<td>Миграция контента с rksh-msk.ru</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Быстрый старт</h2>
+<table>
+<thead>
+<tr>
+<th>Хочу...</th>
+<th>Смотрю...</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Создать страницу</td>
+<td><a href="05-content-workflow.html">05-content-workflow.md</a></td>
+</tr>
+<tr>
+<td>Добавить коллекцию</td>
+<td>Admin UI → <a href="01-schema-collections.html">01-schema-collections.md</a></td>
+</tr>
+<tr>
+<td>Создать кастомный блок</td>
+<td><a href="02-blocks-plugin.html">02-blocks-plugin.md</a></td>
+</tr>
+<tr>
+<td>Настроить меню</td>
+<td>Admin UI → <a href="03-menus-taxonomies.html">03-menus-taxonomies.md</a></td>
+</tr>
+<tr>
+<td>Понять роутинг</td>
+<td><a href="04-pages-templates.html">04-pages-templates.md</a></td>
+</tr>
+<tr>
+<td>Что-то сломалось</td>
+<td><a href="11-troubleshooting.html">11-troubleshooting.md</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные документы</h2>
+<table>
+<thead>
+<tr>
+<th>Документ</th>
+<th>Расположение</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WORKFLOW</td>
+<td><code>docs/WORKFLOW.md</code></td>
+<td>Правила работы, seed, команды</td>
+</tr>
+<tr>
+<td>ТЗ дизайна</td>
+<td><code>docs/rksh-emdash-theme-spec.md</code></td>
+<td>Палитра, типографика, компоненты</td>
+</tr>
+<tr>
+<td>Структура сайта</td>
+<td><code>docs/site-structure.md</code></td>
+<td>URL, меню, коллекции</td>
+</tr>
+<tr>
+<td>Контент</td>
+<td><code>docs/content-summary.md</code></td>
+<td>Все 38 страниц rksh-msk.ru</td>
+</tr>
+<tr>
+<td>API для агентов</td>
+<td><code>.agents/emdash-workflow.md</code></td>
+<td>MCP/REST/CLI справка</td>
+</tr>
+</tbody></table>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

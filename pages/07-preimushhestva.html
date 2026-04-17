@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preimushhestva — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Preimushhestva</span></nav>
+  <div class="md-content">
+    <h1>Преимущества (/preimushhestva)</h1>
+<h2>Статус: 🔨 В работе</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: FeatureCard, PrincipleList, SectionTitle</p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Преимущества (нумерованный список)</td>
+<td>CMS <code>advantages</code> collection (title, description, order)</td>
+</tr>
+<tr>
+<td>«Чем мы лучше обычной школы»</td>
+<td>Захардкожено в шаблоне (<code>src/pages/preimushhestva.astro</code>), массив <code>betterItems</code></td>
+</tr>
+<tr>
+<td>Карточки особенностей</td>
+<td>Захардкожено (<code>featureCards</code> — 6 карточек: иконка, заголовок, описание)</td>
+</tr>
+<tr>
+<td>Принципы обучения</td>
+<td>Захардкожено (<code>principles</code> — 6 принципов: title, description)</td>
+</tr>
+<tr>
+<td>Вводный текст (цитата РКШ)</td>
+<td>Захардкожено в каждом варианте</td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>advantages</code></h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Название преимущества</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>text</td>
+<td>❌</td>
+<td>Пояснение</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>integer</td>
+<td>❌</td>
+<td>Позиция в списке</td>
+</tr>
+</tbody></table>
+<p>Текущие записи: путём сортировки по <code>order</code>.</p>
+<blockquote>
+<p><strong>Примечание:</strong> Страница содержит 4 варианта оформления (В1–В4), из которых В3 помечен как рекомендуемый. Все используют одни и те же данные, но с разной визуальной подачей. Финальный выбор варианта — TODO.</p>
+</blockquote>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  Секция 1: Преимущества из CMS              │
+│  h1: «Почему выбирают РКШ»                  │
+│  p subtitle: «Русская классическая школа —  │
+│               это»                          │
+│  ol: advantages (numbered circles + title   │
+│       + desc), sorted by order              │
+├─────────────────────────────────────────────┤
+│  Секция 2: Чем мы лучше обычной школы       │
+│  SectionTitle: «Чем мы лучше обычной школы» │
+│  bg: --color-primary-soft                   │
+│  Grid 2×: betterItems (icon + label)        │
+├─────────────────────────────────────────────┤
+│  ═══ ВАРИАНТ 1: Карточки + акцентный список│
+│  variant-label badge: «Вариант 1»           │
+│  В1-А: Цитата-выноска (bg accent-warm-soft)│
+│     blockquote + lead-абзац                 │
+│  В1-Б: SectionTitle + Grid 3× FeatureCard   │
+│     (6 карточек: icon, title, desc)         │
+│  В1-В: h2 «Принципы обучения»              │
+│     PrincipleList variant=accent            │
+├─────────────────────────────────────────────┤
+│  ═══ ВАРИАНТ 2: Timeline + полосы           │
+│  variant-label badge: «Вариант 2»           │
+│  В2-А: Лид-абзац (h2 + p + p)              │
+│  В2-Б: SectionTitle + striped rows           │
+│     (icon-wrap + title + desc, alternating) │
+│  В2-В: h2 + PrincipleList variant=timeline  │
+├─────────────────────────────────────────────┤
+│  ═══ ВАРИАНТ 3: Карточки + теги ★ рекоменд. │
+│  variant-label badge: «Вариант 3 ★ рекоменд.»│
+│  В3-А: Большая blockquote (quote-mark « +   │
+│     blockquote + sub)                        │
+│  В3-Б: SectionTitle + Grid 3× FeatureCard  │
+│     (bg surface-alt)                        │
+│  В3-В: h2 + intro p + PrincipleList         │
+│     variant=minimal                          │
+├─────────────────────────────────────────────┤
+│  ═══ ВАРИАНТ 4: Storytelling-поток          │
+│  variant-label badge: «Вариант 4»           │
+│  В4: Единый раздел с подблоками,            │
+│     разделёнными линиями:                   │
+│     - h2 + lead-абзац + 2 параграфа        │
+│     - divider                               │
+│     - h3 «Как мы учим» + icon+text список  │
+│     - divider                               │
+│     - h3 «Принципы обучения» + minimal      │
+│     - divider                               │
+│     - closing параграф (strong accent-warm) │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>«Чем мы лучше», «Что отличает», «Как мы учим»</td>
+</tr>
+<tr>
+<td>FeatureCard</td>
+<td><code>ui/FeatureCard.astro</code></td>
+<td>В1-Б, В3-Б (6 карточек: icon path, title, desc)</td>
+</tr>
+<tr>
+<td>PrincipleList</td>
+<td><code>ui/PrincipleList.astro</code></td>
+<td>В1-В (accent), В2-В (timeline), В3-В (minimal), В4 (minimal)</td>
+</tr>
+<tr>
+<td>Base</td>
+<td><code>layouts/Base.astro</code></td>
+<td>Обёртка страницы</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.advantages-page</code></td>
+<td>Секция преимуществ из CMS (padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.advantages-page__title</code></td>
+<td>h1 Playfair 4xl primary</td>
+</tr>
+<tr>
+<td><code>.advantages-page__subtitle</code></td>
+<td>Подзаголовок muted</td>
+</tr>
+<tr>
+<td><code>.advantages-page__list</code></td>
+<td>Нумерованный список (narrow max-width)</td>
+</tr>
+<tr>
+<td><code>.advantages-page__item</code></td>
+<td>Элемент списка (flex, gap lg, border-bottom)</td>
+</tr>
+<tr>
+<td><code>.advantages-page__num</code></td>
+<td>Кружок-номер (bg primary, 2.5rem circle, bold)</td>
+</tr>
+<tr>
+<td><code>.advantages-page__heading</code></td>
+<td>h3 base-family semibold</td>
+</tr>
+<tr>
+<td><code>.advantages-page__desc</code></td>
+<td>Описание muted</td>
+</tr>
+<tr>
+<td><code>.better-page</code></td>
+<td>Секция «лучше школы» (bg primary-soft, padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.better-page__list</code></td>
+<td>Grid 2× (1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.better-page__item</code></td>
+<td>Элемент (flex icon+label)</td>
+</tr>
+<tr>
+<td><code>.better-page__icon</code></td>
+<td>SVG иконка (accent-warm, 24px)</td>
+</tr>
+<tr>
+<td><code>.variant-label</code></td>
+<td>Полоса-разделитель вариантов (bg primary, badge accent-warm)</td>
+</tr>
+<tr>
+<td><code>.v1-quote</code></td>
+<td>В1 цитата (bg accent-warm-soft, centered)</td>
+</tr>
+<tr>
+<td><code>.v1-quote__text</code></td>
+<td>Blockquote Playfair 2xl primary bold</td>
+</tr>
+<tr>
+<td><code>.v1-features__grid</code></td>
+<td>Grid 3× FeatureCard</td>
+</tr>
+<tr>
+<td><code>.v1-principles</code></td>
+<td>В1 принципы (bg surface-alt, centered)</td>
+</tr>
+<tr>
+<td><code>.v2-intro</code></td>
+<td>В2 лид-абзац (narrow, h2 4xl)</td>
+</tr>
+<tr>
+<td><code>.v2-facts</code></td>
+<td>В2 striped факты</td>
+</tr>
+<tr>
+<td><code>.v2-facts__row</code></td>
+<td>Строка факта (flex, bg surface)</td>
+</tr>
+<tr>
+<td><code>.v2-facts__row--alt</code></td>
+<td>Чётная строка (bg surface-alt)</td>
+</tr>
+<tr>
+<td><code>.v2-principles</code></td>
+<td>В2 принципы (bg surface-alt)</td>
+</tr>
+<tr>
+<td><code>.v3-hero</code></td>
+<td>В3 blockquote (quote-mark « accent-warm 5rem)</td>
+</tr>
+<tr>
+<td><code>.v3-features</code></td>
+<td>В3 карточки (bg surface-alt, Grid 3×)</td>
+</tr>
+<tr>
+<td><code>.v3-principles</code></td>
+<td>В3 принципы (intro text, minimal list)</td>
+</tr>
+<tr>
+<td><code>.v4-story</code></td>
+<td>В4 storytelling (narrow, dividers)</td>
+</tr>
+<tr>
+<td><code>.v4-story__divider</code></td>
+<td>Горизонтальная линия (2px primary-line)</td>
+</tr>
+<tr>
+<td><code>.v4-story__fact</code></td>
+<td>Элемент факта (flex icon+text)</td>
+</tr>
+<tr>
+<td><code>.v4-story__closing strong</code></td>
+<td>Акцент в закрывающем абзаце (accent-warm)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/preimushhestva/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Преимущества</td>
+<td>Простой список</td>
+<td>CMS <code>advantages</code> + нумерованные кружки</td>
+</tr>
+<tr>
+<td>«Лучше обычной школы»</td>
+<td>Маркированный список</td>
+<td>Grid 2× с SVG иконками</td>
+</tr>
+<tr>
+<td>Карточки особенностей</td>
+<td>Нет (плоский текст)</td>
+<td>FeatureCard grid 3× (В1, В3)</td>
+</tr>
+<tr>
+<td>Принципы обучения</td>
+<td>Простой список</td>
+<td>PrincipleList (3 варианта: accent, timeline, minimal)</td>
+</tr>
+<tr>
+<td>Вводный текст</td>
+<td>Нет отдельного блока</td>
+<td>Цитата-выноска / лид-абзац / blockquote (по варианту)</td>
+</tr>
+<tr>
+<td>Варианты</td>
+<td>1 вариант страницы</td>
+<td>4 варианта (В1–В4), В3 рекомендован</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>Нет (TODO?)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Выбрать финальный вариант (рекомендован В3) и удалить остальные</li>
+<li><input disabled="" type="checkbox"> Вынести hardcoded данные (<code>betterItems</code>, <code>featureCards</code>, <code>principles</code>) в CMS отдельными коллекциями или полями <code>pages/preimushhestva</code></li>
+<li><input disabled="" type="checkbox"> Удалить вариантные <code>variant-label</code> разделители из продакшна</li>
+<li><input disabled="" type="checkbox"> Рассмотреть добавление CTA-секции внизу (как на /o-shkole)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

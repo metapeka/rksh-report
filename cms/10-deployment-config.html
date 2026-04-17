@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deployment config — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Deployment config</span></nav>
+  <div class="md-content">
+    <h1>Деплой и конфигурация</h1>
+<h2>Переменные окружения</h2>
+<h3><code>.env</code> (development)</h3>
+<pre><code class="language-bash"># Секрет для сессий и JWT
+EMDASH_SECRET=dev-secret-key-change-in-production
+
+# База данных (SQLite)
+DATABASE_URL=file:./data.db
+
+# Хранение файлов
+STORAGE_LOCAL_DIR=./uploads
+STORAGE_LOCAL_BASE_URL=/_emdash/api/media/file
+
+# SMTP (для email)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=info@rksh-msk.ru
+SMTP_PASSWORD=app-password
+
+# CRM webhook (опционально)
+BITRIX24_WEBHOOK_URL=https://rksh.bitrix24.ru/rest/1/xxxxxxxx/crm.lead.add.json
+
+# OAuth (если нужен вход через Google/GitHub)
+GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=xxxxx
+GITHUB_CLIENT_ID=xxxxx
+GITHUB_CLIENT_SECRET=xxxxx
+
+# Режим
+NODE_ENV=development
+</code></pre>
+<hr>
+<h3><code>.env.production</code> (production)</h3>
+<pre><code class="language-bash">EMDASH_SECRET=&lt;random-64-char-string&gt;
+DATABASE_URL=file:/app/data/data.db  # в Docker volume
+
+# Сторидж (локальный или S3)
+STORAGE_LOCAL_DIR=/app/uploads
+STORAGE_LOCAL_BASE_URL=https://cdn.rksh-msk.ru/media
+
+# SMTP (реальный)
+SMTP_HOST=smtp.yandex.ru
+SMTP_PORT=587
+SMTP_USER=noreply@rksh-msk.ru
+SMTP_PASSWORD=real-password
+
+# Redis для сессий и кэша (опционально)
+REDIS_URL=redis://redis:6379
+
+# Домен
+SITE_URL=https://rksh-msk.ru
+</code></pre>
+<hr>
+<h2>Build и запуск</h2>
+<h3>Development</h3>
+<pre><code class="language-bash"># Установка зависимостей
+npm install
+
+# Запуск dev-сервера с hot reload
+npm run dev
+# или npx emdash dev
+# или dev.bat (Windows)
+
+# Admin UI: http://localhost:4321/_emdash/admin
+</code></pre>
+<p><strong>Что делает <code>npx emdash dev</code>:</strong></p>
+<ol>
+<li>Применяет миграции из <code>seed/seed.json</code></li>
+<li>Создаёт/обновляет БД (SQLite)</li>
+<li>Генерирует TypeScript типы (<code>emdash-env.d.ts</code>)</li>
+<li>Запускает Astro dev server с Vite HMR</li>
+<li>Подгружает плагины (включая <code>@rksh/blocks</code>)</li>
+</ol>
+<hr>
+<h3>Production build</h3>
+<pre><code class="language-bash"># Сборка
+npm run build
+# → creates ./dist/ with server entry
+
+# Запуск
+npm run start
+# → node ./dist/server/entry.mjs
+</code></pre>
+<p><strong>Checklist production:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>NODE_ENV=production</code></li>
+<li><input disabled="" type="checkbox"> <code>EMDASH_SECRET</code> установлен и надёжный</li>
+<li><input disabled="" type="checkbox"> <code>DATABASE_URL</code> указывает на persistent storage</li>
+<li><input disabled="" type="checkbox"> Папка <code>uploads/</code> монтируется как volume (не удаляется при redeploy)</li>
+<li><input disabled="" type="checkbox"> <code>.env.production</code> добавлен в <code>.gitignore</code></li>
+<li><input disabled="" type="checkbox"> Logging перенаправлен в файл или stdout (Docker logs)</li>
+</ul>
+<hr>
+<h2>Docker deployment (рекомендуется)</h2>
+<h3><code>Dockerfile</code></h3>
+<pre><code class="language-dockerfile"># Stage 1: deps
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+# Stage 2: builder
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+# Stage 3: runner ( slim )
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Копируем зависимости и сборку
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/data.db ./data/  # если БД локальная
+COPY --from=builder /app/seed ./seed
+
+# Создаём non-root пользователя
+RUN addgroup --system --gid 1001 nodejs &amp;&amp; \
+    adduser --system --uid 1001 astro
+USER astro
+
+EXPOSE 4321
+CMD [&quot;node&quot;, &quot;dist/server/entry.mjs&quot;]
+</code></pre>
+<hr>
+<h3><code>docker-compose.yml</code></h3>
+<pre><code class="language-yaml">version: &quot;3.8&quot;
+
+services:
+  web:
+    build: .
+    ports:
+      - &quot;4321:4321&quot;
+    environment:
+      - NODE_ENV=production
+      - EMDASH_SECRET=${EMDASH_SECRET}
+      - DATABASE_URL=file:/app/data/data.db
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    volumes:
+      - ./data:/app/data  # SQLite + persistent data
+      - ./uploads:/app/uploads  # медиафайлы
+    restart: unless-stopped
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;wget&quot;, &quot;--quiet&quot;, &quot;--tries=1&quot;, &quot;--spider&quot;, &quot;http://localhost:4321/&quot;]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Опционально: Redis для сессий и кэша
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  data:
+  uploads:
+  redis_data:
+</code></pre>
+<p><strong>Запуск:</strong></p>
+<pre><code class="language-bash">docker-compose up -d
+docker-compose logs -f web
+</code></pre>
+<hr>
+<h2>Миграции базы данных</h2>
+<h3>Что такое миграции?</h3>
+<p>Изменения <code>seed.json</code> (новые поля, коллекции) применяются автоматически при запуске <code>emdash dev</code> или <code>emdash migrate</code>.</p>
+<h3>Команды</h3>
+<pre><code class="language-bash"># Применить миграции (dev и prod)
+npx emdash migrate
+
+# Показать статус миграций
+npx emdash migrate:status
+
+# Откатить последнюю (осторожно!)
+npx emdash migrate:rollback
+</code></pre>
+<h3>Как безопасно менять schema</h3>
+<ol>
+<li><strong>Добавить поле</strong> — безопасно (старые записи получат <code>null</code>)</li>
+<li><strong>Удалить поле</strong> — данные поля потеряются навсегда</li>
+<li><strong>Изменить тип поля</strong> — может вызвать ошибки, нужен скрипт конвертации</li>
+<li><strong>Переименовать коллекцию</strong> — лучше создать новую, скопировать данные</li>
+</ol>
+<p><strong>Best practice:</strong> Never delete fields in production. Mark as <code>deprecated</code> in seed, stop using in code, but keep DB column.</p>
+<hr>
+<h2>Backup strategy</h2>
+<h3>Локальный backup (cron)</h3>
+<pre><code class="language-bash"># /etc/cron.d/rksh-backup
+0 2 * * * root /app/backup.sh
+</code></pre>
+<p><code>backup.sh</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+BACKUP_DIR=/backups
+DATE=$(date +%Y%m%d_%H%M%S)
+sqlite3 /app/data/data.db &quot;.backup $BACKUP_DIR/data-$DATE.db&quot;
+tar -czf $BACKUP_DIR/uploads-$DATE.tar.gz /app/uploads
+# Удалить старые (&gt;30 дней)
+find $BACKUP_DIR -name &quot;data-*.db&quot; -mtime +30 -delete
+</code></pre>
+<h3>Cloud backup (Yandex Cloud Object Storage)</h3>
+<pre><code class="language-bash"># Установить yc CLI
+yc storage cp /backups/data-*.db storage://rksh-backups/
+</code></pre>
+<hr>
+<h2>Мониторинг</h2>
+<h3>Health check endpoint</h3>
+<p><code>src/pages/health.json.ts</code> (или middleware):</p>
+<pre><code class="language-typescript">export const GET = async () =&gt; {
+  // Проверить БД
+  const db = getDatabase();
+  const ok = await db.raw(&quot;SELECT 1&quot;);
+  return new Response(JSON.stringify({
+    status: ok ? &quot;ok&quot; : &quot;error&quot;,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  }), {
+    headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  });
+};
+</code></pre>
+<p><strong>Kubernetes / Docker healthcheck:</strong></p>
+<pre><code class="language-yaml">healthcheck:
+  test: [&quot;CMD&quot;, &quot;wget&quot;, &quot;--quiet&quot;, &quot;--spider&quot;, &quot;http://localhost:4321/health.json&quot;]
+  interval: 30s
+</code></pre>
+<hr>
+<h3>Логи</h3>
+<p><strong>Astro logging:</strong></p>
+<pre><code class="language-typescript">// src/middleware.ts
+import { context } from &quot;astro&quot;;
+console.log(`[${new Date().toISOString()}] ${context.request.method} ${context.request.url}`);
+</code></pre>
+<p><strong>Production:</strong> перенаправить в файл или stdout (Docker):</p>
+<pre><code class="language-bash">docker logs rksh-web --tail 100
+</code></pre>
+<hr>
+<h2>Сети и безопасность</h2>
+<h3>Firewall (настройка сервера)</h3>
+<pre><code class="language-bash"># Разрешить только 80/443
+ufw allow 22    # SSH
+ufw allow 80    # HTTP
+ufw allow 443   # HTTPS
+ufw deny 4321   # закрыть порт 4321 снаружи (будет behind nginx)
+</code></pre>
+<h3>Nginx как reverse proxy</h3>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name rksh-msk.ru;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name rksh-msk.ru;
+
+    ssl_certificate /etc/letsencrypt/live/rksh-msk.ru/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/rksh-msk.ru/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:4321;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &#39;upgrade&#39;;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Статика (если нужно)
+    location /_emdash/api/media/file/ {
+        alias /app/uploads/;
+        expires 1y;
+        add_header Cache-Control &quot;public, immutable&quot;;
+    }
+
+    # Запретить доступ к админке снаружи (опционально IP whitelist)
+    location /_emdash/admin {
+        allow 127.0.0.1;  # только локально
+        deny all;
+    }
+}
+</code></pre>
+<p><strong>Сертификат Let&#39;s Encrypt:</strong></p>
+<pre><code class="language-bash">certbot certonly --standalone -d rksh-msk.ru -d www.rksh-msk.ru
+# Автообновление: certbot renew
+</code></pre>
+<hr>
+<h2>SSR vs SSG</h2>
+<p><strong>Проект использует SSR (<code>output: &quot;server&quot;</code>)</strong> — потому что контент динамический из БД.</p>
+<p><strong>Если нужен SSG:</strong></p>
+<pre><code class="language-javascript">// astro.config.mjs
+export default defineConfig({
+  output: &quot;static&quot;,  // гибридный режим (не подходит для CMS)
+  // Или hybrid: &quot;hybrid&quot;
+});
+</code></pre>
+<p>Но для EmDash <strong>только SSR</strong>.</p>
+<hr>
+<h2>Кэширование</h2>
+<h3>CDN (Cloudflare / Yandex Cloud CDN)</h3>
+<p><strong>Настройка:</strong></p>
+<ul>
+<li>CDN в front of Node.js app</li>
+<li>Cache everything для статики (<code>/media/*</code>, <code>/dist/*</code>)</li>
+<li>Bypass cache для <code>/_emdash/*</code> (админка, API)</li>
+</ul>
+<p><strong>Cache headers (в Nginx):</strong></p>
+<pre><code class="language-nginx">location / {
+  proxy_pass http://node:4321;
+  proxy_cache mycache;
+  proxy_cache_valid 200 10m;
+}
+</code></pre>
+<h3>In-memory cache (EmDash)</h3>
+<p>EmDash кэширует результаты запросов к БД в памяти (или Redis). Управляется через <code>cacheHint</code>.</p>
+<p><strong>TTL по умолчанию:</strong> 5 минут (настраивается в коллекции <code>settings</code>).</p>
+<hr>
+<h2>Rate limiting</h2>
+<h3>Защита API</h3>
+<pre><code class="language-typescript">// src/middleware.ts
+import { rateLimit } from &quot;astro/middleware&quot;;
+export const onRequest = rateLimit({
+  duration: 60_000,  // 1 минута
+  limit: 100,        // 100 запросов
+  namespace: &quot;global&quot;,
+});
+</code></pre>
+<p><strong>Разные лимиты:</strong></p>
+<ul>
+<li><code>/</code> — публичная, 1000/мин</li>
+<li><code>/_emdash/api/*</code> — 100/мин (для editors)</li>
+<li><code>/api/forms/submit</code> — 10/мин (защита от спама)</li>
+</ul>
+<hr>
+<h2>Логирование</h2>
+<h3>Winston / Pino</h3>
+<pre><code class="language-typescript">// plugins/logging/src/index.ts
+import pino from &quot;pino&quot;;
+const logger = pino({
+  level: process.env.LOG_LEVEL || &quot;info&quot;,
+  transport: {
+    target: &quot;pino-pretty&quot;,
+    options: { colorize: true },
+  },
+});
+export const loggerPlugin = definePlugin({
+  hooks: {
+    &quot;content:afterSave&quot;: async (event, ctx) =&gt; {
+      ctx.log.info(&quot;Content saved&quot;, { collection: event.collection, id: event.content.id });
+    },
+  },
+});
+</code></pre>
+<hr>
+<h2>Скрипты_deploy</h2>
+<h3><code>deploy.sh</code> (bash)</h3>
+<pre><code class="language-bash">#!/bin/bash
+set -e
+
+echo &quot;=== Deploy RKSH ===&quot;
+
+# 1. Pull latest
+git pull origin main
+
+# 2. Install deps
+npm ci --only=production
+
+# 3. Build
+npm run build
+
+# 4. Apply migrations
+npx emdash migrate
+
+# 5. Restart PM2
+pm2 restart rksh-web
+
+# 6. Clear CDN cache (Cloudflare)
+curl -X POST &quot;https://api.cloudflare.com/client/v4/zones/xxx/purge_cache&quot; \
+  -H &quot;Authorization: Bearer $CF_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  --data &#39;{&quot;purge_everything&quot;:true}&#39;
+
+echo &quot;✅ Deploy complete&quot;
+</code></pre>
+<hr>
+<h3>GitHub Actions (<code>.github/workflows/deploy.yml</code>)</h3>
+<pre><code class="language-yaml">name: Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/rksh
+            ./deploy.sh
+</code></pre>
+<hr>
+<h2>Настройка домена</h2>
+<ol>
+<li><strong>Купить домен</strong> (already: rksh-msk.ru)</li>
+<li><strong>DNS records:</strong><ul>
+<li><code>A</code> → IP сервера</li>
+<li><code>AAAA</code> (IPv6) — опционально</li>
+<li><code>CNAME www</code> → <code>rksh-msk.ru</code></li>
+</ul>
+</li>
+<li><strong>SSL сертификат</strong> — Let&#39;s Encrypt (бесплатно)</li>
+<li><strong>Reverse proxy</strong> — Nginx</li>
+</ol>
+<hr>
+<h2>Zero-downtime deploy</h2>
+<h3>Using PM2</h3>
+<pre><code class="language-bash">pm2 start dist/server/entry.mjs --name rksh-web
+pm2 reload rksh-web  # zero-downtime
+</code></pre>
+<h3>Using Docker Compose</h3>
+<pre><code class="language-bash">docker-compose pull  # обновить образ
+docker-compose up -d --no-deps --build web  # пересобрать и поднять
+</code></pre>
+<hr>
+<h2>Rollback</h2>
+<h3>Если deploy сломался</h3>
+<pre><code class="language-bash"># Допустим, текущая версия v1.2.3, предыдущая v1.2.2
+git tag v1.2.2
+git checkout v1.2.2
+npm install
+npm run build
+pm2 restart rksh-web
+
+# Или Docker: откатить к previous image
+docker tag rksh-web:1.2.2
+docker-compose up -d
+</code></pre>
+<hr>
+<h2>Мониторинг доступности</h2>
+<h3>UptimeRobot / Better Uptime</h3>
+<ul>
+<li>Проверять <code>https://rksh-msk.ru/health</code> каждые 5 минут</li>
+<li>Уведомления в Telegram при падении</li>
+</ul>
+<h3>Grafana + Prometheus</h3>
+<p><strong>Экспорт метрик:</strong></p>
+<pre><code class="language-typescript">// plugins/metrics/src/metrics.ts
+export const metrics = {
+  requests: new Counter(),
+  errors: new Counter(),
+  responseTime: new Histogram(),
+};
+</code></pre>
+<hr>
+<h2>Backups</h2>
+<h3>Daily backup to Yandex Cloud</h3>
+<pre><code class="language-bash">#!/bin/bash
+# /app/backup.sh
+DATE=$(date +%Y%m%d)
+# DB backup
+sqlite3 /app/data/data.db &quot;.backup /backup/data-$DATE.db&quot;
+# Uploads backup
+tar -czf /backup/uploads-$DATE.tar.gz /app/uploads
+# Upload to Yandex Cloud
+yc storage cp /backup/data-$DATE.db storage://rksh-backups/
+yc storage cp /backup/uploads-$DATE.tar.gz storage://rksh-backups/
+# Retention: keep last 30 days
+find /backup -type f -mtime +30 -delete
+</code></pre>
+<p><strong>Cron:</strong> <code>0 3 * * * /app/backup.sh</code></p>
+<hr>
+<h2>Recovery</h2>
+<ol>
+<li>Остановить сервер: <code>pm2 stop rksh-web</code></li>
+<li>Восстановить БД: <code>sqlite3 data.db &quot;.restore backup/data-20250415.db&quot;</code></li>
+<li>Восстановить uploads: <code>tar -xzf backup/uploads-20250415.tar.gz -C /app/</code></li>
+<li>Запустить: <code>pm2 start rksh-web</code></li>
+</ol>
+<hr>
+<h2>Troubleshooting deployment</h2>
+<h3>Ошибка: &quot;Cannot find module &#39;sharp&#39;&quot;</h3>
+<pre><code class="language-bash">npm install sharp --save-optional
+# Или в Dockerfile: RUN npm ci --include=dev &amp;&amp; npm rebuild sharp
+</code></pre>
+<h3>Ошибка: &quot;Address already in use&quot;</h3>
+<p>Process уже использует порт 4321:</p>
+<pre><code class="language-bash"># Найти PID
+lsof -i :4321
+# Убить
+kill -9 &lt;PID&gt;
+# Или использовать другой порт
+PORT=4322 npm start
+</code></pre>
+<h3>Database locked</h3>
+<p>SQLite locked (много write-запросов):</p>
+<pre><code class="language-sql">PRAGMA journal_mode=WAL;
+PRAGMA busy_timeout=5000;
+</code></pre>
+<p>Или перейти на PostgreSQL (через <code>emdash/db/postgres</code>).</p>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><code>00-overview.md</code> — архитектура</li>
+<li><a href="https://docs.emdashcms.com/deployment/">EmDash Deployment</a></li>
+<li><a href="https://docs.astro.build/en/guides/deploy/">Astro Deploy</a></li>
+<li><a href="https://docs.docker.com/develop/dev-best-practices/">Docker Best Practices</a></li>
+</ul>
+<hr>
+<h2>Чек-лист релиза</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Все переменные окружения в <code>.env.production</code></li>
+<li><input disabled="" type="checkbox"> <code>EMDASH_SECRET</code> сгенерирован (64+ chars)</li>
+<li><input disabled="" type="checkbox"> SSL сертификат установлен (Let&#39;s Encrypt)</li>
+<li><input disabled="" type="checkbox"> Nginx reverse proxy настроен</li>
+<li><input disabled="" type="checkbox"> <code>npm run build</code> проходит без ошибок</li>
+<li><input disabled="" type="checkbox"> Backups настроены (daily)</li>
+<li><input disabled="" type="checkbox"> Health check endpoint работает</li>
+<li><input disabled="" type="checkbox"> Monitoring (UptimeRobot) добавлен</li>
+<li><input disabled="" type="checkbox"> Logs идут в stdout (Docker logs)</li>
+<li>[ ]_rate limiting включён</li>
+<li><input disabled="" type="checkbox"> Admin IP whitelist (если нужно)</li>
+<li><input disabled="" type="checkbox"> CDN configured (Cloudflare)</li>
+</ul>
+<hr>
+<h2>FAQ</h2>
+<p><strong>Q:</strong> Можно ли деплоить без Docker?<br><strong>A:</strong> Да, просто Node.js на VPS: <code>npm ci</code>, <code>npm run build</code>, <code>npm start</code> + pm2.</p>
+<p><strong>Q:</strong> Где хранить <code>data.db</code>?<br><strong>A:</strong> В volume (Docker) или отдельной папке <code>/var/lib/rksh/</code>. Не в контейнере (исчезнет при пересборке).</p>
+<p><strong>Q:</strong> Как обновить EmDash версию?<br><strong>A:</strong> <code>npm update emdash</code>, проверить compatibility, <code>npm run build</code>, протестировать staging.</p>
+<p><strong>Q:</strong> Сколько стоит хостинг?<br><strong>A:</strong> VPS 2 GB RAM, 1 vCPU ~ $5/mo (DigitalOcean, Hetzner). + storage (~$0.05/GB).</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

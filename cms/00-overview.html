@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overview — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Overview</span></nav>
+  <div class="md-content">
+    <h1>Обзор архитектуры CMS</h1>
+<h2>Стек технологий</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Технология</th>
+<th>Версия</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Фреймворк</td>
+<td>Astro</td>
+<td>6.1.6</td>
+</tr>
+<tr>
+<td>CMS</td>
+<td>EmDash</td>
+<td>0.4.0</td>
+</tr>
+<tr>
+<td>Язык</td>
+<td>TypeScript</td>
+<td>5.9.3</td>
+</tr>
+<tr>
+<td>База данных</td>
+<td>SQLite (better-sqlite3)</td>
+<td>12.8.0</td>
+</tr>
+<tr>
+<td>Хранение файлов</td>
+<td>Локальная ФС</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Режим рендеринга</td>
+<td>Server-side (SSR)</td>
+<td><code>output: &quot;server&quot;</code></td>
+</tr>
+<tr>
+<td>UI компоненты</td>
+<td>Astro + React (админка)</td>
+<td>19.2.4</td>
+</tr>
+</tbody></table>
+<h2>Архитектурные слои</h2>
+<pre><code>┌─────────────────────────────────────────┐
+│         Admin UI (React)                │
+│  http://localhost:4321/_emdash/admin    │
+├─────────────────────────────────────────┤
+│         EmDash API Layer                │
+│  /_emdash/api/* — JSON endpoints        │
+├─────────────────────────────────────────┤
+│     EmDash Integration (astro.config)   │
+│  — database, storage, plugins           │
+├─────────────────────────────────────────┤
+│     Astro Runtime (SSR)                 │
+│  — routes, layouts, components          │
+├─────────────────────────────────────────┤
+│     SQLite + Uploads                    │
+│  — data.db, /uploads/                   │
+└─────────────────────────────────────────┘
+</code></pre>
+<h2>Ключевые файлы проекта</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>astro.config.mjs</code></td>
+<td>Конфиг Astro + интеграция EmDash (БД, storage, плагины)</td>
+</tr>
+<tr>
+<td><code>src/live.config.ts</code></td>
+<td>Регистрация live-коллекций (не менять)</td>
+</tr>
+<tr>
+<td><code>seed/seed.json</code></td>
+<td><strong>Схема данных</strong>: коллекции, поля, меню, начальный контент</td>
+</tr>
+<tr>
+<td><code>emdash-env.d.ts</code></td>
+<td>Сгенерированные TypeScript типы (автообновление)</td>
+</tr>
+<tr>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Базовый layout (Header, SecondMenu, Footer, <code>&lt;slot /&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>src/pages/</code></td>
+<td>Страницы Astro (все SSR, нет <code>getStaticPaths()</code> для CMS)</td>
+</tr>
+<tr>
+<td><code>src/components/</code></td>
+<td>UI компоненты (Header, Footer, SecondMenu)</td>
+</tr>
+<tr>
+<td><code>src/styles/</code></td>
+<td>Стили: <code>tokens.css</code> (CSS variables), <code>global.css</code></td>
+</tr>
+<tr>
+<td><code>plugins/rksh-blocks/</code></td>
+<td><strong>Кастомный плагин</strong>: Portable Text блоки + Astro компоненты</td>
+</tr>
+</tbody></table>
+<h2>Контексты выполнения кода</h2>
+<h3>Build-time (Vite)</h3>
+<ul>
+<li><code>astro.config.mjs</code> — импорты, конфигурация</li>
+<li><code>PluginDescriptor</code> (из <code>plugins/*/src/index.ts</code>) — описание плагина без side-effects</li>
+<li>Запускается при сборке/старте dev-сервера</li>
+</ul>
+<h3>Request-time (SSR)</h3>
+<ul>
+<li><code>definePlugin()</code> (из <code>plugins/*/src/sandbox-entry.ts</code>) — логика плагина</li>
+<li>EmDash middleware — обработка запросов к <code>/_emdash/api/*</code></li>
+<li>Astro page components — рендеринг страниц</li>
+<li>Запускается на каждый HTTP-запрос (в продакшн)</li>
+</ul>
+<h3>Admin UI (браузер)</h3>
+<ul>
+<li>React-приложение на <code>/_emdash/admin</code></li>
+<li>Подключается к API EmDash</li>
+<li>Требует <code>EMDASH_SECRET</code> для аутентификации</li>
+</ul>
+<h2>Поток данных</h2>
+<pre><code>1. Запрос страницы → Astro middleware
+2. EmDash проверяет кэш (cacheHint)
+3. Если кэш невалиден → запрос к БД (SQLite)
+4. Контент форматируется → PortableText → block components (если есть кастомные блоки)
+5. Астро-компоненты рендерятся в HTML
+6. Ответ отправляется браузеру
+</code></pre>
+<h2>Ключевые принципы</h2>
+<ol>
+<li><strong>Server-side rendering</strong>: все страницы с контентом — SSR, нет статической генерации для CMS-страниц</li>
+<li><strong>Кэширование</strong>: каждый запрос контента возвращает <code>cacheHint</code> → <code>Astro.cache.set(cacheHint)</code> обязателен</li>
+<li><strong>Изоляция контекстов</strong>: descriptor (build) ≠ definition (runtime)</li>
+<li><strong>Плагины как пакеты</strong>: <code>@rksh/blocks</code> — workspace package, подключается через <code>plugins:</code> в <code>astro.config.mjs</code></li>
+</ol>
+<h2>Директории и их роль</h2>
+<pre><code>.project/
+├── .astro/              # Временные файлы сборки (не коммитить)
+├── .beads/              # База Beads (task tracking)
+├── node_modules/
+├── plugins/             # Кастомные плагины EmDash
+│   └── rksh-blocks/     # Наш плагин блоков
+│       ├── src/
+│       │   ├── index.ts              # PluginDescriptor (build-time)
+│       │   ├── sandbox-entry.ts      # createPlugin() (runtime)
+│       │   ├── astro/                # Astro-компоненты блоков
+│       │   │   ├── Hero.astro
+│       │   │   ├── Features.astro
+│       │   │   └── ...
+│       │   └── admin.tsx             # (опционально) React-компоненты админки
+│       └── package.json
+├── seed/                # Семена (seed) для БД
+│   └── seed.json        # Схема + demo-контент
+├── src/                 # Исходники сайта
+│   ├── components/      # Компоненты (Header, Footer, ...)
+│   ├── layouts/         # Шаблоны (Base.astro)
+│   ├── pages/           # Страницы ( routable )
+│   ├── styles/          # Стили
+│   │   ├── tokens.css   # CSS variables (палитра)
+│   │   └── global.css   # Reset, base, utilities
+│   └── live.config.ts   # Регистрация live collections (авто)
+├── uploads/             # Загруженные медиафайлы (не в git)
+├── data.db              # База данных SQLite
+├── astro.config.mjs     # Главный конфиг
+├── package.json         # Зависимости
+└── docs/
+    └── cms/             # Документация по CMS (эта папка)
+</code></pre>
+<h2>Жизненный цикл запроса (подробно)</h2>
+<pre><code>1. Пользователь → http://localhost:4321/o-shkole
+2. Astro router → находит src/pages/pages/[slug].astro
+3. getEmDashEntry(&quot;pages&quot;, &quot;o-shkole&quot;) → запрос к EmDash API
+4. EmDash → проверяет кэш (Redis/in-memory)
+5. Если miss → query SQLite: SELECT * FROM entries WHERE collection=&#39;pages&#39; AND slug=&#39;o-shkole&#39;
+6. Полученная запись → преобразуется в entry object с .data
+7. Astro компонент рендерит `&lt;Base&gt; &lt;PortableText value={entry.data.content} /&gt;`
+8. PortableText проходит по массиву блоков:
+   - Если `_type === &quot;rksh.hero&quot;` → импортирует `Hero` из `@rksh/blocks/astro`
+   - Передаёт `node` (все поля) в компонент
+9. Компонент возвращает HTML → собирается вся страница
+10. Ответ кэшируется с `cacheHint` (TTL из настроек коллекции)
+11. Следующий запрос → кэш hit → молниеносно
+</code></pre>
+<h2>Типы данных EmDash</h2>
+<pre><code class="language-typescript">// Entry (запись)
+{
+  id: string;          // slug (для URL)
+  data: {
+    id: string;        // ULID (для API)
+    title: string;
+    content: PortableText[];
+    publishedAt: Date | null;
+    // ... custom fields
+  };
+  status: &quot;draft&quot; | &quot;published&quot; | &quot;archived&quot;;
+  version: number;
+  publishedAt: Date | null;
+  cacheHint: { ttl: number; tags: string[] };
+}
+
+// Menu item
+{
+  label: string;
+  url: string;
+  target?: string;
+  children: MenuItem[];
+}
+
+// Settings (site-wide)
+{
+  site_name: string;
+  logo: { src: string; alt: string };
+  phone_primary: string;
+  ...
+}
+</code></pre>
+<h2>Ограничения и gotchas</h2>
+<ol>
+<li><strong>Images are objects</strong>: <code>{ src, alt }</code>, не строки. Использовать <code>&lt;Image image={...} /&gt;</code> из <code>emdash/ui</code></li>
+<li><strong><code>entry.id</code> ≠ <code>entry.data.id</code></strong>: первый — slug, второй — ULID</li>
+<li><strong>Taxonomy name exact match</strong>: если в seed <code>&quot;name&quot;: &quot;category&quot;</code>, то <code>getTerm(&quot;category&quot;, slug)</code>, а не <code>&quot;categories&quot;</code></li>
+<li><strong>Cache hint mandatory</strong>: без <code>Astro.cache.set(cacheHint)</code> контент не инвалидируется при публикации</li>
+<li><strong>No <code>getStaticPaths()</code></strong>: CMS-контент не может быть статически сгенерирован</li>
+</ol>
+<h2>Ресурсы</h2>
+<ul>
+<li><a href="https://docs.emdashcms.com">EmDash Docs</a></li>
+<li><a href="https://docs.astro.build">Astro Docs</a></li>
+<li>Спецификация темы: <code>docs/rksh-emdash-theme-spec.md</code></li>
+<li>Структура сайта: <code>docs/site-structure.md</code></li>
+<li>Контент-выжимка: <code>docs/content-summary.md</code></li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

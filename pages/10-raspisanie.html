@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raspisanie — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Raspisanie</span></nav>
+  <div class="md-content">
+    <h1>Расписание (/raspisanie)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Расписание 1–4 классов</td>
+<td>Захардкожено в шаблоне (<code>src/pages/raspisanie.astro</code>, массив <code>schedule</code>)</td>
+</tr>
+<tr>
+<td>Ссылки на 0 класс / среднюю школу</td>
+<td>Захардкожены (href <code>/0klass</code>, <code>/srednyaya-shkola</code>)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Расписание не вынесено в CMS — обновляется вручную в шаблоне. Причина: простая структура (класс → время → список предметов).</p>
+</blockquote>
+<h3>Структура данных (хардкод)</h3>
+<pre><code class="language-ts">schedule: Array&lt;{
+  grade: string;    // &quot;1 класс&quot;
+  time: string;     // &quot;9:00–12:20&quot;
+  subjects: string[]; // [&quot;Физкультура&quot;, &quot;Обучение грамоте&quot;, ...]
+}&gt;
+</code></pre>
+<p>4 записи: 1 класс (9:00–12:20, 7 предметов), 2 класс (9:00–13:10, 10 предметов), 3 класс (9:00–13:10, 9 предметов), 4 класс (9:00–13:10, 9 предметов).</p>
+<hr>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  schedule-hero                              │
+│  SectionTitle h1: Расписание                │
+│  p.lead: Расписание занятий начальной школы  │
+├─────────────────────────────────────────────┤
+│  schedule-classes (bg: surface-alt)          │
+│  SectionTitle h2 center: Начальная школа     │
+│  Grid 2×: schedule-card × 4                 │
+│  ┌─────────────────────────────────────────┐│
+│  │ schedule-card__header:                  ││
+│  │   h3.grade + span.time (pill)           ││
+│  │ ul.subjects: li (pill) × N              ││
+│  └─────────────────────────────────────────┘│
+├─────────────────────────────────────────────┤
+│  schedule-links                              │
+│  SectionTitle h2 center: Подробное расписание│
+│  p: Расписание 0 класса и средней школы...   │
+│  Grid 2×: schedule-links__card               │
+│  ┌──────────────┐  ┌──────────────┐         │
+│  │ 0 класс      │  │ Средняя школа │         │
+│  │ → /0klass    │  │ → /srednyaya  │         │
+│  └──────────────┘  └──────────────┘         │
+├─────────────────────────────────────────────┤
+│  schedule-cta (bg: primary, text: surface)   │
+│  h2: Хотите узнать больше?                   │
+│  p: Запишитесь на экскурсию...                │
+│  Button warm lg → /kontakty                  │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>h1 (default), h2 (center)</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию» (variant=warm, size=lg)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.schedule-hero</code></td>
+<td>Hero-секция (padding 4xl→2xl, text-align center)</td>
+</tr>
+<tr>
+<td><code>.schedule-hero__inner</code></td>
+<td>Контейнер narrow</td>
+</tr>
+<tr>
+<td><code>.schedule-hero__lead</code></td>
+<td>Подзаголовок (font-size-lg, color muted)</td>
+</tr>
+<tr>
+<td><code>.schedule-classes</code></td>
+<td>Секция карточек (bg surface-alt, padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.schedule-classes__grid</code></td>
+<td>Grid 2× карточек (gap lg; 1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.schedule-card</code></td>
+<td>Карточка класса (bg surface, border primary-line, radius-xl, hover shadow+accent border)</td>
+</tr>
+<tr>
+<td><code>.schedule-card__header</code></td>
+<td>Flex baseline, gap md, margin-bottom lg</td>
+</tr>
+<tr>
+<td><code>.schedule-card__grade</code></td>
+<td>h3 Playfair xl bold primary</td>
+</tr>
+<tr>
+<td><code>.schedule-card__time</code></td>
+<td>Pill-бейдж времени (bg primary-soft, sm, radius-md)</td>
+</tr>
+<tr>
+<td><code>.schedule-card__subjects</code></td>
+<td>Flex wrap, gap xs</td>
+</tr>
+<tr>
+<td><code>.schedule-card__subjects li</code></td>
+<td>Pill предмета (bg surface-alt, border primary-line, radius-full, sm)</td>
+</tr>
+<tr>
+<td><code>.schedule-links</code></td>
+<td>Секция ссылок (padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.schedule-links__inner</code></td>
+<td>narrow, text-align center</td>
+</tr>
+<tr>
+<td><code>.schedule-links__desc</code></td>
+<td>Описание (lg, muted)</td>
+</tr>
+<tr>
+<td><code>.schedule-links__grid</code></td>
+<td>Grid 2× ссылочных карточек (1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.schedule-links__card</code></td>
+<td>Ссылочная карточка (flex column, bg surface, border, hover shadow+accent)</td>
+</tr>
+<tr>
+<td><code>.schedule-links__card-title</code></td>
+<td>Playfair xl bold primary</td>
+</tr>
+<tr>
+<td><code>.schedule-links__card-desc</code></td>
+<td>sm muted, flex:1</td>
+</tr>
+<tr>
+<td><code>.schedule-links__card-link</code></td>
+<td>«Перейти →» (sm, semibold, accent)</td>
+</tr>
+<tr>
+<td><code>.schedule-cta</code></td>
+<td>CTA-баннер (bg primary, text surface, padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.schedule-cta__inner</code></td>
+<td>narrow, text-align center</td>
+</tr>
+<tr>
+<td><code>.schedule-cta__title</code></td>
+<td>color surface</td>
+</tr>
+<tr>
+<td><code>.schedule-cta__desc</code></td>
+<td>lg, rgba(255,255,255,0.85), line-height relaxed</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/raspisanie/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Структура</td>
+<td>Список классов с предметами</td>
+<td>4 карточки в grid 2× с pill-бейджами</td>
+</tr>
+<tr>
+<td>Время</td>
+<td>В тексте рядом с классом</td>
+<td>Pill-бейдж <code>.schedule-card__time</code></td>
+</tr>
+<tr>
+<td>Предметы</td>
+<td>Обычный список</td>
+<td>Pill-теги <code>.schedule-card__subjects li</code></td>
+</tr>
+<tr>
+<td>0 класс / средняя школа</td>
+<td>Ссылки в тексте</td>
+<td>Отдельные карточки <code>.schedule-links__card</code></td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите узнать больше?» + Button warm</td>
+</tr>
+<tr>
+<td>Фон классов</td>
+<td>Обычный белый</td>
+<td><code>surface-alt</code> секция</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Вынести расписание в CMS для динамичности (schema <code>schedule</code> с полями grade, time, subjects[])</li>
+<li><input disabled="" type="checkbox"> Добавить секцию «Режим дня» (звонки, перемены) если есть данные</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

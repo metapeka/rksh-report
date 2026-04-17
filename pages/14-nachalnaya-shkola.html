@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nachalnaya shkola — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Nachalnaya shkola</span></nav>
+  <div class="md-content">
+    <h1>Начальная школа (/nachalnaya-shkola)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>все данные</td>
+<td>Захардкожены в шаблоне (<code>src/pages/nachalnaya-shkola.astro</code>)</td>
+</tr>
+<tr>
+<td>Hero-факты</td>
+<td>Массив <code>facts</code> (возраст, группа, цена)</td>
+</tr>
+<tr>
+<td>Карточки особенностей</td>
+<td>Массив <code>aboutCards</code> (4 карточки)</td>
+</tr>
+<tr>
+<td>FAQ — Питание</td>
+<td>Массив <code>faqNutrition</code> (4 вопроса)</td>
+</tr>
+<tr>
+<td>FAQ — Медицина</td>
+<td>Массив <code>faqMedical</code> (3 вопроса)</td>
+</tr>
+<tr>
+<td>FAQ — Одежда</td>
+<td>Массив <code>faqClothing</code> (2 вопроса)</td>
+</tr>
+<tr>
+<td>Документы</td>
+<td>Массив <code>documents</code> (4 пункта)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Данные не вынесены в CMS — обновляются вручную в шаблоне. Расписание (<code>_schedule1</code>) не отображается на странице (заглушка).</p>
+</blockquote>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────┐
+│  ns-hero                                   │
+│  SectionTitle h1: Начальная школа          │
+│  p: 1–4 классы • классическое…             │
+│  3× Fact (возраст / группа / цена)         │
+│  Button warm: Записаться на экскурсию      │
+├─────────────────────────────────────────────┤
+│  ns-about  (bg: surface-alt)               │
+│  SectionTitle h2 center: Особенности…      │
+│  Grid 2×: 4 карточки                       │
+│  ┌──────────────┐ ┌──────────────┐         │
+│  │ 3–4 урока    │ │ до 15 чел.   │         │
+│  │ ежедневно    │ │ в классе     │         │
+│  ├──────────────┤ ├──────────────┤         │
+│  │ Продлёнка    │ │ Без домашних  │         │
+│  │ с питанием   │ │ заданий      │         │
+│  └──────────────┘ └──────────────┘         │
+├─────────────────────────────────────────────┤
+│  ns-faq-section                            │
+│  SectionTitle h2 center: Часто задаваемые… │
+│                                             │
+│  ┌ ns-faq-group ────────────────────────┐  │
+│  │ SectionTitle h3 underline: Питание   │  │
+│  │ 4× details/summary                  │  │
+│  └──────────────────────────────────────┘  │
+│  ┌ ns-faq-group ────────────────────────┐  │
+│  │ SectionTitle h3 underline: Медицина  │  │
+│  │ 3× details/summary                  │  │
+│  └──────────────────────────────────────┘  │
+│  ┌ ns-faq-group ────────────────────────┐  │
+│  │ SectionTitle h3 underline: Одежда    │  │
+│  │ 2× details/summary                  │  │
+│  └──────────────────────────────────────┘  │
+│  ┌ ns-faq-group ────────────────────────┐  │
+│  │ SectionTitle h3 underline: Документы │  │
+│  │ ul.ns-docs (4 пункта с ✓)           │  │
+│  └──────────────────────────────────────┘  │
+├─────────────────────────────────────────────┤
+│  ns-cta  (bg: primary, text: surface)       │
+│  h2: Запишите ребёнка в начальную школу    │
+│  p: Приходите на экскурсию…                │
+│  Button warm lg: Записаться на экскурсию    │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base layout</td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Обёртка</td>
+</tr>
+<tr>
+<td>SectionTitle</td>
+<td><code>src/components/ui/SectionTitle.astro</code></td>
+<td>h1, h2 (center), h3 (underline)</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>src/components/ui/Button.astro</code></td>
+<td>Hero CTA, нижний CTA</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Карточки особенностей и FAQ — нативный HTML, не отдельные компоненты.</p>
+</blockquote>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.ns-hero</code></td>
+<td>Hero-секция, text-align center, padding 4xl/2xl</td>
+</tr>
+<tr>
+<td><code>.ns-hero__facts</code></td>
+<td>Flex-ряд для 3 fact-блоков (gap 2xl)</td>
+</tr>
+<tr>
+<td><code>.ns-fact__val</code></td>
+<td>Playfair Display, 2xl, bold, color primary</td>
+</tr>
+<tr>
+<td><code>.ns-fact__label</code></td>
+<td>sm, muted</td>
+</tr>
+<tr>
+<td><code>.ns-about</code></td>
+<td>Секция особенностей, bg surface-alt</td>
+</tr>
+<tr>
+<td><code>.ns-about__grid</code></td>
+<td>Grid 2×2 для карточек (gap lg)</td>
+</tr>
+<tr>
+<td><code>.ns-about__card</code></td>
+<td>Карточка: bg surface, border primary-line, radius lg, padding xl</td>
+</tr>
+<tr>
+<td><code>.ns-about__card-title</code></td>
+<td>Inter, semibold, lg, color primary</td>
+</tr>
+<tr>
+<td><code>.ns-about__card-desc</code></td>
+<td>sm, muted, line-height relaxed</td>
+</tr>
+<tr>
+<td><code>.ns-faq-section</code></td>
+<td>Секция FAQ, padding 4xl</td>
+</tr>
+<tr>
+<td><code>.ns-faq-group</code></td>
+<td>Группа FAQ-вопросов (margin-bottom 2xl)</td>
+</tr>
+<tr>
+<td><code>.ns-faq__item</code></td>
+<td>border-top/bottom primary-line</td>
+</tr>
+<tr>
+<td><code>.ns-faq__q::before</code></td>
+<td>&quot;+&quot; / &quot;−&quot; prefix, color accent-warm</td>
+</tr>
+<tr>
+<td><code>.ns-docs__item::before</code></td>
+<td>&quot;✓&quot; prefix, color success</td>
+</tr>
+<tr>
+<td><code>.ns-cta</code></td>
+<td>CTA-баннер, bg primary, color surface</td>
+</tr>
+</tbody></table>
+<h3>Адаптив (≤768px)</h3>
+<ul>
+<li><code>.ns-hero</code> → padding 2xl/lg</li>
+<li><code>.ns-about</code>, <code>.ns-faq-section</code> → padding 2xl</li>
+<li><code>.ns-about__grid</code> → grid-template-columns 1fr</li>
+<li><code>.ns-cta</code> → padding 2xl</li>
+<li><code>.btn</code> внутри <code>.ns-cta</code> → width 100%</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/nachalnaya-shkola/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FAQ-категории</td>
+<td>Питание, Медицина, Одежда, Прогулки/мероприятия, Аттестация, Документы, Пособия</td>
+<td>Питание, Медицина, Одежда, Документы (4 из 7)</td>
+</tr>
+<tr>
+<td>Расписание</td>
+<td>Полное расписание 1–4 классов</td>
+<td>Заглушка <code>_schedule1</code> (не отображается)</td>
+</tr>
+<tr>
+<td>Карточки особенностей</td>
+<td>Нет</td>
+<td>2×2 grid-карточки</td>
+</tr>
+<tr>
+<td>Документы</td>
+<td>В составе FAQ</td>
+<td>Отдельная подсекция со ✓-маркерами</td>
+</tr>
+<tr>
+<td>CTA-баннер</td>
+<td>Нет</td>
+<td>Финальная секция с Button warm</td>
+</tr>
+<tr>
+<td>Шрифты</td>
+<td>Roboto Slab / Source Sans Pro</td>
+<td>Playfair Display / Inter</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Добавить полное расписание 1–4 классов (отсутствует на странице)</li>
+<li><input disabled="" type="checkbox"> Добавить FAQ-категории: «Прогулки и мероприятия», «Аттестация», «Пособия» (из оригинала)</li>
+<li><input disabled="" type="checkbox"> Рассмотреть вынос FAQ в CMS</li>
+<li><input disabled="" type="checkbox"> Общийѐ FAQ-аккордеон компонент (с klass-faq / ns-faq — дублирование стилей)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

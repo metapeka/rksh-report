@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakty — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Kontakty</span></nav>
+  <div class="md-content">
+    <h1>Контакты (/kontakty)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Заголовок + описание</td>
+<td><code>pages</code> collection, slug <code>kontakty</code> (Portable Text)</td>
+</tr>
+<tr>
+<td>Телефоны</td>
+<td><code>settings</code> collection, slug <code>site</code>, field <code>phones</code> (JSON)</td>
+</tr>
+<tr>
+<td>Email</td>
+<td><code>settings</code> collection, field <code>email</code></td>
+</tr>
+<tr>
+<td>Адрес</td>
+<td><code>settings</code> collection, field <code>address</code></td>
+</tr>
+<tr>
+<td>Время работы</td>
+<td><code>settings</code> collection, field <code>working_hours</code> (TODO: подключить)</td>
+</tr>
+<tr>
+<td>Соцсети</td>
+<td><code>settings</code> collection, field <code>socials</code> (TODO: подключить)</td>
+</tr>
+<tr>
+<td>Карта</td>
+<td>Яндекс.Карта iframe по адресу</td>
+</tr>
+</tbody></table>
+<h3>Структура phones</h3>
+<pre><code class="language-json">[
+  {&quot;number&quot;: &quot;+7 (495) 798-37-33&quot;, &quot;tel&quot;: &quot;+74957983733&quot;},
+  {&quot;number&quot;: &quot;+7 (909) 938-61-60&quot;, &quot;tel&quot;: &quot;+79099386160&quot;}
+]
+</code></pre>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────┐
+│  h1: Контакты (Playfair Display)          │
+│  p: Описание (из Portable Text)           │
+├──────────────────┬────────────────────────┤
+│  Карточка        │                        │
+│  ┌────────────┐  │    Яндекс.Карта        │
+│  │ 📍 Адрес   │  │    (iframe)            │
+│  │ 🕐 Часы    │  │                        │
+│  │ 📞 Телефоны│  │                        │
+│  │ ✉ Email    │  │                        │
+│  ├────────────┤  │                        │
+│  │ Соцсети    │  │                        │
+│  ├────────────┤  │                        │
+│  │ [CTA]      │  │                        │
+│  └────────────┘  │                        │
+├──────────────────┴────────────────────────┤
+</code></pre>
+<hr>
+<h2>Отличия от гайдлайнов</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>По гайду</th>
+<th>Здесь</th>
+<th>Причина</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grid колонки</td>
+<td>—</td>
+<td><code>1fr 1.1fr</code></td>
+<td>Карта чуть шире карточки</td>
+</tr>
+<tr>
+<td>Лейбл размер</td>
+<td><code>--font-size-xs</code></td>
+<td><code>--font-size-xs</code></td>
+<td>Совпадает</td>
+</tr>
+<tr>
+<td>Value размер</td>
+<td><code>--font-size-base</code></td>
+<td><code>--font-size-base</code></td>
+<td>Совпадает</td>
+</tr>
+<tr>
+<td>Иконки в карточке</td>
+<td>22px</td>
+<td>22px</td>
+<td>Совпадает</td>
+</tr>
+<tr>
+<td>Иконки соцсетей</td>
+<td>16px</td>
+<td>16px</td>
+<td>Совпадает</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Тип</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base layout</td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Общий</td>
+</tr>
+<tr>
+<td>Шаблон страницы</td>
+<td><code>src/pages/kontakty.astro</code></td>
+<td>Специфичный</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/kontakty/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Шрифт заголовка</td>
+<td>Roboto Slab</td>
+<td>Playfair Display</td>
+</tr>
+<tr>
+<td>Шрифт текста</td>
+<td>Source Sans Pro</td>
+<td>Inter</td>
+</tr>
+<tr>
+<td>Иконки</td>
+<td>Нет</td>
+<td>SVG в цвете primary</td>
+</tr>
+<tr>
+<td>Карточка</td>
+<td>Текст без обёртки</td>
+<td>Карточка с тенью/скруглением</td>
+</tr>
+<tr>
+<td>Карта</td>
+<td>Пустое место</td>
+<td>Яндекс.Карта</td>
+</tr>
+<tr>
+<td>Соцсети</td>
+<td>Только WhatsApp</td>
+<td>VK + TG + WA</td>
+</tr>
+<tr>
+<td>Данные</td>
+<td>Захардкожены</td>
+<td>Из CMS (settings)</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Записаться на экскурсию»</td>
+</tr>
+<tr>
+<td>Адаптив</td>
+<td>Базовый</td>
+<td>Полный</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Форма обратной связи (отдельная задача)</li>
+<li><input disabled="" type="checkbox"> Карта: создать через конструктор Яндекс.Карт с меткой и балуном</li>
+<li><input disabled="" type="checkbox"> Подключить <code>working_hours</code> и <code>socials</code> из settings (поля созданы, шаблон не обновлён)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

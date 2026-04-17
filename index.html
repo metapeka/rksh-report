@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Отчёт по проекту РКШ</title>
+  <link rel="stylesheet" href="css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="#metrics" class="nav__link nav__link--active">Метрики</a>
+        <a href="#pages" class="nav__link">Страницы</a>
+        <a href="#components" class="nav__link">Компоненты</a>
+        <a href="#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1 class="hero__title">Отчёт по проекту сайта РКШ</h1>
+    <p class="hero__subtitle">Русская Классическая Школа — rksh-msk.ru</p>
+    <p class="hero__date">Дата отчёта: 17 апреля 2026 г. в 18:09</p>
+  </section>
+
+  <section class="section" id="metrics">
+    <div class="container">
+      <h2 class="section__title">Метрики проекта</h2>
+      <p class="section__desc">Ключевые показатели проделанной работы</p>
+
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-card__icon">&#128196;</div>
+          <div class="metric-card__value">15</div>
+          <div class="metric-card__label">страниц</div>
+          <div class="metric-card__detail">14 готово · 4 в работе</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#129513;</div>
+          <div class="metric-card__value">23</div>
+          <div class="metric-card__label">UI-компонентов</div>
+          <div class="metric-card__detail">написаны с нуля</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#127912;</div>
+          <div class="metric-card__value">75</div>
+          <div class="metric-card__label">иконок</div>
+          <div class="metric-card__detail">25 уникальных &times; 3 стиля</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#128218;</div>
+          <div class="metric-card__value">58</div>
+          <div class="metric-card__label">документов</div>
+          <div class="metric-card__detail">specs + cms docs</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#128451;</div>
+          <div class="metric-card__value">12</div>
+          <div class="metric-card__label">коллекций CMS</div>
+          <div class="metric-card__detail">EmDash</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#127991;&#65039;</div>
+          <div class="metric-card__value">2</div>
+          <div class="metric-card__label">таксономии</div>
+          <div class="metric-card__detail">2 термина</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#128240;</div>
+          <div class="metric-card__value">6</div>
+          <div class="metric-card__label">новостей</div>
+          <div class="metric-card__detail">перенесено из rksh-msk.ru</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__icon">&#128187;</div>
+          <div class="metric-card__value">~10 339</div>
+          <div class="metric-card__label">строк кода</div>
+          <div class="metric-card__detail">src/ (astro, ts, css)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface-alt);">
+    <div class="container">
+      <h2 class="section__title">Прогресс</h2>
+
+      <div class="progress-list">
+        <div class="progress-item">
+          <div class="progress-item__header">
+            <span class="progress-item__label">Страницы</span>
+            <span class="progress-item__stats">14/18 готово (78%)</span>
+          </div>
+          <div class="progress-item__bar">
+            <div class="progress-item__fill progress-item__fill--done" style="width: 78%"></div>
+          </div>
+          <div class="progress-item__legend">
+            <span><span class="legend-dot legend-dot--done"></span>14 готово</span>
+            <span><span class="legend-dot legend-dot--wip"></span>4 в работе</span>
+            <span><span class="legend-dot legend-dot--todo"></span>0 запланировано</span>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-item__header">
+            <span class="progress-item__label">Документация</span>
+            <span class="progress-item__stats">58 спецификаций</span>
+          </div>
+          <div class="progress-item__bar">
+            <div class="progress-item__fill progress-item__fill--done" style="width: 94%"></div>
+          </div>
+          <div class="progress-item__legend">
+            <span>19 page-specs</span>
+            <span>24 component specs</span>
+            <span>15 CMS docs</span>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-item__header">
+            <span class="progress-item__label">Код</span>
+            <span class="progress-item__stats">~10 339 строк</span>
+          </div>
+          <div class="progress-item__bar">
+            <div class="progress-item__fill progress-item__fill--done" style="width: 100%"></div>
+          </div>
+          <div class="progress-item__legend">
+            <span>Компоненты: 2 745</span>
+            <span>Страницы: 6 492</span>
+            <span>Иконки: 181</span>
+            <span>Стили: 853</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section__title">Не из коробки — каждый элемент создан вручную</h2>
+      <p class="section__desc">Проект не использует готовые шаблоны или темы. Все компоненты, страницы и иконки разработаны с нуля под требования школы.</p>
+
+      <div class="highlight-box">
+        <div class="highlight-box__title">Оригинальный сайт rksh-msk.ru — 38 страниц на WordPress</div>
+        <p>Полная переработка: кастомная CMS (EmDash), уникальный дизайн-код, адаптивная вёрстка mobile-first, централизованная система иконок, 22 UI-компонента с нуля.</p>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Из коробки (шаблон)</th><th>Наш проект</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Готовая тема WordPress</td><td>15 уникальных страниц с нуля</td></tr>
+          <tr><td>5–10 стандартных блоков</td><td>23 кастомных UI-компонента</td></tr>
+          <tr><td>Стоковые иконки</td><td>25 иконки в 3 стилях = 75 SVG-вариантов</td></tr>
+          <tr><td>Дефолтные формы</td><td>CMS EmDash с 12 коллекциями</td></tr>
+          <tr><td>Нет документации</td><td>58 спецификаций и документов</td></tr>
+          <tr><td>Один фиксированный дизайн</td><td>Mobile-first адаптив с дизайн-токенами</td></tr>
+          <tr><td>Контент в HTML</td><td>Контент в CMS (Portable Text + таксономии)</td></tr>
+          <tr><td>Нет SEO-инструментов</td><td>SEO-мета + sitemap из коробки</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top: 2rem; font-family: var(--font-heading); color: var(--primary);">Детализация кодовой базы</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Модуль</th><th>Строк кода</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>UI-компоненты (src/components/)</td><td>~2 745</td></tr>
+          <tr><td>Страницы (src/pages/)</td><td>~6 492</td></tr>
+          <tr><td>Иконки (src/icons/)</td><td>~181</td></tr>
+          <tr><td>Стили (src/styles/)</td><td>~853</td></tr>
+          <tr><td><strong>Итого (src/)</strong></td><td><strong>~10 339</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="pages" style="background: var(--surface-alt);">
+    <div class="container">
+      <h2 class="section__title">Спецификации страниц</h2>
+      <p class="section__desc">19 ТЗ с описанием структуры, контента и компонентов каждой страницы</p>
+      <div class="index-list">
+        <a href="pages/index.html" class="index-item">
+      <div class="index-item__title">Главная (/)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/01-design-guide.html" class="index-item">
+      <div class="index-item__title">01-design-guide</div>
+      <div class="index-item__meta"><span class="status status--todo">⬜ Запланирована</span></div>
+    </a>
+<a href="pages/02-czeny.html" class="index-item">
+      <div class="index-item__title">Цены (/czeny)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/03-otzyvy.html" class="index-item">
+      <div class="index-item__title">Отзывы (/otzyvy)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/04-prepodavateli.html" class="index-item">
+      <div class="index-item__title">Преподаватели (/prepodavateli)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/05-sveden.html" class="index-item">
+      <div class="index-item__title">Сведения (/sveden)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/06-kontakty.html" class="index-item">
+      <div class="index-item__title">Контакты (/kontakty)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/07-preimushhestva.html" class="index-item">
+      <div class="index-item__title">Преимущества (/preimushhestva)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/08-o-shkole.html" class="index-item">
+      <div class="index-item__title">О школе (/o-shkole)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/09-news.html" class="index-item">
+      <div class="index-item__title">Новости (/news)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/10-raspisanie.html" class="index-item">
+      <div class="index-item__title">Расписание (/raspisanie)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/11-fotogalereya.html" class="index-item">
+      <div class="index-item__title">Фотогалерея (/media)</div>
+      <div class="index-item__meta"><span class="status status--wip">🔨 В работе</span></div>
+    </a>
+<a href="pages/12-videoarhiv.html" class="index-item">
+      <div class="index-item__title">Видеоархив (/media)</div>
+      <div class="index-item__meta"><span class="status status--wip">🔨 В работе</span></div>
+    </a>
+<a href="pages/13-0klass.html" class="index-item">
+      <div class="index-item__title">0 класс (/0klass)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/14-nachalnaya-shkola.html" class="index-item">
+      <div class="index-item__title">Начальная школа (/nachalnaya-shkola)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/15-srednyaya-shkola.html" class="index-item">
+      <div class="index-item__title">Средняя школа (/srednyaya-shkola)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/16-doshkolniki.html" class="index-item">
+      <div class="index-item__title">Дошкольники (/doshkolniki)</div>
+      <div class="index-item__meta"><span class="status status--done">✅ Готова</span></div>
+    </a>
+<a href="pages/17-shkolniki.html" class="index-item">
+      <div class="index-item__title">Школьники (/shkolniki)</div>
+      <div class="index-item__meta"><span class="status status--wip">🔨 В работе</span></div>
+    </a>
+<a href="pages/18-attestaciya.html" class="index-item">
+      <div class="index-item__title">Аттестация (/podgotovka-attestacii)</div>
+      <div class="index-item__meta"><span class="status status--wip">🔨 В работе</span></div>
+    </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="components">
+    <div class="container">
+      <h2 class="section__title">Спецификации компонентов</h2>
+      <p class="section__desc">24 документов с описанием пропсов, вариантов и использования</p>
+      <div class="index-list">
+        <a href="components/01-card.html" class="index-item">
+      <div class="index-item__title">Card</div>
+      <div class="index-item__meta">01-card.md</div>
+    </a>
+<a href="components/02-section-title.html" class="index-item">
+      <div class="index-item__title">Section title</div>
+      <div class="index-item__meta">02-section-title.md</div>
+    </a>
+<a href="components/03-badge.html" class="index-item">
+      <div class="index-item__title">Badge</div>
+      <div class="index-item__meta">03-badge.md</div>
+    </a>
+<a href="components/04-button.html" class="index-item">
+      <div class="index-item__title">Button</div>
+      <div class="index-item__meta">04-button.md</div>
+    </a>
+<a href="components/05-icon-list.html" class="index-item">
+      <div class="index-item__title">Icon list</div>
+      <div class="index-item__meta">05-icon-list.md</div>
+    </a>
+<a href="components/10-program-card.html" class="index-item">
+      <div class="index-item__title">Program card</div>
+      <div class="index-item__meta">10-program-card.md</div>
+    </a>
+<a href="components/11-teacher-card.html" class="index-item">
+      <div class="index-item__title">Teacher card</div>
+      <div class="index-item__meta">11-teacher-card.md</div>
+    </a>
+<a href="components/12-review-card.html" class="index-item">
+      <div class="index-item__title">Review card</div>
+      <div class="index-item__meta">12-review-card.md</div>
+    </a>
+<a href="components/13-seats-card.html" class="index-item">
+      <div class="index-item__title">Seats card</div>
+      <div class="index-item__meta">13-seats-card.md</div>
+    </a>
+<a href="components/14-price-card.html" class="index-item">
+      <div class="index-item__title">Price card</div>
+      <div class="index-item__meta">14-price-card.md</div>
+    </a>
+<a href="components/15-package-table.html" class="index-item">
+      <div class="index-item__title">Package table</div>
+      <div class="index-item__meta">15-package-table.md</div>
+    </a>
+<a href="components/16-service-table.html" class="index-item">
+      <div class="index-item__title">Service table</div>
+      <div class="index-item__meta">16-service-table.md</div>
+    </a>
+<a href="components/17-document-list.html" class="index-item">
+      <div class="index-item__title">Document list</div>
+      <div class="index-item__meta">17-document-list.md</div>
+    </a>
+<a href="components/18-feature-card.html" class="index-item">
+      <div class="index-item__title">Feature card</div>
+      <div class="index-item__meta">18-feature-card.md</div>
+    </a>
+<a href="components/19-principle-list.html" class="index-item">
+      <div class="index-item__title">Principle list</div>
+      <div class="index-item__meta">19-principle-list.md</div>
+    </a>
+<a href="components/20-gallery-card.html" class="index-item">
+      <div class="index-item__title">Gallery card</div>
+      <div class="index-item__meta">20-gallery-card.md</div>
+    </a>
+<a href="components/21-video-card.html" class="index-item">
+      <div class="index-item__title">Video card</div>
+      <div class="index-item__meta">21-video-card.md</div>
+    </a>
+<a href="components/25-post-card.html" class="index-item">
+      <div class="index-item__title">Post card</div>
+      <div class="index-item__meta">25-post-card.md</div>
+    </a>
+<a href="components/26-subject-grid.html" class="index-item">
+      <div class="index-item__title">Subject grid</div>
+      <div class="index-item__meta">26-subject-grid.md</div>
+    </a>
+<a href="components/27-icon.html" class="index-item">
+      <div class="index-item__title">Icon</div>
+      <div class="index-item__meta">27-icon.md</div>
+    </a>
+<a href="components/28-pills-nav.html" class="index-item">
+      <div class="index-item__title">Pills nav</div>
+      <div class="index-item__meta">28-pills-nav.md</div>
+    </a>
+<a href="components/29-overview-cards-nav.html" class="index-item">
+      <div class="index-item__title">Overview cards nav</div>
+      <div class="index-item__meta">29-overview-cards-nav.md</div>
+    </a>
+<a href="components/30-accordion-nav.html" class="index-item">
+      <div class="index-item__title">Accordion nav</div>
+      <div class="index-item__meta">30-accordion-nav.md</div>
+    </a>
+<a href="components/README.html" class="index-item">
+      <div class="index-item__title">README</div>
+      <div class="index-item__meta">README.md</div>
+    </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cms" style="background: var(--surface-alt);">
+    <div class="container">
+      <h2 class="section__title">CMS документация</h2>
+      <p class="section__desc">15 документов по архитектуре, схеме, API и workflow</p>
+      <div class="index-list">
+        <a href="cms/00-overview.html" class="index-item">
+      <div class="index-item__title">Overview</div>
+      <div class="index-item__meta">00-overview.md</div>
+    </a>
+<a href="cms/01-schema-collections.html" class="index-item">
+      <div class="index-item__title">Schema collections</div>
+      <div class="index-item__meta">01-schema-collections.md</div>
+    </a>
+<a href="cms/02-blocks-plugin.html" class="index-item">
+      <div class="index-item__title">Blocks plugin</div>
+      <div class="index-item__meta">02-blocks-plugin.md</div>
+    </a>
+<a href="cms/03-menus-taxonomies.html" class="index-item">
+      <div class="index-item__title">Menus taxonomies</div>
+      <div class="index-item__meta">03-menus-taxonomies.md</div>
+    </a>
+<a href="cms/04-pages-templates.html" class="index-item">
+      <div class="index-item__title">Pages templates</div>
+      <div class="index-item__meta">04-pages-templates.md</div>
+    </a>
+<a href="cms/05-content-workflow.html" class="index-item">
+      <div class="index-item__title">Content workflow</div>
+      <div class="index-item__meta">05-content-workflow.md</div>
+    </a>
+<a href="cms/06-forms-integrations.html" class="index-item">
+      <div class="index-item__title">Forms integrations</div>
+      <div class="index-item__meta">06-forms-integrations.md</div>
+    </a>
+<a href="cms/07-media-assets.html" class="index-item">
+      <div class="index-item__title">Media assets</div>
+      <div class="index-item__meta">07-media-assets.md</div>
+    </a>
+<a href="cms/08-seo-meta.html" class="index-item">
+      <div class="index-item__title">Seo meta</div>
+      <div class="index-item__meta">08-seo-meta.md</div>
+    </a>
+<a href="cms/09-permissions-users.html" class="index-item">
+      <div class="index-item__title">Permissions users</div>
+      <div class="index-item__meta">09-permissions-users.md</div>
+    </a>
+<a href="cms/10-deployment-config.html" class="index-item">
+      <div class="index-item__title">Deployment config</div>
+      <div class="index-item__meta">10-deployment-config.md</div>
+    </a>
+<a href="cms/11-troubleshooting.html" class="index-item">
+      <div class="index-item__title">Troubleshooting</div>
+      <div class="index-item__meta">11-troubleshooting.md</div>
+    </a>
+<a href="cms/README.html" class="index-item">
+      <div class="index-item__title">README</div>
+      <div class="index-item__meta">README.md</div>
+    </a>
+<a href="cms/api-reference.html" class="index-item">
+      <div class="index-item__title">Api reference</div>
+      <div class="index-item__meta">api-reference.md</div>
+    </a>
+<a href="cms/migration-guide.html" class="index-item">
+      <div class="index-item__title">Migration guide</div>
+      <div class="index-item__meta">migration-guide.md</div>
+    </a>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09 · Исходники: <code>docs/</code>
+  </footer>
+</body>
+</html>

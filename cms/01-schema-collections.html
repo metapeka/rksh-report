@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema collections — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Schema collections</span></nav>
+  <div class="md-content">
+    <h1>Схема данных: коллекции EmDash</h1>
+<h2>Список коллекций</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Коллекция</th>
+<th>slug</th>
+<th>Назначение</th>
+<th>Статус</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Страницы</td>
+<td><code>pages</code></td>
+<td>Статические страницы (О школе, Контакты...)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Новости</td>
+<td><code>posts</code></td>
+<td>Блог/новости</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Преподаватели</td>
+<td><code>teachers</code></td>
+<td>Список педагогов</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Расписание</td>
+<td><code>schedule</code></td>
+<td>Расписание уроков по классам</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Преимущества</td>
+<td><code>advantages</code></td>
+<td>Преимущества школы</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Медиа</td>
+<td><code>media</code></td>
+<td>Галереи и видео</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Курсы (дошкольники)</td>
+<td><code>courses_preschool</code></td>
+<td>Программы 3–7 лет</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Курсы (школьники)</td>
+<td><code>courses_school</code></td>
+<td>Программы 6–14 лет</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Цены</td>
+<td><code>prices</code></td>
+<td>Стоимость программ</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Отзывы</td>
+<td><code>reviews</code></td>
+<td>Отзывы родителей</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Сведения</td>
+<td><code>sveden_sections</code></td>
+<td>Разделы для страницы «Сведения об образовательной организации»</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Уровни школы</td>
+<td><code>school_levels</code></td>
+<td>0 класс, начальная, средняя</td>
+<td>⬜</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Детализация коллекций</h2>
+<h3><code>pages</code> (существует)</h3>
+<p><strong>Slug:</strong> <code>pages</code><br><strong>Лейбл:</strong> Страницы<br><strong>Поддержка:</strong> drafts, revisions, seo</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Поисковое</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>✅</td>
+<td>Заголовок страницы</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>✅</td>
+<td>Основной контент (редактор)</td>
+</tr>
+</tbody></table>
+<p><strong>Пример:</strong> <code>o-shkole</code>, <code>czeny</code>, <code>kontakty</code></p>
+<hr>
+<h3><code>posts</code> (существует)</h3>
+<p><strong>Slug:</strong> <code>posts</code><br><strong>Лейбл:</strong> Новости<br><strong>Поддержка:</strong> drafts, revisions, search, seo</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Поисковое</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>✅</td>
+<td>Заголовок новости</td>
+</tr>
+<tr>
+<td><code>excerpt</code></td>
+<td>text</td>
+<td>❌</td>
+<td>✅</td>
+<td>Краткое описание (анонс)</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>✅</td>
+<td>Полный текст</td>
+</tr>
+<tr>
+<td><code>publish_date</code></td>
+<td>datetime</td>
+<td>❌</td>
+<td>❌</td>
+<td>Дата публикации (ручная)</td>
+</tr>
+</tbody></table>
+<p><strong>Пример:</strong> Новости о наборе, события школы</p>
+<hr>
+<h3><code>teachers</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>teachers</code><br><strong>Лейбл:</strong> Преподаватели<br><strong>Поддержка:</strong> drafts, revisions, seo</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>full_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>ФИО педагога</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Должность (например, «Учитель начальных классов»)</td>
+</tr>
+<tr>
+<td><code>bio</code></td>
+<td>portableText</td>
+<td>❌</td>
+<td>Биография, опыт, достижения</td>
+</tr>
+<tr>
+<td><code>photo</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Фотография (объект <code>{src, alt}</code>)</td>
+</tr>
+<tr>
+<td><code>courses</code></td>
+<td>array[reference]</td>
+<td>❌</td>
+<td>Ссылки на связанные курсы/программы</td>
+</tr>
+</tbody></table>
+<p><strong>Связи:</strong></p>
+<ul>
+<li><code>courses</code> → <code>courses_preschool</code> или <code>courses_school</code> (многие-ко-многим)</li>
+</ul>
+<p><strong>Примечание:</strong> В текущем плагине <code>rksh.teachers</code> блок жёстко ограничен 3 карточками. При переходе на коллекцию можно рендерить динамически через запрос.</p>
+<hr>
+<h3><code>schedule</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>schedule</code><br><strong>Лейбл:</strong> Расписание<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>grade</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Класс/группа («1 класс», «2 класс»)</td>
+</tr>
+<tr>
+<td><code>day_of_week</code></td>
+<td>enum</td>
+<td>✅</td>
+<td>День недели: <code>mon</code>, <code>tue</code>, <code>wed</code>, <code>thu</code>, <code>fri</code></td>
+</tr>
+<tr>
+<td><code>lessons</code></td>
+<td>array[object]</td>
+<td>✅</td>
+<td>Массив уроков: <code>{ time: &quot;8:00-9:00&quot;, subject: &quot;Математика&quot;, teacher?: string }</code></td>
+</tr>
+<tr>
+<td><code>time_range</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Общее время занятий (например «8:00–14:00»)</td>
+</tr>
+</tbody></table>
+<p><strong>Альтернативная структура:</strong></p>
+<pre><code>{
+  &quot;grade&quot;: &quot;1 класс&quot;,
+  &quot;schedule&quot;: {
+    &quot;monday&quot;: [{ &quot;time&quot;: &quot;...&quot;, &quot;subject&quot;: &quot;...&quot;, &quot;room&quot;: &quot;...&quot; }],
+    ...
+  }
+}
+</code></pre>
+<p><strong>Рендеринг:</strong> Таблица 5 дней × N уроков</p>
+<hr>
+<h3><code>advantages</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>advantages</code><br><strong>Лейбл:</strong> Преимущества<br><strong>Поддержка:</strong> drafts, revisions, seo</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Заголовок секции</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Иконка (если нужна)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Краткое описание преимущества</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Позиция для сортировки</td>
+</tr>
+</tbody></table>
+<p><strong>Пример использования:</strong></p>
+<ul>
+<li>Карточки на главной (6 преимуществ из миссии)</li>
+<li>Список «Чем мы лучше обычной школы»</li>
+</ul>
+<hr>
+<h3><code>media</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>media</code><br><strong>Лейбл:</strong> Медиа<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>type</code></td>
+<td>enum</td>
+<td>✅</td>
+<td><code>gallery</code> или <code>video</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Заголовок</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>array[object]</td>
+<td>✅</td>
+<td>Массив медиа:</td>
+</tr>
+<tr>
+<td><code>items[].url</code></td>
+<td>string</td>
+<td>✅</td>
+<td>URL файла</td>
+</tr>
+<tr>
+<td><code>items[].caption</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Подпись</td>
+</tr>
+<tr>
+<td><code>items[].thumb</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Превью (для галереи)</td>
+</tr>
+</tbody></table>
+<p><strong>Структура для видео:</strong></p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;video&quot;,
+  &quot;items&quot;: [
+    {
+      &quot;url&quot;: &quot;https://youtube.com/watch?v=...&quot;,
+      &quot;platform&quot;: &quot;youtube&quot;,
+      &quot;title&quot;: &quot;День открытых дверей 2025&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h3><code>courses_preschool</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>courses_preschool</code><br><strong>Лейбл:</strong> Курсы для дошкольников<br><strong>Поддержка:</strong> drafts, revisions, seo</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Название курса</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>✅</td>
+<td>URL-фрагмент (генерируется)</td>
+</tr>
+<tr>
+<td><code>age_range</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Возраст: «3–5 лет»</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>Подробное описание программы</td>
+</tr>
+<tr>
+<td><code>short_desc</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Краткое описание (анонс)</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Стоимость (₽/месяц)</td>
+</tr>
+<tr>
+<td><code>seats_available</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Осталось мест (статично)</td>
+</tr>
+<tr>
+<td><code>schedule</code></td>
+<td>string</td>
+<td>❌</td>
+<td>График занятий</td>
+</tr>
+<tr>
+<td><code>photo</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Фото из занятий</td>
+</tr>
+<tr>
+<td><code>cta_text</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Текст кнопки (иначе «Записаться»)</td>
+</tr>
+<tr>
+<td><code>cta_url</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Ссылка (форма записи)</td>
+</tr>
+</tbody></table>
+<p><strong>Примеры:</strong></p>
+<ul>
+<li>Подготовка к школе от 4 до 7 лет</li>
+<li>Курс «Я Сам(а)» 2.5–4 года</li>
+<li>Шахматы, живопись, логопед</li>
+</ul>
+<hr>
+<h3><code>courses_school</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>courses_school</code><br><strong>Лейбл:</strong> Курсы для школьников<br><strong>Поддержка:</strong> drafts, revisions, seo</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Название курса</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>✅</td>
+<td>URL</td>
+</tr>
+<tr>
+<td><code>grade_range</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Классы: «1–4 класс», «5–9 класс»</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>Подробное описание</td>
+</tr>
+<tr>
+<td><code>short_desc</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Анонс</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Стоимость</td>
+</tr>
+<tr>
+<td><code>seats_available</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Осталось мест</td>
+</tr>
+<tr>
+<td><code>photo</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Фото</td>
+</tr>
+<tr>
+<td><code>cta_text</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Текст кнопки</td>
+</tr>
+<tr>
+<td><code>cta_url</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Ссылка</td>
+</tr>
+</tbody></table>
+<hr>
+<h3><code>prices</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>prices</code><br><strong>Лейбл:</strong> Цены<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>program</code></td>
+<td>reference</td>
+<td>✅</td>
+<td>Ссылка на <code>courses_preschool</code> или <code>courses_school</code></td>
+</tr>
+<tr>
+<td><code>grade</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Класс (если для уровня школы)</td>
+</tr>
+<tr>
+<td><code>price_monthly</code></td>
+<td>number</td>
+<td>✅</td>
+<td>Стоимость в месяц (₽)</td>
+</tr>
+<tr>
+<td><code>price_year</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Годовая стоимость (со скидкой)</td>
+</tr>
+<tr>
+<td><code>includes</code></td>
+<td>array[string]</td>
+<td>❌</td>
+<td>Что входит («материалы», «обеды»)</td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Примечание («оплата поэтапно»)</td>
+</tr>
+</tbody></table>
+<p><strong>Вариант:</strong> вместо отдельной коллекции хранить прямо в <code>courses_*</code> полем <code>price</code>. Но лучше отдельно — гибче.</p>
+<hr>
+<h3><code>reviews</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>reviews</code><br><strong>Лейбл:</strong> Отзывы<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>author_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Имя родителя</td>
+</tr>
+<tr>
+<td><code>author_photo</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Фото (необязательно)</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>Текст отзыва</td>
+</tr>
+<tr>
+<td><code>rating</code></td>
+<td>number</td>
+<td>❌</td>
+<td>Оценка 1–5</td>
+</tr>
+<tr>
+<td><code>children_grade</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Класс ребёнка («2 класс»)</td>
+</tr>
+<tr>
+<td><code>verified</code></td>
+<td>boolean</td>
+<td>❌</td>
+<td>Подлинность (галочка от администрации)</td>
+</tr>
+</tbody></table>
+<p><strong>Использование:</strong> блок <code>ReviewsSection</code> на странице Отзывы</p>
+<hr>
+<h3><code>sveden_sections</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>sveden_sections</code><br><strong>Лейбл:</strong> Сведения об образовательной организации<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>section</code></td>
+<td>enum</td>
+<td>✅</td>
+<td><code>structure</code>, <code>docs</code>, <code>education</code>, <code>support</code>, <code>internet-contacts</code></td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>Контент раздела</td>
+</tr>
+<tr>
+<td><code>documents</code></td>
+<td>array[reference]</td>
+<td>❌</td>
+<td>Ссылки на документы (из <code>documents</code>)</td>
+</tr>
+</tbody></table>
+<p><strong>Секция (из оригинального сайта):</strong></p>
+<ol>
+<li>Структура и органы управления</li>
+<li>Документы</li>
+<li>Образование</li>
+<li>Стипендии и поддержка</li>
+<li>Международное сотрудничество</li>
+<li>Сведения для инвалидов</li>
+</ol>
+<hr>
+<h3><code>school_levels</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>school_levels</code><br><strong>Лейбл:</strong> Уровни школы<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«0 класс», «Начальная школа», «Средняя школа»</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>✅</td>
+<td><code>0klass</code>, <code>nachalnaya-shkola</code>, <code>srednyaya-shkola</code></td>
+</tr>
+<tr>
+<td><code>age_range</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«5–7 лет», «6–11 лет», «10–14 лет»</td>
+</tr>
+<tr>
+<td><code>max_class_size</code></td>
+<td>number</td>
+<td>✅</td>
+<td>Макс. размер класса (8, 15)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>Подробности программы</td>
+</tr>
+<tr>
+<td><code>features</code></td>
+<td>array[string]</td>
+<td>❌</td>
+<td>Ключевые особенности (misc)</td>
+</tr>
+<tr>
+<td><code>cta_url</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Ссылка «Записаться»</td>
+</tr>
+</tbody></table>
+<p><strong>Используется на:</strong> главной (карточки уровней) и на страницах уровней.</p>
+<hr>
+<h3><code>documents</code> (новая)</h3>
+<p><strong>Slug:</strong> <code>documents</code><br><strong>Лейбл:</strong> Документы<br><strong>Поддержка:</strong> drafts, revisions</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Название документа</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>✅</td>
+<td><code>policy</code>, <code>license</code>, <code>report</code>, <code>other</code></td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Номер документа</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>date</td>
+<td>✅</td>
+<td>Дата утверждения</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>file</td>
+<td>✅</td>
+<td>PDF/DOC файл</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Краткое описание</td>
+</tr>
+</tbody></table>
+<p><strong>Пример:</strong> Политика обработки ПДн, лицензия на образование.</p>
+<hr>
+<h2>Типы полей (Field Types) в EmDash</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Описание</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>string</code></td>
+<td>Короткий текст (≤255)</td>
+<td>название, ФИО</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>Многострочный текст</td>
+<td>описание</td>
+</tr>
+<tr>
+<td><code>portableText</code></td>
+<td>Визуальный редактор (blocks)</td>
+<td>контент страницы</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>Объект <code>{src, alt}</code></td>
+<td>лого, фото</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>Файл (PDF, DOC)</td>
+<td>документы</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>Число</td>
+<td>цена, количество мест</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td>Флаг (да/нет)</td>
+<td><code>verified</code></td>
+</tr>
+<tr>
+<td><code>datetime</code></td>
+<td>Дата+время</td>
+<td><code>publish_date</code></td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>Только дата</td>
+<td><code>date_approved</code></td>
+</tr>
+<tr>
+<td><code>enum</code></td>
+<td>Enum (выбор из списка)</td>
+<td><code>day_of_week</code></td>
+</tr>
+<tr>
+<td><code>array</code></td>
+<td>Массив значений</td>
+<td><code>tags</code>, <code>items[]</code></td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>Ссылка на другую запись</td>
+<td><code>course → courses_preschool</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связи между коллекциями</h2>
+<pre><code class="language-typescript">// teachers → courses
+teacher.data.courses = [
+  { id: &quot;course-1&quot;, collection: &quot;courses_preschool&quot; },
+  { id: &quot;course-2&quot;, collection: &quot;courses_school&quot; }
+];
+
+// advantages → page (optional)
+advantage.data.page = { id: &quot;o-shkole&quot;, collection: &quot;pages&quot; };
+
+// schedule → school_levels
+schedule.data.grade_ref = { id: &quot;1-klass&quot;, collection: &quot;school_levels&quot; };
+
+// reviews → teachers (who taught)
+reviews.data.teacher = { id: &quot;ivanov&quot;, collection: &quot;teachers&quot; };
+
+// prices → courses
+price.data.program = { id: &quot;podgotovka-4-7&quot;, collection: &quot;courses_preschool&quot; };
+</code></pre>
+<hr>
+<h2>Миграция seed.json</h2>
+<p>Текущий <code>seed/seed.json</code> содержит только <code>pages</code>, <code>posts</code>, <code>settings</code>. Нужно добавить все новые коллекции:</p>
+<pre><code class="language-json">{
+  &quot;collections&quot;: [
+    { &quot;slug&quot;: &quot;teachers&quot;, &quot;label&quot;: &quot;Преподаватели&quot;, &quot;fields&quot;: [...] },
+    { &quot;slug&quot;: &quot;schedule&quot;, &quot;label&quot;: &quot;Расписание&quot;, &quot;fields&quot;: [...] },
+    ...
+  ]
+}
+</code></pre>
+<p><strong>Порядок внесения:</strong></p>
+<ol>
+<li>Определить все поля</li>
+<li>Записать в <code>seed.json</code></li>
+<li>Запустить <code>npx emdash dev</code> (применит миграцию)</li>
+<li>Заполнить контент через админку</li>
+</ol>
+<hr>
+<h2>Дополнительные коллекции (опционально)</h2>
+<ul>
+<li><code>applications</code> — заявки с форм (хранилище)</li>
+<li><code>subscribers</code> — подписчики на рассылку</li>
+<li><code>events</code> — события школы (экскурсии, дни открытых дверей)</li>
+</ul>
+<hr>
+<h2>FAQ</h2>
+<p><strong>Q:</strong> Можно ли использовать связи many-to-many?<br><strong>A:</strong> Да, через массив <code>reference</code>: <code>[{id, collection}, ...]</code></p>
+<p><strong>Q:</strong> Как удалить поле из коллекции?<br><strong>A:</strong> В <code>seed.json</code> удалить поле → пересоздать БД (dev) или написать миграцию (prod). <strong>Данные поля потеряются.</strong></p>
+<p><strong>Q:</strong> Можно ли изменить тип поля (string → number)?<br><strong>A:</strong> Да, но существующие значения конвертировать вручную через SQL.</p>
+<p><strong>Q:</strong> Как добавить поле <code>required: true</code>?<br><strong>A:</strong> В <code>seed.json</code> добавить <code>&quot;required&quot;: true</code> в поле. Для существующих записей пустые значения станут invalid.</p>
+<hr>
+<h2>Полезные запросы SQLite (для отладки)</h2>
+<pre><code class="language-bash"># Список всех записей в pages
+sqlite3 data.db &quot;SELECT id, title FROM entries WHERE collection=&#39;pages&#39;&quot;
+
+# С/jsonb поле content
+sqlite3 data.db &quot;SELECT id, json_extract(data, &#39;$.title&#39;) FROM entries LIMIT 10&quot;
+
+# Создание миграции (скрипт)
+# — написано вручную в SQL
+</code></pre>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><a href="https://docs.emdashcms.com/reference/schema/">EmDash Schema Reference</a></li>
+<li><a href="https://docs.emdashcms.com/reference/field-types/">Field Types</a></li>
+<li><a href="https://docs.emdashcms.com/reference/field-types/reference">References &amp; Relations</a></li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

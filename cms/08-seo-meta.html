@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seo meta — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Seo meta</span></nav>
+  <div class="md-content">
+    <h1>SEO и мета-теги</h1>
+<h2>Автоматическая генерация SEO</h2>
+<p>EmDash автоматически генерирует базовые мета-теги для каждой страницы на основе:</p>
+<ul>
+<li>Поля <code>title</code> (заголовок страницы)</li>
+<li>Поля <code>excerpt</code> или первых 160 символов <code>content</code></li>
+<li>Настроек сайта (<code>settings.site_name</code>)</li>
+<li>Изображения <code>og:image</code> (если указано)</li>
+</ul>
+<p><strong>Базовые мета-теги:</strong></p>
+<pre><code class="language-html">&lt;title&gt;{title} | {site_name}&lt;/title&gt;
+&lt;meta name=&quot;description&quot; content=&quot;{excerpt}&quot; /&gt;
+&lt;meta property=&quot;og:title&quot; content=&quot;{title}&quot; /&gt;
+&lt;meta property=&quot;og:description&quot; content=&quot;{excerpt}&quot; /&gt;
+&lt;meta property=&quot;og:type&quot; content=&quot;website&quot; /&gt;
+&lt;meta property=&quot;og:url&quot; content=&quot;{canonical_url}&quot; /&gt;
+&lt;meta name=&quot;twitter:card&quot; content=&quot;summary_large_image&quot; /&gt;
+</code></pre>
+<hr>
+<h2>Настройка SEO на уровне сайта</h2>
+<p><strong>Админка:</strong> Настройки сайта → SEO</p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>site_name</code></td>
+<td>Название сайта («РКШ — Русская Классическая Школа») — используется в <code>&lt;title&gt;</code></td>
+</tr>
+<tr>
+<td><code>default_og_image</code></td>
+<td>Изображение по умолчанию для соцсетей (лого)</td>
+</tr>
+<tr>
+<td><code>google_site_verification</code></td>
+<td>Мета-тег для Google Search Console</td>
+</tr>
+<tr>
+<td><code>yandex_verification</code></td>
+<td>Яндекс.Вебмастер</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Настройка SEO на уровне страницы</h2>
+<h3>В админке (если включено)</h3>
+<p>При редактировании страницы/новости есть вкладка <strong>SEO</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Описание</th>
+<th>Приоритет</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>meta_title</code></td>
+<td>Заменяет <code>{title}</code> в <code>&lt;title&gt;</code></td>
+<td>Высокий</td>
+</tr>
+<tr>
+<td><code>meta_description</code></td>
+<td>Кастомное описание (иначе excerpt)</td>
+<td>Высокий</td>
+</tr>
+<tr>
+<td><code>meta_keywords</code></td>
+<td>Устарело, но можно добавить</td>
+<td>Низкий</td>
+</tr>
+<tr>
+<td><code>og_image</code></td>
+<td>Изображение для соцсетей (переопределяет default)</td>
+<td>Средний</td>
+</tr>
+<tr>
+<td><code>noindex</code></td>
+<td>Не индексировать страницу (для черновиков)</td>
+<td>Высокий</td>
+</tr>
+<tr>
+<td><code>canonical_url</code></td>
+<td>Канонический URL (при дублях)</td>
+<td>Высокий</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Структура заголовков (H1-H6)</h2>
+<p><strong>Правило:</strong> одна H1 на страницу.</p>
+<p>На страницах, созданных через <code>pages/[slug].astro</code>:</p>
+<ul>
+<li>H1 — это <code>page.data.title</code> (отображается в шаблоне)</li>
+<li>Подзаголовки — внутри <code>content</code> (Portable Text)</li>
+</ul>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-html">&lt;h1&gt;О школе&lt;/h1&gt; &lt;!-- из title --&gt;
+&lt;p&gt;...контент...&lt;/p&gt;
+&lt;h2&gt;Наши принципы&lt;/h2&gt; &lt;!-- из Portable Text --&gt;
+&lt;h3&gt;Принцип 1&lt;/h3&gt;
+</code></pre>
+<hr>
+<h2>URL (слаг) и permalinks</h2>
+<p><strong>Формат slug:</strong> латиница, дефисы, lowercase.</p>
+<p>Примеры:</p>
+<ul>
+<li><code>o-shkole</code> (О школе)</li>
+<li><code>prepodavateli</code> (Преподаватели)</li>
+<li><code>nachalnaya-shkola</code> (Начальная школа)</li>
+</ul>
+<p><strong>Рекомендации:</strong></p>
+<ul>
+<li>Краткие, запоминаемые</li>
+<li>Без стоп-слов (the, and, для)</li>
+<li>Ключевые слова: <code>czeny</code> (цены), <code>otzyvy</code> (отзывы)</li>
+</ul>
+<p><strong>Изменение slug:</strong> можно в админке, но будет 301 редирект? Нет — EmDash не создаёт автоматически. Нужно:</p>
+<ol>
+<li>Вручную добавить redirect в <code>src/middleware.ts</code></li>
+<li>Или использовать пакет <code>astro-redirects</code></li>
+</ol>
+<hr>
+<h2>Sitemap (карта сайта)</h2>
+<p><strong>Автогенерация:</strong> EmDash создаёт sitemap по маршрутам.</p>
+<p><strong>Доступ:</strong> <code>/_emdash/api/sitemap.xml</code> (или <code>/sitemap.xml</code>?)</p>
+<p><strong>Что включено:</strong></p>
+<ul>
+<li>Все опубликованные <code>pages</code></li>
+<li>Все <code>posts</code></li>
+<li>Коллекции (если настроены)</li>
+</ul>
+<p><strong>Настройка:</strong></p>
+<pre><code class="language-typescript">// src/pages/sitemap.xml.ts или через middleware
+import { getSitemap } from &quot;emdash&quot;;
+const sitemap = await getSitemap();
+return new Response(sitemap, { headers: { &quot;Content-Type&quot;: &quot;application/xml&quot; } });
+</code></pre>
+<p><strong>РеFrequency:</strong></p>
+<ul>
+<li>Страницы: <code>weekly</code></li>
+<li>Новости: <code>daily</code> (часто обновляются)</li>
+</ul>
+<hr>
+<h2>robots.txt</h2>
+<p><strong>Создать файл:</strong> <code>src/pages/robots.txt</code></p>
+<pre><code class="language-txt">User-agent: *
+Allow: /
+
+Sitemap: https://rksh-msk.ru/sitemap.xml
+</code></pre>
+<p><strong>Disallow для админки:</strong></p>
+<pre><code>User-agent: *
+Disallow: /_emdash/
+Disallow: /api/
+</code></pre>
+<hr>
+<h2>Structured Data (Schema.org)</h2>
+<p><strong>Цель:</strong> добавить микроразметку для поисковиков.</p>
+<h3>Organization</h3>
+<pre><code class="language-json">{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;EducationalOrganization&quot;,
+  &quot;name&quot;: &quot;РКШ — Русская Классическая Школа&quot;,
+  &quot;address&quot;: {
+    &quot;streetAddress&quot;: &quot;Соколово-Мещерская ул., 14&quot;,
+    &quot;addressLocality&quot;: &quot;Москва&quot;,
+    &quot;addressRegion&quot;: &quot;Москва&quot;,
+    &quot;postalCode&quot;: &quot;125597&quot;,
+    &quot;addressCountry&quot;: &quot;RU&quot;
+  },
+  &quot;telephone&quot;: &quot;+7 (495) 798-37-33&quot;,
+  &quot;email&quot;: &quot;info@rksh-msk.ru&quot;,
+  &quot;url&quot;: &quot;https://rksh-msk.ru&quot;,
+  &quot;logo&quot;: &quot;https://rksh-msk.ru/logo.png&quot;,
+  &quot;sameAs&quot;: [
+    &quot;https://vk.com/rksh&quot;,
+    &quot;https://t.me/rksh&quot;,
+    &quot;https://youtube.com/@rksh&quot;
+  ]
+}
+</code></pre>
+<p><strong>Куда вставить:</strong> в <code>&lt;head&gt;</code> или в <code>&lt;script type=&quot;application/ld+json&quot;&gt;</code> на главной.</p>
+<hr>
+<h2>Open Graph (соцсети)</h2>
+<p><strong>Автоматически:</strong> EmDash добавляет базовые OG-теги.</p>
+<p><strong>Кастомизация:</strong></p>
+<pre><code class="language-astro">---
+import { getSeoMeta } from &quot;emdash&quot;;
+const seo = await getSeoMeta({
+  title: page.data.title,
+  description: page.data.excerpt,
+  image: page.data.og_image?.src || defaultOgImage,
+  url: Astro.url,
+  type: &quot;article&quot; // для новостей
+});
+---
+&lt;head&gt;
+  {seo.tags.map(tag =&gt; &lt;Astro.self {...tag} /&gt;)}
+&lt;/head&gt;
+</code></pre>
+<hr>
+<h2>Canonical URL</h2>
+<p><strong>Зачем:</strong> избегать дублей контента.</p>
+<p><strong>Как:</strong> в <code>&lt;head&gt;</code>:</p>
+<pre><code class="language-html">&lt;link rel=&quot;canonical&quot; href=&quot;https://rksh-msk.ru/o-shkole/&quot; /&gt;
+</code></pre>
+<p><strong>Генерировать автоматически:</strong></p>
+<pre><code class="language-typescript">const canonical = Astro.url.pathname;
+// Если есть query params? игнорировать
+</code></pre>
+<hr>
+<h2>Обработка 404</h2>
+<p><strong>Файл:</strong> <code>src/pages/404.astro</code></p>
+<pre><code class="language-astro">---
+import Base from &quot;../layouts/Base.astro&quot;;
+---
+&lt;Base title=&quot;Страница не найдена&quot;&gt;
+  &lt;h1&gt;404 — Страница не найдена&lt;/h1&gt;
+  &lt;p&gt;Запрошенный URL не существует.&lt;/p&gt;
+  &lt;a href=&quot;/&quot;&gt;На главную&lt;/a&gt;
+&lt;/Base&gt;
+</code></pre>
+<p><strong>SEO:</strong> <code>noindex, follow</code> в meta robots.</p>
+<hr>
+<h2>noindex, nofollow</h2>
+<p><strong>Когда использовать:</strong></p>
+<ul>
+<li>Черновики (status=draft) — автоматически</li>
+<li>Administrator-only страницы (админка)</li>
+<li>Простые страницы («Спасибо за заявку»)</li>
+</ul>
+<p><strong>Как:</strong></p>
+<pre><code class="language-astro">&lt;meta name=&quot;robots&quot; content=&quot;noindex, nofollow&quot; /&gt;
+</code></pre>
+<hr>
+<h2>Контроль индексации</h2>
+<h3>Яндекс.Вебмастер</h3>
+<p>Добавить meta-тег в <code>Base.astro</code>:</p>
+<pre><code class="language-html">&lt;meta name=&quot;yandex-verification&quot; content=&quot;XXXXXXXX&quot; /&gt;
+</code></pre>
+<h3>Google Search Console</h3>
+<pre><code class="language-html">&lt;meta name=&quot;google-site-verification&quot; content=&quot;XXXXXXXX&quot; /&gt;
+</code></pre>
+<hr>
+<h2>Генерация title/description динамически</h2>
+<p><strong>Для новостей:</strong></p>
+<pre><code class="language-typescript">title: `${post.data.title} — Новости — РКШ`,
+description: post.data.excerpt || stripHtml(post.data.content).slice(0, 160)
+</code></pre>
+<p><strong>Для курсов:</strong></p>
+<pre><code class="language-typescript">title: `${course.data.title} — Курсы — РКШ`,
+description: `Цена: ${course.data.price} ₽/мес. Возраст: ${course.data.age_range}`
+</code></pre>
+<hr>
+<h2>Локализация (i18n)</h2>
+<p><strong>Пока:</strong> только русский. Если понадобится английский:</p>
+<ol>
+<li>Добавить поле <code>lang</code> в коллекции (<code>ru</code>, <code>en</code>)</li>
+<li>Создать <code>src/pages/en/[slug].astro</code></li>
+<li>Динамически подставлять <code>lang</code> в <code>html</code> tag</li>
+<li><code>hreflang</code> link tags:</li>
+</ol>
+<pre><code class="language-html">&lt;link rel=&quot;alternate&quot; hreflang=&quot;ru&quot; href=&quot;https://rksh-msk.ru/o-shkole/&quot; /&gt;
+&lt;link rel=&quot;alternate&quot; hreflang=&quot;en&quot; href=&quot;https://rksh-msk.ru/en/about/&quot; /&gt;
+</code></pre>
+<hr>
+<h2>Пагинация и SEO</h2>
+<p>Для списков (например, <code>/news/?page=2</code>):</p>
+<p><strong>canonical:</strong></p>
+<pre><code class="language-html">&lt;link rel=&quot;canonical&quot; href=&quot;https://rksh-msk.ru/news/&quot; /&gt;
+</code></pre>
+<p><strong>next/prev:</strong></p>
+<pre><code class="language-html">&lt;link rel=&quot;next&quot; href=&quot;/news/?page=2&quot; /&gt;
+&lt;link rel=&quot;prev&quot; href=&quot;/news/&quot; /&gt;
+</code></pre>
+<hr>
+<h2>Изображения и OG</h2>
+<p><strong>Оптимальные размеры:</strong></p>
+<ul>
+<li>OG image: 1200×630 px (Facebook, LinkedIn)</li>
+<li>Twitter: 1200×675 px</li>
+<li>Favicon: 32×32, 192×192 (manifest)</li>
+</ul>
+<p><strong>Генерация динамических OG:</strong></p>
+<pre><code class="language-astro">---
+import { Image } from &quot;emdash/ui&quot;;
+const ogImage = page.data.og_image || defaultLogo;
+---
+&lt;meta property=&quot;og:image&quot; content={ogImage.src} /&gt;
+&lt;meta property=&quot;og:image:width&quot; content={ogImage.width.toString()} /&gt;
+&lt;meta property=&quot;og:image:height&quot; content={ogImage.height.toString()} /&gt;
+</code></pre>
+<hr>
+<h2>Микроразметка (Schema.org)</h2>
+<h3>Article (для новостей)</h3>
+<pre><code class="language-json">{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;Article&quot;,
+  &quot;headline&quot;: &quot;{title}&quot;,
+  &quot;datePublished&quot;: &quot;{publishedAt}&quot;,
+  &quot;dateModified&quot;: &quot;{updatedAt}&quot;,
+  &quot;author&quot;: { &quot;@type&quot;: &quot;Person&quot;, &quot;name&quot;: &quot;{author_name}&quot; },
+  &quot;publisher&quot;: {
+    &quot;@type&quot;: &quot;Organization&quot;,
+    &quot;name&quot;: &quot;РКШ&quot;,
+    &quot;logo&quot;: { &quot;@type&quot;: &quot;ImageObject&quot;, &quot;url&quot;: &quot;...&quot; }
+  },
+  &quot;image&quot;: [&quot;{image_url}&quot;]
+}
+</code></pre>
+<h3>Event (для дней открытых дверей)</h3>
+<pre><code class="language-json">{
+  &quot;@type&quot;: &quot;Event&quot;,
+  &quot;name&quot;: &quot;День открытых дверей&quot;,
+  &quot;startDate&quot;: &quot;2025-05-01T10:00&quot;,
+  &quot;endDate&quot;: &quot;2025-05-01T13:00&quot;,
+  &quot;location&quot;: {
+    &quot;@type&quot;: &quot;Place&quot;,
+    &quot;address&quot;: &quot;Москва, Куркино, Соколово-Мещерская 14&quot;
+  }
+}
+</code></pre>
+<hr>
+<h2>Производительность SEO</h2>
+<h3>Core Web Vitals</h3>
+<ul>
+<li><p><strong>LCP</strong> (Largest Contentful Paint) &lt; 2.5s</p>
+<ul>
+<li>Оптимизировать изображения (WebP, lazy load)</li>
+<li>Критичный CSS inline</li>
+<li>Fonts preload</li>
+</ul>
+</li>
+<li><p><strong>FID</strong> (First Input Delay) &lt; 100 ms</p>
+<ul>
+<li>Минимизировать JS</li>
+<li>Defer non-critical</li>
+</ul>
+</li>
+<li><p><strong>CLS</strong> (Cumulative Layout Shift) &lt; 0.1</p>
+<ul>
+<li>Задать <code>width</code>/<code>height</code> для изображений</li>
+<li>Reserve space for ads/embeds</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Мониторинг SEO</h2>
+<ol>
+<li><strong>Google Search Console</strong> — индексация, ошибки, impressions</li>
+<li><strong>Yandex.Webmaster</strong> — аналогично</li>
+<li><strong>Screaming Frog</strong> — аудит мета-тегов</li>
+<li><strong>Ahrefs / SEMrush</strong> — позиции по ключам</li>
+</ol>
+<hr>
+<h2>Чек-лист SEO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> У всех страниц уникальный <code>title</code> (50-60 символов)</li>
+<li><input disabled="" type="checkbox"> Уникальный <code>description</code> (150-160 символов)</li>
+<li><input disabled="" type="checkbox"> Нет <code>noindex</code> на основных страницах</li>
+<li><input disabled="" type="checkbox"> Канонические URL указаны</li>
+<li><input disabled="" type="checkbox"> OG-теги заполнены (title, description, image, url)</li>
+<li><input disabled="" type="checkbox"> Структурированные данные (Schema.org) есть на главной</li>
+<li><input disabled="" type="checkbox"> Карта сайта (<code>sitemap.xml</code>) доступна и отправлена в поисковики</li>
+<li><input disabled="" type="checkbox"> robots.txt не блокирует важные страницы</li>
+<li><input disabled="" type="checkbox"> URL читаемые (без параметров <code>?id=123</code>)</li>
+<li><input disabled="" type="checkbox"> H1 одна на страницу, не дублируется</li>
+<li><input disabled="" type="checkbox"> Изображения имеют <code>alt</code></li>
+<li><input disabled="" type="checkbox"> Скорость загрузки: LCP &lt; 2.5s (PageSpeed Insights)</li>
+</ul>
+<hr>
+<h2>Миграция SEO со старого сайта</h2>
+<ol>
+<li><strong>Спарсить все URL</strong> со старого rksh-msk.ru (38 страниц)</li>
+<li><strong>Сопоставить slugs:</strong><ul>
+<li><code>/o-shkole/</code> → <code>/o-shkole/</code> (точно)</li>
+<li><code>/czeny/</code> → <code>/czeny/</code></li>
+<li>...</li>
+</ul>
+</li>
+<li><strong>Создать 301 redirects:</strong></li>
+</ol>
+<pre><code class="language-typescript">// src/middleware.ts
+if (oldUrl.pathname === &quot;/old-about&quot;) {
+  return Response.redirect(new URL(&quot;/o-shkole/&quot;, oldUrl), 301);
+}
+</code></pre>
+<ol start="4">
+<li><strong>Обновить sitemap</strong> — указать новые URL</li>
+<li><strong>Проверить в Search Console</strong> — нет 404 после миграции</li>
+</ol>
+<hr>
+<h2>Полезные инструменты</h2>
+<ul>
+<li><strong>PageSpeed Insights</strong> — производительность + SEO</li>
+<li><strong>Screaming Frog SEO Spider</strong> — аудит мета-тегов</li>
+<li><strong>Ahrefs Webmaster Tools</strong> — бесплатный аудит</li>
+<li><strong>Google Rich Results Test</strong> — проверка Schema.org</li>
+<li><strong>ogp.me</strong> — валидатор OG-тегов</li>
+</ul>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><code>00-overview.md</code> — архитектура</li>
+<li><code>05-content-workflow.md</code> — как редактировать SEO в админке</li>
+<li><a href="https://developers.google.com/search/docs">Google SEO Guide</a></li>
+<li><a href="https://schema.org/">Schema.org</a></li>
+<li><a href="https://ogp.me/">Open Graph Protocol</a></li>
+</ul>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Включить SEO-поля в <code>seed.json</code> для <code>pages</code> и <code>posts</code></li>
+<li><input disabled="" type="checkbox"> Добавить <code>EmDashHead</code> компонент в <code>Base.astro</code></li>
+<li><input disabled="" type="checkbox"> Реализовать динамический <code>title</code>/<code>description</code> на основе типа страницы</li>
+<li><input disabled="" type="checkbox"> Добавить Schema.org разметку (Organization, Article)</li>
+<li><input disabled="" type="checkbox"> Создать <code>src/pages/sitemap.xml.ts</code></li>
+<li><input disabled="" type="checkbox"> Создать <code>src/pages/robots.txt</code></li>
+<li><input disabled="" type="checkbox"> Настроить 301 redirects со старых URL</li>
+<li><input disabled="" type="checkbox"> Протестировать в Google Search Console (на staging)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

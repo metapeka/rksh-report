@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Permissions users — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Permissions users</span></nav>
+  <div class="md-content">
+    <h1>Пользователи и права доступа</h1>
+<h2>Обзор системы пользователей</h2>
+<p>EmDash имеет встроенную систему аутентификации и авторизации:</p>
+<ul>
+<li><strong>Аутентификация</strong> (кто вы) — локальная (email+пароль) или OAuth (Google, GitHub)</li>
+<li><strong>Авторизация</strong> (что можно) — роли и permissions</li>
+<li><strong>Сессии</strong> — управляются Astro (<code>@astrojs/node</code>)</li>
+</ul>
+<p><strong>Хранение:</strong> данные пользователей в таблице <code>users</code> (SQLite).<br><strong>Хеширование паролей:</strong> Argon2 или bcrypt (EmDash default).</p>
+<hr>
+<h2>Роли пользователей</h2>
+<table>
+<thead>
+<tr>
+<th>Роль</th>
+<th>英文</th>
+<th>Права</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Admin</strong></td>
+<td>Администратор</td>
+<td>Полный доступ: создание/удаление контента, управление пользователями, настройки сайта, плагины</td>
+</tr>
+<tr>
+<td><strong>Editor</strong></td>
+<td>Редактор</td>
+<td>Создание/редактирование любого контента (pages, posts, teachers...), но не настройки и не пользователи</td>
+</tr>
+<tr>
+<td><strong>Author</strong></td>
+<td>Автор</td>
+<td>Создание/редактирование <strong>своих</strong> записей только. Не может публиковать чужие.</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Зритель</td>
+<td>Только чтение контента, без прав на изменение</td>
+</tr>
+</tbody></table>
+<p><strong>По умолчанию:</strong> при первом запуске создаётся пользователь <code>admin@rksh-msk.ru</code> с ролью Admin.</p>
+<hr>
+<h2>Создание пользователя</h2>
+<h3>Через админку</h3>
+<ol>
+<li><code>/_emdash/admin</code> → Пользователи (Users)</li>
+<li>«+ Добавить пользователя»</li>
+<li>Заполнить:<ul>
+<li><strong>Имя</strong> (display name)</li>
+<li><strong>Email</strong> (логин)</li>
+<li><strong>Пароль</strong> (минимум 8 символов)</li>
+<li><strong>Роль</strong> (Admin/Editor/Author/Viewer)</li>
+</ul>
+</li>
+<li>«Сохранить»</li>
+</ol>
+<h3>Через CLI (emdash)</h3>
+<pre><code class="language-bash">npx emdash user:create --email=&quot;editor@rksh.ru&quot; --role=editor --name=&quot;Иван Редактор&quot;
+</code></pre>
+<hr>
+<h2>Аутентификация</h2>
+<h3>Локальная (email + password)</h3>
+<p>Стандартная форма входа <code>/login</code>.<br>EmDash хранит хеш пароля,.compare на каждом запросе.</p>
+<p><strong>Требования к паролю:</strong></p>
+<ul>
+<li>Минимум 8 символов</li>
+<li>Хотя бы одна заглавная буква</li>
+<li>Хотя бы одна цифра</li>
+<li>(опционально) special character</li>
+</ul>
+<h3>OAuth (опционально)</h3>
+<p>Настройка в <code>astro.config.mjs</code>:</p>
+<pre><code class="language-javascript">emdash({
+  auth: {
+    providers: [
+      {
+        type: &quot;google&quot;,
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      },
+      {
+        type: &quot;github&quot;,
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      },
+    ],
+  },
+});
+</code></pre>
+<p><strong>Плюсы:</strong> пользователи не помнят пароли, быстрая регистрация.<br><strong>Минусы:</strong> зависимость от сторонних сервисов.</p>
+<hr>
+<h2>Сессии</h2>
+<p><strong>Механизм:</strong> <code>@astrojs/node</code> → файловая система (dev) или Redis (prod).</p>
+<p><strong>Конфигурация:</strong></p>
+<pre><code class="language-javascript">// astro.config.mjs
+adapter: node({
+  mode: &quot;standalone&quot;,
+  session: {
+    // В production использовать Redis
+    // driver: &quot;redis&quot;,
+    // redis: { url: process.env.REDIS_URL }
+  },
+}),
+</code></pre>
+<p><strong>TTL сессии:</strong> 7 дней (по умолчанию). Можно настроить.</p>
+<hr>
+<h2>Права доступа (Permissions)</h2>
+<h3>Список permissions EmDash</h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Описание</th>
+<th>Admin</th>
+<th>Editor</th>
+<th>Author</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>content:create</code></td>
+<td>Создание записей</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (свои)</td>
+</tr>
+<tr>
+<td><code>content:update</code></td>
+<td>Редактирование</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (свои)</td>
+</tr>
+<tr>
+<td><code>content:delete</code></td>
+<td>Удаление</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>content:publish</code></td>
+<td>Публикация</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>media:upload</code></td>
+<td>Загрузка файлов</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>media:delete</code></td>
+<td>Удаление файлов</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>settings:read</code></td>
+<td>Чтение настроек</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>settings:update</code></td>
+<td>Изменение настроек</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>users:read</code></td>
+<td>Просмотр пользователей</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>users:create</code></td>
+<td>Создание пользователей</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>users:update</code></td>
+<td>Редактирование пользователей</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>users:delete</code></td>
+<td>Удаление пользователей</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>plugins:install</code></td>
+<td>Установка плагинов</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Управление пользователями</h2>
+<h3>Список пользователей</h3>
+<p>Админка → Пользователи. Таблица:</p>
+<ul>
+<li>Email</li>
+<li>Имя</li>
+<li>Роль</li>
+<li>Статус (active / disabled)</li>
+<li>Дата последнего входа</li>
+</ul>
+<h3>Изменение роли</h3>
+<ol>
+<li>Нажать на пользователя</li>
+<li>Выбрать новую роль из dropdown</li>
+<li>Сохранить</li>
+</ol>
+<h3>Блокировка пользователя</h3>
+<ul>
+<li><strong>Disable</strong> — вход запрещён, но записи сохраняются</li>
+<li><strong>Delete</strong> — полное удаление (каскадное? нужно проверить)</li>
+</ul>
+<hr>
+<h2>Аудит и логи</h2>
+<p><strong>Логи действий:</strong> EmDash может вести audit log (через плагин <code>audit-log</code> или свой).</p>
+<p><strong>Что логировать:</strong></p>
+<ul>
+<li>Вход/выход</li>
+<li>Создание/редактирование/удаление записей</li>
+<li>Изменение настроек</li>
+<li>Загрузка/удаление медиа</li>
+</ul>
+<p><strong>Хранение:</strong> отдельная коллекция <code>audit_log</code> или внешний сервис (Sentry).</p>
+<hr>
+<h2>Многофакторная аутентификация (MFA)</h2>
+<p><strong>Пока не реализована.</strong> Можно добавить:</p>
+<ul>
+<li>TOTP (Google Authenticator)</li>
+<li>SMS-коды</li>
+<li>Email-ссылки</li>
+</ul>
+<p><strong>Настройка:</strong> в админке → настройки безопасности.</p>
+<hr>
+<h2>Сброс пароля</h2>
+<p><strong>Механизм:</strong></p>
+<ol>
+<li>Пользователь нажимает «Забыли пароль?»</li>
+<li>Вводит email</li>
+<li>EmDash отправляет ссылку с токеном (срок действия 1 час)</li>
+<li>Переход по ссылке → форма нового пароля</li>
+</ol>
+<p><strong>Настройка SMTP</strong> обязательна для отправки писем.</p>
+<hr>
+<h2>Настройки безопасности</h2>
+<h3>В <code>.env</code></h3>
+<pre><code class="language-bash"># Секрет для сессий (должен быть надёжным)
+EMDASH_SECRET=supersecurekeychangeit
+
+# Сложность пароля (опционально)
+PASSWORD_MIN_LENGTH=8
+PASSWORD_REQUIRE_UPPER=true
+PASSWORD_REQUIRE_NUMBER=true
+
+# Rate limiting
+RATE_LIMIT_MAX=100  # запросов в час с IP
+</code></pre>
+<h3>В коде</h3>
+<pre><code class="language-typescript">// Максимальные попытки входа
+const MAX_LOGIN_ATTEMPTS = 5;
+// Блокировка на 15 минут после 5 неудачных
+</code></pre>
+<hr>
+<h2>IP-фильтрация (опционально)</h2>
+<p>Ограничить доступ к админке только с определённых IP:</p>
+<pre><code class="language-typescript">// src/middleware.ts
+export const onRequest = async (context) =&gt; {
+  const { url } = context;
+  if (url.pathname.startsWith(&quot;/_emdash/admin&quot;)) {
+    const ip = context.request.headers.get(&quot;x-forwarded-for&quot;) || &quot;127.0.0.1&quot;;
+    const allowed = process.env.ADMIN_IPS?.split(&quot;,&quot;) || [&quot;127.0.0.1&quot;];
+    if (!allowed.includes(ip)) {
+      return new Response(&quot;Forbidden&quot;, { status: 403 });
+    }
+  }
+};
+</code></pre>
+<hr>
+<h2>Резервное копирование</h2>
+<h3>Что бэкапить</h3>
+<ol>
+<li><strong>База данных</strong> (<code>data.db</code>) — весь контент, пользователи, настройки</li>
+<li><strong>Папка <code>uploads/</code></strong> — медиафайлы</li>
+<li><strong><code>seed.json</code></strong> — схема (можно восстановить структуру)</li>
+</ol>
+<h3>Стратегия</h3>
+<p><strong>Ежедневный бэкап:</strong></p>
+<pre><code class="language-bash"># Скрипт backup.bat
+sqlite3 data.db &quot;.backup backup/data-$(date +%Y%m%d).db&quot;
+xcopy uploads backup\uploads-$(date +%Y%m%d) /E /I
+</code></pre>
+<p><strong>Хранение:</strong> облако (Yandex Cloud, S3) + локально.</p>
+<h3>Восстановление</h3>
+<ol>
+<li>Остановить сервер</li>
+<li>Заменить <code>data.db</code> на бэкап</li>
+<li>Восстановить <code>uploads/</code></li>
+<li>Запустить <code>npm start</code></li>
+</ol>
+<hr>
+<h2>Аудит изменений</h2>
+<h3>Включение аудита</h3>
+<p>Создать/включить плагин <code>audit-log</code> (если не вшит):</p>
+<pre><code class="language-typescript">import { auditLogPlugin } from &quot;emdash/plugins/audit-log&quot;;
+emdash({
+  plugins: [auditLogPlugin()],
+});
+</code></pre>
+<h3>Просмотр логов</h3>
+<p>Админка → Аудит (или запрос к API):</p>
+<pre><code class="language-typescript">const { entries } = await getEmDashCollection(&quot;audit_log&quot;, {
+  limit: 100,
+  orderBy: { timestamp: &quot;desc&quot; },
+});
+</code></pre>
+<hr>
+<h2>Частые вопросы</h2>
+<h3>Как изменить пароль admin?</h3>
+<ol>
+<li>Войти под admin</li>
+<li>Профиль → Сменить пароль</li>
+</ol>
+<p>Если забыли пароль — через CLI:</p>
+<pre><code class="language-bash">npx emdash user:reset-password --email=admin@rksh.ru
+</code></pre>
+<h3>Как удалить пользователя?</h3>
+<p><strong>Важно:</strong> нельзя удалить последнего Admin. Сначала назначить другого.</p>
+<ol>
+<li>Админка → Пользователи</li>
+<li>Выбрать пользователя → Удалить</li>
+<li>Подтвердить</li>
+</ol>
+<p><strong>Эффект:</strong></p>
+<ul>
+<li>Записи автора (<code>posts</code>, <code>pages</code>) сохраняются, но поле <code>created_by</code> станет <code>null</code></li>
+<li>Не каскадное удаление контента</li>
+</ul>
+<hr>
+<h2>Best practices</h2>
+<ol>
+<li><strong>Никому не давать Admin</strong> — только владельцу/техническому специалисту</li>
+<li><strong>Editor</strong> — для контент-менеджеров (редактируют всё, но не настройки)</li>
+<li><strong>Author</strong> — для внешних сотрудников (только свои материалы)</li>
+<li><strong>Отключить неактивных</strong> через 90 дней неиспользования</li>
+<li><strong>Обязательные логи:</strong> вход, выход, изменение пароля</li>
+<li><strong>Регулярный аудит</strong> (раз в квартал) — кто что менял</li>
+</ol>
+<hr>
+<h2>Интеграция с Active Directory / LDAP</h2>
+<p><strong>Пока не поддерживается.</strong> Можно написать кастомный auth provider:</p>
+<pre><code class="language-typescript">// plugins/ldap-auth/src/index.ts
+export function ldapAuth(options) {
+  return definePlugin({
+    auth: {
+      providers: [
+        {
+          type: &quot;custom&quot;,
+          name: &quot;LDAP&quot;,
+          handler: async (credentials) =&gt; {
+            // проверить в LDAP
+            // вернуть user object
+          },
+        },
+      ],
+    },
+  });
+}
+</code></pre>
+<hr>
+<h2>Защита от брутфорса</h2>
+<p><strong>Встроенная защита EmDash:</strong></p>
+<ul>
+<li>После 5 неудачных попыток → блокировка на 15 минут</li>
+<li>Логгирование в <code>audit_log</code></li>
+</ul>
+<p><strong>Усиление:</strong></p>
+<ul>
+<li>reCAPTCHA на форме входа</li>
+<li>Уведомление email при новом входе</li>
+</ul>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><code>00-overview.md</code> — архитектура</li>
+<li><code>02-blocks-plugin.md</code> — плагины</li>
+<li><a href="https://docs.emdashcms.com/auth/">EmDash Auth Docs</a></li>
+<li><a href="https://docs.astro.build/en/guides/sessions/">Astora Sessions</a></li>
+</ul>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Настроить роли: Admin, Editor, Author</li>
+<li><input disabled="" type="checkbox"> Создать пользователей (content-менеджер, редактор)</li>
+<li><input disabled="" type="checkbox"> Включить OAuth (Google) для удобства</li>
+<li><input disabled="" type="checkbox"> Настроить SMTP для сброса пароля</li>
+<li><input disabled="" type="checkbox"> Включить audit-log плагин</li>
+<li><input disabled="" type="checkbox"> Настроить IP-фильтр для админки (только офис)</li>
+<li><input disabled="" type="checkbox"> Периодический бэкап БД (cron)</li>
+<li><input disabled="" type="checkbox"> Документировать процесс смены пароля</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Troubleshooting — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Troubleshooting</span></nav>
+  <div class="md-content">
+    <h1>Решение проблем: troubleshooting</h1>
+<h2>Ошибки запуска dev-сервера</h2>
+<h3><code>createPlugin is not a function</code></h3>
+<p><strong>Симптомы:</strong></p>
+<pre><code>[ERROR] TypeError: (0 , __vite_ssr_import_0__.createPlugin) is not a function
+    at eval (virtual:emdash\plugins:9:16)
+</code></pre>
+<p><strong>Причина:</strong> Плагин экспортирует <code>export default definePlugin(...)</code>, а EmDash ожидает <strong>named export</strong> <code>createPlugin</code>.</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-typescript">// plugins/rksh-blocks/src/sandbox-entry.ts
+// ❌ НЕПРАВИЛЬНО:
+export default definePlugin({...});
+
+// ✅ ПРАВИЛЬНО:
+export function createPlugin(options = {}) {
+  return definePlugin({
+    id: &quot;rksh-blocks&quot;,
+    version: &quot;1.0.0&quot;,
+    admin: { ... },
+  });
+}
+</code></pre>
+<p><strong>Зачем:</strong> EmDash загружает плагин через <code>import { createPlugin } from &quot;plugin-entrypoint&quot;</code>.</p>
+<hr>
+<h3><code>Content config not loaded</code></h3>
+<p><strong>Симтом:</strong>  </p>
+<pre><code>[WARN] [content] Content config not loaded
+</code></pre>
+<p><strong>Причина:</strong> Не найден <code>seed/seed.json</code> или ошибка синтаксиса JSON.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Проверить, что файл существует: <code>ls seed/seed.json</code></li>
+<li>Валидировать JSON:</li>
+</ol>
+<pre><code class="language-bash">npx emdash seed seed/seed.json --validate
+</code></pre>
+<ol start="3">
+<li>Если ошибка — исправить (пропущена запятая, невалидный тип поля)</li>
+</ol>
+<hr>
+<h3><code>Address already in use</code> (порт 4321 занят)</h3>
+<p><strong>Причина:</strong> другой процесс уже слушает порт.</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash"># Найти PID
+netstat -ano | findstr :4321
+# или
+lsof -i :4321
+
+# Убить процесс
+taskkill /PID &lt;PID&gt; /F  # Windows
+kill -9 &lt;PID&gt;          # Linux/Mac
+
+# Или изменить порт в .env
+PORT=4322 npm run dev
+</code></pre>
+<hr>
+<h3>Database locked / SQLite busy</h3>
+<p><strong>Причина:</strong> несколько processes пишут в SQLite одновременно (редко в dev).</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Убедиться, что нет других инстансов dev-сервера</li>
+<li>В <code>astro.config.mjs</code>:</li>
+</ol>
+<pre><code class="language-javascript">database: sqlite({
+  url: &quot;file:./data.db?cache=shared&amp;_journal_mode=WAL&quot;,
+}),
+</code></pre>
+<p>WAL mode позволяет concurrent reads/writes.</p>
+<hr>
+<h2>Ошибки в админке</h2>
+<h3>Не могу войти (неверный пароль)</h3>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Проверить <code>.env</code> — нет ли <code>EMDASH_SECRET</code>?</li>
+<li>Сбросить пароль через CLI:</li>
+</ol>
+<pre><code class="language-bash">npx emdash user:reset-password --email=admin@rksh-msk.ru
+</code></pre>
+<ol start="3">
+<li>Если не помогает — удалить <code>data.db</code> и пересоздать (теряется весь контент!)</li>
+</ol>
+<hr>
+<h3>Странности в админке (UI глючит)</h3>
+<p><strong>Причина:</strong> кэш Vite устарел.</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash"># Очистить кэш
+rm -rf .astro/
+rm -rf node_modules/.vite
+
+# Перезапустить
+npm run dev
+</code></pre>
+<hr>
+<h3>Меню не обновляется после редактирования</h3>
+<p><strong>Причина:</strong> кэш контента не инвалидировался.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Убедиться, что на странице есть <code>Astro.cache.set(cacheHint)</code></li>
+<li>В dev-режиме кэш disabled, в prod — проверить TTL</li>
+<li>Вручную очистить кэш (если Redis):</li>
+</ol>
+<pre><code class="language-bash">redis-cli FLUSHALL
+</code></pre>
+<hr>
+<h2>Проблемы с контентом</h2>
+<h3>Изображения не отображаются</h3>
+<p><strong>Проверка:</strong></p>
+<ol>
+<li>В админке: Медиа → найти файл → проверить <code>URL</code> (должен быть <code>/_emdash/api/media/file/...</code>)</li>
+<li>На фронте: <code>&lt;img src={image.src}&gt;</code> — network tab в DevTools — 404?</li>
+<li>Папка <code>uploads/</code> существует? Права на чтение?</li>
+</ol>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash"># Проверить, что файл на диске
+ls uploads/2025/04/15/photo.jpg
+
+# Если нет — перезагрузить через админку
+</code></pre>
+<p><strong>Если изображение в Portable Text:</strong></p>
+<pre><code class="language-astro">import { Image } from &quot;emdash/ui&quot;;
+&lt;Image image={entry.data.image} alt=&quot;...&quot; /&gt;
+</code></pre>
+<p>Нельзя: <code>&lt;img src={entry.data.image} /&gt;</code> — будет <code>[object Object]</code>.</p>
+<hr>
+<h3>Блоки не появляются в <code>/</code> меню редактора</h3>
+<p><strong>Причины:</strong></p>
+<ol>
+<li>Плагин не загружен — серверные логи: <code>createPlugin is not a function</code></li>
+<li>Dev-сервер не перезапускался после изменений в плагине</li>
+<li>В <code>astro.config.mjs</code> нет <code>plugins: [rkshBlocks()]</code></li>
+</ol>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Перезапустить dev completely (не просто HMR)</li>
+<li>Проверить <code>astro.config.mjs</code>:</li>
+</ol>
+<pre><code class="language-javascript">import { rkshBlocks } from &quot;@rksh/blocks&quot;;
+emdash({
+  plugins: [rkshBlocks()],
+}),
+</code></pre>
+<ol start="3">
+<li>Проверить, что <code>@rksh/blocks</code> установлен: <code>ls node_modules/@rksh/blocks</code></li>
+</ol>
+<hr>
+<h3>Portable Text отображает [object Object]</h3>
+<p><strong>Причина:</strong> в контенте <code>image</code> объект, а вы выводите как строку.</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-astro">&lt;!-- ❌ --&gt;
+&lt;img src={post.data.image.src} /&gt;
+
+&lt;!-- ✅ (правильный компонент EmDash) --&gt;
+&lt;Image image={post.data.image} alt={post.data.image.alt} /&gt;
+</code></pre>
+<hr>
+<h3>Slug не сохраняется / дублируется</h3>
+<p><strong>Причина:</strong> slug должен быть уникальным в коллекции.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>В админке: редактировать slug вручную</li>
+<li>Если «already exists» — добавить цифру (<code>o-shkole-2</code>)</li>
+<li>Влиять на URL — менять slug, но тогда старый URL сломается. Нужен redirect.</li>
+</ol>
+<hr>
+<h3>404 на странице после публикации</h3>
+<p><strong>Проверка:</strong></p>
+<ol>
+<li>Slug correct? <code>/o-shkole/</code> в меню</li>
+<li>Файл <code>src/pages/pages/[slug].astro</code> существует</li>
+<li>Запись в БД: <code>sqlite3 data.db &quot;SELECT * FROM entries WHERE collection=&#39;pages&#39; AND slug=&#39;o-shkole&#39;&quot;</code></li>
+<li>Статус <code>published</code>?</li>
+</ol>
+<p><strong>Решение:</strong> если запись есть, но 404 — возможно, роут не зарегистрировался. Проверить <code>getStaticPaths()</code>.</p>
+<hr>
+<h2>Ошибки TypeScript</h2>
+<h3><code>TS2307: Cannot find module</code></h3>
+<p>EmDash типы не сгенерированы.</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash">npx emdash types
+# или
+npm run typecheck  #Astro check
+</code></pre>
+<p>Если ошибка persists — удалить <code>tsconfig.tsbuildinfo</code> и <code>emdash-env.d.ts</code>, перезапустить dev.</p>
+<hr>
+<h3>Type mismatch в <code>entry.data</code></h3>
+<p><strong>Пример:</strong> <code>Property &#39;excerpt&#39; does not exist on type...</code></p>
+<p><strong>Причина:</strong> <code>emdash-env.d.ts</code> устарел (коллекция изменилась, типы не регенерировались).</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash">npx emdash types --force
+# или удалить файл и перезапустить dev
+rm emdash-env.d.ts
+npm run dev
+</code></pre>
+<hr>
+<h2>Производительность</h2>
+<h3>Страницы медленно грузят</h3>
+<p><strong>Диагностика:</strong></p>
+<ol>
+<li>Открыть DevTools → Network → проверить время ответа</li>
+<li>Посмотреть server logs: запрос к БД длится &gt; 200 мс?</li>
+</ol>
+<p><strong>Оптимизации:</strong></p>
+<ol>
+<li><strong>Кэширование:</strong> убедиться, что <code>Astro.cache.set(cacheHint)</code> есть на всех страницах</li>
+<li><strong>Индексы БД:</strong> sqlite3 → <code>CREATE INDEX idx_entries_collection_slug ON entries(collection, slug);</code></li>
+<li><strong>N+1 запросы:</strong> не делать запрос в цикле. Использовать <code>include</code> или batch.</li>
+<li><strong>Оптимизировать изображения:</strong> сжать, WebP, lazy load.</li>
+</ol>
+<hr>
+<h3>Высокое CPU / Memory</h3>
+<p><strong>Причины:</strong></p>
+<ul>
+<li>Большое количество simultaneous connections (нет connection pooling в SQLite)</li>
+<li>Утечка памяти в плагине (closure, global variable)</li>
+</ul>
+<p><strong>Решение:</strong></p>
+<ol>
+<li><code>top</code> / <code>htop</code> — посмотретьProcess</li>
+<li>Если Node &gt; 1 GB — investigate heap dump</li>
+<li>Ограничить параллельные запросы (через Nginx limits)</li>
+</ol>
+<hr>
+<h2>Безопасность</h2>
+<h3>Подозрительные файлы в <code>uploads/</code></h3>
+<p><strong>.php, .js, .exe</strong> — потенциальные backdoors.</p>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash"># Найти dangerous extensions
+find uploads/ -type f \( -name &quot;*.php&quot; -o -name &quot;*.js&quot; -o -name &quot;*.exe&quot; \)
+# Удалить
+find ... -delete
+# Заблокировать в storage config (allowlist)
+</code></pre>
+<hr>
+<h3>SQL Injection</h3>
+<p>EmDash использует параметризованные запросы (Kysely), инъекций нет.<br>Но если пишете raw queries — используйте параметры:</p>
+<pre><code class="language-typescript">db.raw(&quot;SELECT * FROM entries WHERE slug = ?&quot;, [slug]);
+</code></pre>
+<p>Never string concatenation.</p>
+<hr>
+<h2>Сеть</h2>
+<h3>Cannot connect to localhost:4321</h3>
+<p><strong>Причины:</strong></p>
+<ul>
+<li>Сервер не запущен</li>
+<li>Порт другой (смотрите консоль при старте)</li>
+<li>Фаервол блокирует</li>
+</ul>
+<p><strong>Решение:</strong></p>
+<pre><code class="language-bash"># Проверить, слушает ли порт
+netstat -an | grep 4321
+
+# Запустить сервер
+npm run dev
+
+# Проверить логи
+cat .astro/console.log  # или смотреть в окне dev.bat
+</code></pre>
+<hr>
+<h2>Медиа</h2>
+<h3>Превышен лимит размера файла</h3>
+<p><strong>Ошибка:</strong> <code>File too large (max 10MB)</code></p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Увеличить лимит в storage config:</li>
+</ol>
+<pre><code class="language-javascript">storage: local({
+  directory: &quot;./uploads&quot;,
+  maxFileSize: 50 * 1024 * 1024, // 50 MB
+}),
+</code></pre>
+<ol start="2">
+<li>Проверить Nginx/proxy limits: <code>client_max_body_size</code></li>
+</ol>
+<hr>
+<h3>Broken images after migration</h3>
+<p><strong>Причина:</strong> URL в контенте старые (<code>/wp-content/...</code>), а файлы лежат в <code>uploads/</code> с другими именами.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Обновить все записи:</li>
+</ol>
+<pre><code class="language-sql">UPDATE entries
+SET content = replace(content, &#39;https://rksh-msk.ru/wp-content/&#39;, &#39;/_emdash/api/media/file/&#39;)
+WHERE collection=&#39;pages&#39;;
+</code></pre>
+<ol start="2">
+<li>Или скриптом на Node пройтись по всем entries и обновить <code>image.src</code></li>
+</ol>
+<hr>
+<h2>Частые вопросы (FAQ)</h2>
+<h3>«Как очистить кэш?»</h3>
+<pre><code class="language-bash"># EmDash кэш (in-memory) — перезапуск сервера
+#Redis кэш
+redis-cli FLUSHALL
+#Vite кэш
+rm -rf node_modules/.vite
+</code></pre>
+<h3>«Как увидеть SQL-запросы?»</h3>
+<p>Включить логирование:</p>
+<pre><code class="language-typescript">// src/middleware.ts
+import { getDb } from &quot;emdash/db&quot;;
+getDb().on(&quot;query&quot;, (query) =&gt; console.log(&quot;[SQL]&quot;, query));
+</code></pre>
+<h3>«Как увеличить лимит загрузки?»</h3>
+<p>В <code>astro.config.mjs</code>:</p>
+<pre><code class="language-javascript">emdash({
+  storage: local({
+    maxFileSize: 50 * 1024 * 1024, // 50 MB
+  }),
+}),
+</code></pre>
+<hr>
+<h3>«Нет места на диске»</h3>
+<pre><code class="language-bash"># Проверить
+df -h
+# Очистить логи
+rm -rf logs/*
+# Очистить неиспользуемые Docker образы
+docker system prune -a
+# Удалить старые бэкапы
+find /backups -type f -mtime +30 -delete
+</code></pre>
+<hr>
+<h3>«Почему в продакшне 500 error?»</h3>
+<ol>
+<li>Проверить логи: <code>pm2 logs rksh-web</code> или <code>docker logs &lt;container&gt;</code></li>
+<li>Убедиться, что <code>.env.production</code> загружен (переменные окружения)</li>
+<li>Проверить, что папка <code>uploads/</code> доступна на запись</li>
+<li>Проверить подключение к БД (файл <code>data.db</code> существует)</li>
+</ol>
+<hr>
+<h3>«Как посмотреть ошибки в production?»</h3>
+<p><strong>Если Docker:</strong></p>
+<pre><code class="language-bash">docker logs -f &lt;container_name&gt;
+</code></pre>
+<p><strong>Если PM2:</strong></p>
+<pre><code class="language-bash">pm2 logs rksh-web
+# или
+tail -f ~/.pm2/logs/rksh-web-error.log
+</code></pre>
+<p><strong>Если просто Node:</strong></p>
+<pre><code class="language-bash"># Пришить forever или аналоги
+</code></pre>
+<hr>
+<h2>Отладка</h2>
+<h3>Включить debug logs</h3>
+<pre><code class="language-bash">DEBUG=emdash:* npm run dev
+# или
+NODE_DEBUG=verbose npm run dev
+</code></pre>
+<hr>
+<h3>Логи EmDash</h3>
+<p>EmDash использует <code>consola</code>. Можно настроить:</p>
+<pre><code class="language-typescript">// src/live.config.ts
+import { defineConfig } from &quot;emdash/config&quot;;
+export default defineConfig({
+  logging: {
+    level: &quot;debug&quot;, // trace, debug, info, warn, error
+  },
+});
+</code></pre>
+<hr>
+<h3>Брейкпоинты в VS Code</h3>
+<ol>
+<li>Открыть <code>src/pages/index.astro</code></li>
+<li>Добавить <code>debugger;</code> в <code>&lt;script&gt;</code> (или <code>console.log</code>)</li>
+<li>Запустить dev server с <code>--inspect</code>:</li>
+</ol>
+<pre><code class="language-bash">node --inspect ./dist/server/entry.mjs
+</code></pre>
+<ol start="4">
+<li>Attach VS Code debugger (port 9229)</li>
+</ol>
+<hr>
+<h2>Исправление багов</h2>
+<h3>Шаги:</h3>
+<ol>
+<li><strong>Воспроизвести:</strong> чётко описать шаги, которые приводят к ошибке</li>
+<li><strong>Собрать логи:</strong> серверные, браузерные console, network tab</li>
+<li><strong>Изолировать:</strong> минимальный case (например, один блок)</li>
+<li><strong>Искать в коде:</strong> <code>grep</code> по ключевым словам ошибки</li>
+<li><strong>Создать issue</strong> в репозитории (если проблема в EmDash)</li>
+<li><strong>Создать PR</strong> с фиксом (если знаете решение)</li>
+</ol>
+<hr>
+<h2>Где искать помощь</h2>
+<ol>
+<li><strong>Документация EmDash:</strong> <a href="https://docs.emdashcms.com">https://docs.emdashcms.com</a></li>
+<li><strong>GitHub Issues:</strong> <a href="https://github.com/emdash-cms/emdash/issues">https://github.com/emdash-cms/emdash/issues</a></li>
+<li><strong>Discord/Slack:</strong> (если есть社区)</li>
+<li><strong>Этот репозиторий:</strong> <code>docs/cms/</code> — локальная документация</li>
+</ol>
+<hr>
+<h2>Что делать, если ничего не помогает</h2>
+<ol>
+<li><strong>Очистить кэш полностью:</strong></li>
+</ol>
+<pre><code class="language-bash">rm -rf .astro/
+rm -rf node_modules/.vite
+rm -rf node_modules/.cache
+npm run dev
+</code></pre>
+<ol start="2">
+<li><strong>Переустановить зависимости:</strong></li>
+</ol>
+<pre><code class="language-bash">rm -rf node_modules package-lock.json
+npm install
+</code></pre>
+<ol start="3">
+<li><strong>Удалить БД и пересоздать (данные потеряются!):</strong></li>
+</ol>
+<pre><code class="language-bash">rm data.db
+rm -rf uploads/
+npx emdash dev  # создаст пустую БД из seed
+</code></pre>
+<ol start="4">
+<li><strong>Клонировать заново</strong> и переустановить</li>
+</ol>
+<hr>
+<h2>Профилактика</h2>
+<ul>
+<li><strong>Не редактировать <code>data.db</code> вручную</strong> (кроме SELECT)</li>
+<li><strong>Не коммитить <code>data.db</code></strong> в git (в .gitignore)</li>
+<li><strong>Регулярно бэкапить</strong> (<code>uploads/</code>, <code>data.db</code>)</li>
+<li><strong>Не удалять поля из <code>seed.json</code></strong> в production без миграции</li>
+<li><strong>Писать миграции</strong> при изменении schema</li>
+</ul>
+<hr>
+<h2>Checklist для быстрой диагностики</h2>
+<p><strong>Сервер не запускается:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>npm install</code> прошёл без ошибок</li>
+<li><input disabled="" type="checkbox"> <code>EMDASH_SECRET</code> установлен</li>
+<li><input disabled="" type="checkbox"> Порт свободен (4321)</li>
+<li><input disabled="" type="checkbox"> <code>data.db</code> не заблокирован</li>
+<li><input disabled="" type="checkbox"> Логи: <code>npm run dev 2&gt;&amp;1 | tee log.txt</code></li>
+</ul>
+<p><strong>Страница 404:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Slug совпадает с URL</li>
+<li><input disabled="" type="checkbox"> Статус <code>published</code></li>
+<li><input disabled="" type="checkbox"> <code>getEmDashEntry</code> возвращает entry (console.log)</li>
+<li><input disabled="" type="checkbox"> Роут <code>[slug].astro</code> существует</li>
+</ul>
+<p><strong>Изображение не грузится:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Network tab → статус 200?</li>
+<li><input disabled="" type="checkbox"> URL правильный (<code>/_emdash/api/media/file/...</code>)</li>
+<li><input disabled="" type="checkbox"> Файл на диске есть</li>
+<li><input disabled="" type="checkbox"> <code>alt</code> текст не пустой (не влияет, но для валидности)</li>
+</ul>
+<p><strong>Форма не отправляется:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> JS console → ошибки?</li>
+<li><input disabled="" type="checkbox"> Network → POST request → статус 200?</li>
+<li><input disabled="" type="checkbox"> CORS? (если фронт и бэкенд на разных доменах)</li>
+<li><input disabled="" type="checkbox"> honeypot заполнен? (спам-фильтр)</li>
+</ul>
+<hr>
+<h2>Ссылки на похожие проблемы</h2>
+<ul>
+<li><a href="https://github.com/emdash-cms/emdash/issues">EmDash GitHub Issues</a></li>
+<li><a href="https://discord.gg/astro">Astro Discord</a></li>
+<li><a href="https://stackoverflow.com/questions/tagged/astro+emdash">Stack Overflow</a></li>
+</ul>
+<hr>
+<h2>When all else fails</h2>
+<p><strong>Пересоздать проект:</strong></p>
+<pre><code class="language-bash"># Backup
+cp data.db data.db.backup
+cp -r uploads uploads.backup
+
+# Удалить
+rm -rf node_modules .astro data.db uploads/
+
+# Переустановить
+npm install
+npx emdash dev  # создаст пустую БД
+
+# Имигрировать контент (если были бэкапы)
+# Или вручную заново
+</code></pre>
+<hr>
+<p><strong>Always keep backups before making schema changes!</strong></p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Videoarhiv — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Videoarhiv</span></nav>
+  <div class="md-content">
+    <h1>Видеоархив (/videoarhiv)</h1>
+<h2>Статус: 🔨 В работе</h2>
+<blockquote>
+<p>Видеоархив — вкладка «Видео» на странице <code>/media</code>. Отдельной страницы <code>/videoarhiv</code> нет.</p>
+</blockquote>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Родительская страница: <code>src/pages/media.astro</code></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Видео</td>
+<td>CMS <code>media_videos</code> collection</td>
+</tr>
+<tr>
+<td>Категории</td>
+<td>Вычисляются из <code>category</code> поля записей (<code>[...new Set(videos.map(v =&gt; v.data.category))]</code>)</td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>media_videos</code></h3>
+<p>Seed-схема (устарела — не совпадает с кодом страницы):</p>
+<table>
+<thead>
+<tr>
+<th>Поле (seed)</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Заголовок</td>
+</tr>
+<tr>
+<td><code>youtube_id</code></td>
+<td>string</td>
+<td>✅</td>
+<td>YouTube ID</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>text</td>
+<td>❌</td>
+<td>Описание</td>
+</tr>
+</tbody></table>
+<p>Поля, используемые в коде страницы (фактические):</p>
+<table>
+<thead>
+<tr>
+<th>Поле (код)</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Заголовок → VideoCard title</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>Ссылка на видео → VideoCard url</td>
+</tr>
+<tr>
+<td><code>thumbnail</code></td>
+<td>image</td>
+<td>Превью → <code>thumbnail.src</code> для VideoCard thumbnailUrl</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>Категория для фильтрации</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ Расхождение: seed-схема содержит <code>youtube_id</code> + <code>description</code>, а страница использует <code>url</code> + <code>thumbnail</code> + <code>category</code>. Схему нужно обновить через Admin UI.</p>
+</blockquote>
+<hr>
+<h3>Структура вкладки (внутри media.astro)</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  media-hero                                  │
+│  h1: Медиа                                   │
+│  p: Фотогалерея и видеоархив нашей школы      │
+├─────────────────────────────────────────────┤
+│  media-tabs                                  │
+│  [Фотогалерея] [Видео]  ← tabs               │
+├─────────────────────────────────────────────┤
+│  tab-videos (media-videos, hidden по умолч.)  │
+│  media-filters (если &gt;1 категории):           │
+│    [Все] [Категория1] [Категория2] ...        │
+│  media-grid--videos (3×):                     │
+│  ┌────────┐ ┌────────┐ ┌────────┐          │
+│  │ Video  │ │ Video  │ │ Video  │ ← VideoCard│
+│  │ Card   │ │ Card   │ │ Card   │          │
+│  └────────┘ └────────┘ └────────┘          │
+│  ИЛИ                                         │
+│  media-empty: «Видео скоро появятся»          │
+├─────────────────────────────────────────────┤
+│  media-cta (bg: primary, text: surface)       │
+│  h2: Хотите увидеть школу своими глазами?      │
+│  p: Запишитесь на экскурсию...                 │
+│  Button warm lg → /kontakty                   │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p>Вкладка видео скрыта по умолчанию (<code>.media-videos--hidden { display: none }</code>). Переключение через JS-обработчик на <code>.media-tabs__btn</code>.</p>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VideoCard</td>
+<td><code>ui/VideoCard.astro</code></td>
+<td>Все видео из <code>media_videos</code></td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию» (variant=warm, size=lg)</td>
+</tr>
+</tbody></table>
+<h3>VideoCard props</h3>
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Название видео</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>Ссылка (внешняя, <code>target=&quot;_blank&quot;</code>)</td>
+</tr>
+<tr>
+<td><code>thumbnailUrl</code></td>
+<td>string</td>
+<td>URL превью (<code>v.data.thumbnail?.src</code>)</td>
+</tr>
+<tr>
+<td><code>thumbnailAlt</code></td>
+<td>string</td>
+<td>Alt-текст превью</td>
+</tr>
+</tbody></table>
+<p>VideoCard — ссылка (<code>&lt;a&gt;</code>) с превью 16:9, play-иконкой по hover (абсолютный оверлей) и заголовком внизу.</p>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.media-videos</code></td>
+<td>Секция видео (padding 2xl→4xl)</td>
+</tr>
+<tr>
+<td><code>.media-videos--hidden</code></td>
+<td>display: none (скрытая вкладка)</td>
+</tr>
+<tr>
+<td><code>.media-grid--videos</code></td>
+<td>Grid 3× видео (gap xl; 1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.media-grid__item</code></td>
+<td>Обёртка VideoCard (data-category для JS-фильтра)</td>
+</tr>
+<tr>
+<td><code>.media-grid__item--hidden</code></td>
+<td>display: none (скрыт фильтром)</td>
+</tr>
+</tbody></table>
+<p>Остальные стили общие с фотогалереей — см. <a href="11-fotogalereya.html">11-fotogalereya.md</a>.</p>
+<hr>
+<h2>JS-логика (встроена в media.astro)</h2>
+<ol>
+<li><strong>Табы:</strong> клик по <code>.media-tabs__btn</code> переключает видимость <code>#tab-photos</code> / <code>#tab-videos</code> через toggle класса <code>.media-videos--hidden</code></li>
+<li><strong>Фильтры:</strong> клик по <code>.media-filters__btn</code> фильтрует <code>.media-grid__item</code> по <code>data-category</code> (toggle <code>.media-grid__item--hidden</code>)</li>
+</ol>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/videoarhiv/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>URL</td>
+<td>Отдельная страница <code>/videoarhiv/</code></td>
+<td>Вкладка на <code>/media</code></td>
+</tr>
+<tr>
+<td>Контент</td>
+<td>Пустая (только виджет чата)</td>
+<td>VideoCard grid 3× из CMS</td>
+</tr>
+<tr>
+<td>Встраивание</td>
+<td>Неизвестно (пустая страница)</td>
+<td>Ссылка на внешний YouTube (target=_blank)</td>
+</tr>
+<tr>
+<td>Фильтры</td>
+<td>Нет</td>
+<td>Категории-фильтры (pill-кнопки)</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите увидеть школу своими глазами?» + Button warm</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Обновить схему <code>media_videos</code> — заменить <code>youtube_id</code> на <code>url</code> (string), <code>description</code> на <code>thumbnail</code> (image), добавить <code>category</code> (string)</li>
+<li><input disabled="" type="checkbox"> Добавить записи-видео в CMS (пока коллекция пуста)</li>
+<li><input disabled="" type="checkbox"> Решить: создать отдельную страницу <code>/videoarhiv</code> или оставить вкладкой на <code>/media</code></li>
+<li><input disabled="" type="checkbox"> Рассмотреть встроенный YouTube-плеер вместо внешней ссылки</li>
+<li><input disabled="" type="checkbox"> Добавить страницу <code>pages/media</code> в CMS для SEO-мета</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

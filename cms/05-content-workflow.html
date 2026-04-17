@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content workflow — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Content workflow</span></nav>
+  <div class="md-content">
+    <h1>Workflow: создание и редактирование контента</h1>
+<h2>Доступ к админке</h2>
+<p><strong>URL:</strong> <code>http://localhost:4321/_emdash/admin</code><br><strong>Первоначальная настройка:</strong> при первом запуске <code>npx emdash dev</code> создаётся админ-пользователь. Логин/пароль можно посмотреть в консоли или в <code>.env</code>.</p>
+<h2>Общий процесс создания страницы</h2>
+<h3>1. Нажать «Контент» → выбранная коллекция</h3>
+<p>Для статической страницы: <strong>Контент → Страницы</strong><br>Для новости: <strong>Контент → Новости</strong><br>Для преподавателя: <strong>Контент → Преподаватели</strong> (если создана коллекция)</p>
+<h3>2. «Создать запись»</h3>
+<p>Откроется форма с полями, определёнными в схеме коллекции (настраивается через Admin UI).</p>
+<h3>3. Заполнить основные поля</h3>
+<ul>
+<li><strong>Заголовок</strong> — отображается в админке и используется в <code>&lt;title&gt;</code> страницы</li>
+<li><strong>Slug</strong> — генерируется автоматически из заголовка (транслитерация). Можно редактировать вручную.<br><strong>Правила:</strong> латиница, цифры, дефисы, без пробелов. Уникальный в пределах коллекции.</li>
+<li><strong>Статус:</strong><ul>
+<li><code>Черновик</code> — не виден на сайте</li>
+<li><code>Опубликован</code> — доступен публично</li>
+<li><code>В архиве</code> — скрыт, но сохранён</li>
+</ul>
+</li>
+<li><strong>Дата публикации</strong> — если требуется отложенная публикация</li>
+</ul>
+<h3>4. Редактор Portable Text</h3>
+<p>Основное поле <code>content</code> (тип <code>portableText</code>). Интерфейс:</p>
+<pre><code>[Текст] Bold Italic Heading Link
+[Блоки] /image /video /table ...
+</code></pre>
+<p><strong>Добавить блок:</strong></p>
+<ol>
+<li>Поставить курсор в нужное место</li>
+<li>Нажать <code>/</code> (слеш) → открывается меню доступных блоков</li>
+<li>Выбрать блок → открывается форма Block Kit с полями</li>
+<li>Заполнить поля → нажать «Сохранить» (или Enter)</li>
+<li>Блок вставляется в поток</li>
+</ol>
+<p><strong>Редактировать блок:</strong></p>
+<ul>
+<li>Кликнуть на блок → панель с полями становится редактируемой</li>
+<li>Изменить значения → автосохранение или Ctrl+S</li>
+</ul>
+<p><strong>Удалить блок:</strong></p>
+<ul>
+<li>Выделить блок → Backspace / Delete</li>
+</ul>
+<p><strong>Переместить блок:</strong></p>
+<ul>
+<li>Drag handle (6 точек) слева от блока → перетащить</li>
+</ul>
+<h3>5. SEO-поля (если включены)</h3>
+<p>В разделе «SEO» (вкладка):</p>
+<ul>
+<li><strong>Meta title</strong> — если пусто, используется <code>title</code></li>
+<li><strong>Meta description</strong> — краткое описание для поисковиков</li>
+<li><strong>Open Graph image</strong> — изображение для соцсетей</li>
+</ul>
+<h3>6. Сохранить и опубликовать</h3>
+<ul>
+<li><strong>Сохранить</strong> (Ctrl+S) — сохраняет черновик</li>
+<li><strong>Опубликовать</strong> — меняет статус на <code>published</code> и делает доступным на сайте</li>
+</ul>
+<p>После публикации:</p>
+<ul>
+<li>Кэш инвалидируется (через <code>cacheHint</code>)</li>
+<li>Страница становится доступна по URL</li>
+</ul>
+<hr>
+<h2>Работа с кастомными блоками (плагин @rksh/blocks)</h2>
+<h3>Как добавить блок на страницу</h3>
+<ol>
+<li>В редакторе <code>content</code> нажать <code>/</code></li>
+<li>В списке появится новый раздел «Кастомные блоки» (или просто в общем списке):<ul>
+<li><code>Hero-секция</code></li>
+<li><code>Особенности</code></li>
+<li><code>Принципы обучения</code></li>
+<li><code>Преимущества</code></li>
+<li><code>Расписание</code></li>
+<li><code>Преподаватели</code></li>
+<li><code>CTA-секция</code></li>
+</ul>
+</li>
+<li>Выбрать блок → заполнить форму</li>
+<li>Нажать «Сохранить» → блок появился в контенте</li>
+</ol>
+<h3>Пример: добавить Hero на главную</h3>
+<ol>
+<li><strong>Контент → Страницы → Создать запись</strong> (или найти «Главная»)</li>
+<li><strong>Заголовок:</strong> <code>Главная</code> (slug должен быть <code>home</code> или <code>index</code> — нужно проверить роутинг)</li>
+<li>В <code>content</code> нажать <code>/</code> → выбрать <strong>Hero-секция</strong></li>
+<li>Заполнить:<ul>
+<li>Заголовок: <code>Частная школа РКШ — Москва, Куркино</code></li>
+<li>Подзаголовок: <code>Идёт набор учеников на 2025–2026 учебный год</code></li>
+<li>Текст кнопки: <code>Получить презентацию</code></li>
+<li>Ссылка кнопки: <code>/kontakty</code> (или <code>#presentation</code>)</li>
+</ul>
+</li>
+<li>Нажать <code>/</code> ещё раз → <strong>Особенности</strong> → заполнить 6 карточек</li>
+<li>Нажать <code>/</code> → <strong>Преимущества</strong> → заполнить 6 преимуществ</li>
+<li>Нажать <code>/</code> → <strong>CTA-секция</strong> → «Остались вопросы?» → <code>/kontakty</code></li>
+<li><strong>Сохранить → Опубликовать</strong></li>
+</ol>
+<p><strong>Результат:</strong> главная страница состоит из 4 блоков.</p>
+<hr>
+<h2>Версионирование и история</h2>
+<p>EmDash поддерживает <strong>revisions</strong> (если включено в коллекции). Для <code>pages</code> и <code>posts</code> включено.</p>
+<p><strong>Как посмотреть историю:</strong></p>
+<ol>
+<li>Открыть запись</li>
+<li>Нажать кнопку «История» (или «Ревизии»)</li>
+<li>Выбрать версию → «Восстановить»</li>
+</ol>
+<p>Каждое сохранение создаёт новую revision. Можно сравнить изменения.</p>
+<hr>
+<h2>Публикация и расписание</h2>
+<ul>
+<li><strong>Немедленная публикация:</strong> статус <code>published</code> → контент сразу доступен</li>
+<li><strong>Отложенная публикация:</strong> задать <code>publish_date</code> → страница появится в указанное время</li>
+<li><strong>Снятие с публикации:</strong> статус <code>archived</code> → страница возвращает 404</li>
+</ul>
+<hr>
+<h2>Поиск и фильтры в админке</h2>
+<p>В списках записей:</p>
+<ul>
+<li><strong>Поиск</strong> по заголовку и содержимому (если поле <code>searchable: true</code>)</li>
+<li><strong>Фильтр по статусу</strong> (draft/published/archived)</li>
+<li><strong>Фильтр по тегам/категориям</strong> (если есть таксономии)</li>
+</ul>
+<hr>
+<h2>Bulk-операции</h2>
+<ul>
+<li><strong>Массовое изменение статуса</strong> — выделить несколько записей → «Изменить статус»</li>
+<li><strong>Удаление</strong> — выделить → «Удалить» (переходит в корзину)</li>
+<li><strong>Экспорт</strong> — через API (<code>/_emdash/api/collections/.../entries</code>)</li>
+</ul>
+<hr>
+<h2>Медиа-библиотека</h2>
+<p><strong>Загрузка изображений:</strong></p>
+<ol>
+<li>Админка → Медиа → Загрузить</li>
+<li>Выбрать файл (JPG, PNG, WebP, GIF)</li>
+<li>Заполнить <code>Alt</code> текст (для доступности)</li>
+<li>Сохранить</li>
+</ol>
+<p><strong>Использование в Portable Text:</strong></p>
+<ul>
+<li>В редакторе нажать <code>/image</code></li>
+<li>Выбрать из библиотеки или загрузить новое</li>
+<li>Автоматически вставляется блок <code>&lt;Image /&gt;</code></li>
+</ul>
+<p><strong>URL-ы:</strong></p>
+<ul>
+<li>Dev: <code>http://localhost:4321/_emdash/api/media/file/&lt;id&gt;</code></li>
+<li>Prod: <code>/media/&lt;filename&gt;</code> (если настроен CDN)</li>
+</ul>
+<hr>
+<h2>Безопасность</h2>
+<ul>
+<li><strong>Авторизация:</strong> логин/пароль (или OAuth, если настроено)</li>
+<li><strong>Роли:</strong> Admin, Editor, Author (настраивается в «Пользователи»)</li>
+<li><strong>Сессии:</strong> файловая система в dev, в prod — Redis (опционально)</li>
+<li><strong>Секретный ключ:</strong> <code>EMDASH_SECRET</code> в <code>.env</code> — должен быть надёжным</li>
+</ul>
+<hr>
+<h2>Частые ошибки</h2>
+<h3>«Slug уже существует»</h3>
+<p>У двух страниц одинаковый slug. Изменить один из них.</p>
+<h3>«Не могу сохранить — поле обязательно»</h3>
+<p>Заполнить все поля с <code>required: true</code> (кроются под «asterisk» в админке).</p>
+<h3>«Изображение не отображается на сайте»</h3>
+<ul>
+<li>Проверить, что <code>src</code> начинается с <code>/_emdash/api/media/file/</code></li>
+<li>В <code>src</code> должен быть объект <code>{src, alt}</code> (не строка)</li>
+<li>Использовать <code>&lt;Image image={post.data.image} /&gt;</code>, а не <code>&lt;img src={...}&gt;</code></li>
+</ul>
+<h3>«Контент не обновляется после редактирования»</h3>
+<ul>
+<li>Убедиться, что на странице есть <code>Astro.cache.set(cacheHint)</code></li>
+<li>В dev-режиме кэш disabled, в prod — проверить TTL</li>
+</ul>
+<hr>
+<h2>Грамотное использование блоков</h2>
+<h3>Как не надо:</h3>
+<p>❌ <strong>Жёстко вшивать контент в шаблон:</strong></p>
+<pre><code class="language-astro">&lt;h1&gt;Частная школа РКШ&lt;/h1&gt;
+&lt;p&gt;Мы такие же родители...&lt;/p&gt;
+</code></pre>
+<p>Это нередактируемо.</p>
+<p>✅ <strong>Использовать PortableText:</strong></p>
+<pre><code class="language-astro">&lt;Base title={page.data.title}&gt;
+  &lt;PortableText value={page.data.content} /&gt;
+&lt;/Base&gt;
+</code></pre>
+<p>Контент полностью управляется из админки.</p>
+<hr>
+<h3>Как структурировать страницу «О школе»</h3>
+<p>Контент в админке (порядок блоков):</p>
+<ol>
+<li><code>[hero]</code> — «О школе»</li>
+<li><code>[features]</code> — 6 особенностей программы</li>
+<li><code>[principles]</code> — 6 принципов обучения</li>
+<li><code>[teachers]</code> — 3 ключевых педагога (выбор из коллекции, если будет)</li>
+<li><code>[advantages]</code> — «Чем мы лучше обычной школы»</li>
+<li><code>[cta]</code> — «Записаться на экскурсию»</li>
+</ol>
+<p>Каждый блок — отдельная форма. Администратор может перетаскивать, удалять, дублировать.</p>
+<hr>
+<h2>Bulk-импорт контента</h2>
+<p>Если нужно загрузить много страниц сразу:</p>
+<ol>
+<li><strong>Через API:</strong></li>
+</ol>
+<pre><code class="language-bash">POST /_emdash/api/collections/pages/entries
+{
+  &quot;data&quot;: {
+    &quot;title&quot;: &quot;О школе&quot;,
+    &quot;slug&quot;: &quot;o-shkole&quot;,
+    &quot;content&quot;: [{ &quot;_type&quot;: &quot;block&quot;, ... }]
+  }
+}
+</code></pre>
+<ol start="2">
+<li><strong>Скриптом ( Node.js ):</strong></li>
+</ol>
+<pre><code class="language-javascript">import { createClient } from &quot;emdash&quot;;
+const client = createClient({ url, token });
+await client.entries.create(&quot;pages&quot;, { ... });
+</code></pre>
+<ol start="3">
+<li><strong>CSV → JSON → import</strong> (пока вручную, нет встроенного импорта CSV)</li>
+</ol>
+<hr>
+<h2>Проверка контента перед публикацией</h2>
+<p>Чек-лист:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Все заголовки без ошибок</li>
+<li><input disabled="" type="checkbox"> Слаг корректный (латиница, дефисы)</li>
+<li><input disabled="" type="checkbox"> Все обязательные поля заполнены</li>
+<li><input disabled="" type="checkbox"> Изображения имеют <code>alt</code> текст</li>
+<li><input disabled="" type="checkbox"> Нет «ломатых» ссылок (внутренние — слэш в начале)</li>
+<li><input disabled="" type="checkbox"> SEO-поля заполнены (title, description)</li>
+<li><input disabled="" type="checkbox"> Кнопки CTA ведут на правильные URL</li>
+</ul>
+<hr>
+<h2>Документирование структуры страниц</h2>
+<p><strong>Важно:</strong> вести <code>docs/cms/04-pages-templates.md</code> (этот файл) в актуальном состоянии. Для каждой новой страницы:</p>
+<ol>
+<li>Определить, из какой коллекции</li>
+<li>Описать, какие блоки используются</li>
+<li>Зафиксировать slug</li>
+</ol>
+<p><strong>Пример:</strong></p>
+<pre><code>Страница: О школе (/o-shkole/)
+Коллекция: pages
+Блоки: [hero, features, principles, teachers, advantages, cta]
+Slug: o-shkole
+</code></pre>
+<hr>
+<h2>Связанные документы</h2>
+<ul>
+<li><code>00-overview.md</code> — архитектура</li>
+<li><code>01-schema-collections.md</code> — структура коллекций</li>
+<li><code>02-blocks-plugin.md</code> — кастомные блоки</li>
+<li><code>04-pages-templates.md</code> — шаблоны страниц</li>
+</ul>
+<hr>
+<h2>Ресурсы</h2>
+<ul>
+<li><a href="https://docs.emdashcms.com/admin/">EmDash Admin Guide</a></li>
+<li><a href="https://portabletext.org/">Portable Text Editor</a></li>
+<li><a href="https://docs.emdashcms.com/plugins/block-kit/">Block Kit Documentation</a></li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

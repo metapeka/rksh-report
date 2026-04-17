@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design guide — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Design guide</span></nav>
+  <div class="md-content">
+    <h1>Дизайн-гайдлайны РКШ</h1>
+<p>Единые правила дизайна и вёрстки для всех страниц. Каждое ТЗ в <code>page-specs/</code> ссылается сюда.</p>
+<hr>
+<h2>1. Типографика</h2>
+<h3>Шрифты</h3>
+<table>
+<thead>
+<tr>
+<th>Назначение</th>
+<th>Семейство</th>
+<th>CSS-переменная</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Основной текст</td>
+<td>Inter (sans-serif)</td>
+<td><code>--font-family-base</code></td>
+</tr>
+<tr>
+<td>Заголовки h1–h3</td>
+<td>Playfair Display (serif)</td>
+<td><code>--font-family-heading</code></td>
+</tr>
+</tbody></table>
+<h3>Размеры и веса</h3>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Размер</th>
+<th>Вес</th>
+<th>Цвет</th>
+<th>Примечание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>h1 секции</td>
+<td><code>--font-size-4xl</code> (2.25rem)</td>
+<td>700</td>
+<td><code>--color-primary</code></td>
+<td>Playfair Display</td>
+</tr>
+<tr>
+<td>h2 секции</td>
+<td><code>--font-size-3xl</code> (1.875rem)</td>
+<td>600</td>
+<td><code>--color-primary</code></td>
+<td>Playfair Display</td>
+</tr>
+<tr>
+<td>h3 подзаголовок</td>
+<td><code>--font-size-xl</code> (1.25rem)</td>
+<td>600</td>
+<td><code>--color-text</code></td>
+<td>Inter</td>
+</tr>
+<tr>
+<td>Лейбл (Адрес, Телефоны...)</td>
+<td><code>--font-size-xs</code> (0.75rem)</td>
+<td>600</td>
+<td><code>--color-text-muted</code></td>
+<td>uppercase, letter-spacing 0.06em</td>
+</tr>
+<tr>
+<td>Основной текст</td>
+<td><code>--font-size-base</code> (1rem)</td>
+<td>400</td>
+<td><code>--color-text</code></td>
+<td>line-height: 1.75</td>
+</tr>
+<tr>
+<td>Текст описания</td>
+<td><code>--font-size-lg</code> (1.125rem)</td>
+<td>400</td>
+<td><code>--color-text-muted</code></td>
+<td>line-height: 1.75</td>
+</tr>
+<tr>
+<td>Кнопки</td>
+<td><code>--font-size-base</code> (1rem)</td>
+<td>600</td>
+<td>зависит от типа</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3>Ссылки</h3>
+<ul>
+<li>Цвет: <code>--color-accent</code> (#2F6FB3)</li>
+<li>Hover: <code>--color-primary</code>, underline</li>
+<li>Переход: <code>var(--transition-fast)</code></li>
+</ul>
+<hr>
+<h2>2. Отступы</h2>
+<h3>Секции</h3>
+<table>
+<thead>
+<tr>
+<th>Контекст</th>
+<th>Значение</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Padding секции (десктоп)</td>
+<td><code>--spacing-4xl</code> (6rem)</td>
+<td>Вертикальный воздух</td>
+</tr>
+<tr>
+<td>Padding секции (мобилка)</td>
+<td><code>--spacing-2xl</code> (3rem)</td>
+<td>Экономия места</td>
+</tr>
+<tr>
+<td>Margin h1 → контент</td>
+<td><code>--spacing-lg</code> (1.5rem)</td>
+<td>Под заголовком</td>
+</tr>
+<tr>
+<td>Margin intro → grid</td>
+<td><code>--spacing-2xl</code> (3rem)</td>
+<td>После описания</td>
+</tr>
+</tbody></table>
+<h3>Карточки</h3>
+<table>
+<thead>
+<tr>
+<th>Контекст</th>
+<th>Значение</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Padding карточки (десктоп)</td>
+<td><code>--spacing-2xl</code> (3rem)</td>
+<td>Внутренний воздух</td>
+</tr>
+<tr>
+<td>Padding карточки (мобилка)</td>
+<td><code>--spacing-xl</code> (2rem)</td>
+<td>Экономия</td>
+</tr>
+<tr>
+<td>Gap между блоками внутри карточки</td>
+<td><code>--spacing-xl</code> (2rem)</td>
+<td>Между строками контактов</td>
+</tr>
+<tr>
+<td>Gap иконка → текст</td>
+<td><code>--spacing-lg</code> (1.5rem)</td>
+<td>Рядом с SVG</td>
+</tr>
+</tbody></table>
+<h3>Разделители и CTA</h3>
+<table>
+<thead>
+<tr>
+<th>Контекст</th>
+<th>Значение</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Divider margin</td>
+<td><code>--spacing-sm</code> (0.75rem)</td>
+<td>Сверху/снизу линии</td>
+</tr>
+<tr>
+<td>CTA padding-top</td>
+<td><code>--spacing-lg</code> (1.5rem)</td>
+<td>Отступ перед кнопкой</td>
+</tr>
+</tbody></table>
+<h3>Grid</h3>
+<table>
+<thead>
+<tr>
+<th>Контекст</th>
+<th>Значение</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gap между колонками (десктоп)</td>
+<td><code>--spacing-3xl</code> (4rem)</td>
+<td>Воздух между колонками</td>
+</tr>
+<tr>
+<td>Gap между колонками (мобилка)</td>
+<td><code>--spacing-xl</code> (2rem)</td>
+<td>Экономия</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. Иконки (SVG)</h2>
+<h3>Правила</h3>
+<ul>
+<li>Формат: inline SVG</li>
+<li>Цвет: <code>currentColor</code> → родительский элемент задаёт <code>--color-primary</code></li>
+<li>Stroke: <code>stroke-width=&quot;1.5&quot;</code>, <code>stroke-linecap=&quot;round&quot;</code>, <code>stroke-linejoin=&quot;round&quot;</code></li>
+<li>Fill: <code>none</code> (outline-стиль), <code>currentColor</code> для лого соцсетей</li>
+</ul>
+<h3>Размеры</h3>
+<table>
+<thead>
+<tr>
+<th>Контекст</th>
+<th>Width/Height</th>
+<th>margin-top</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Контактные иконки (адрес, телефон)</td>
+<td>22px</td>
+<td>3px</td>
+</tr>
+<tr>
+<td>Иконки в кнопках соцсетей</td>
+<td>16px</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Иконки в навигации</td>
+<td>20px</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<h3>Выравнивание</h3>
+<pre><code class="language-css">.icon {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  margin-top: 3px; /* выравнивание с первой строкой текста */
+}
+</code></pre>
+<hr>
+<h2>4. Карточки</h2>
+<pre><code class="language-css">.card {
+  background: var(--color-surface);     /* #FFFFFF */
+  border-radius: var(--radius-xl);      /* 1rem */
+  box-shadow: var(--shadow-lg);         /* 0 10px 15px rgba(0,0,0,0.1) */
+  padding: var(--spacing-2xl);          /* 3rem */
+}
+</code></pre>
+<hr>
+<h2>5. Кнопки</h2>
+<h3>CTA (основная, тёплая)</h3>
+<pre><code class="language-css">.cta-button {
+  display: inline-block;
+  padding: var(--spacing-md) var(--spacing-2xl);   /* 1rem 3rem */
+  background: var(--color-accent-warm);             /* #C88A3D */
+  color: #fff;
+  border-radius: var(--radius-md);                  /* 0.5rem */
+  font-weight: var(--font-weight-semibold);         /* 600 */
+  font-size: var(--font-size-base);                 /* 1rem */
+  text-align: center;
+  text-decoration: none;
+}
+.cta-button:hover {
+  background: var(--color-accent-warm-hover);     /* #B07832 */
+  transform: translateY(-1px);
+}
+</code></pre>
+<h3>Кнопки соцсетей</h3>
+<pre><code class="language-css">.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);                           /* 0.75rem */
+  padding: var(--spacing-sm) var(--spacing-lg);     /* 0.75rem 1.5rem */
+  background: var(--color-primary-soft);            /* #DEE8F5 */
+  color: var(--color-primary);                      /* #173B6E */
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);           /* 500 */
+  font-size: var(--font-size-base);                 /* 1rem */
+  text-decoration: none;
+}
+.social-link:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+</code></pre>
+<hr>
+<h2>6. Адаптив (≤768px)</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Десктоп</th>
+<th>Мобилка</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Колонки</td>
+<td>Grid 2-col</td>
+<td>1 col (стопка)</td>
+</tr>
+<tr>
+<td>Padding секции</td>
+<td><code>--spacing-4xl</code></td>
+<td><code>--spacing-2xl</code></td>
+</tr>
+<tr>
+<td>Padding карточки</td>
+<td><code>--spacing-2xl</code></td>
+<td><code>--spacing-xl</code></td>
+</tr>
+<tr>
+<td>Карта min-height</td>
+<td>480px</td>
+<td>300px</td>
+</tr>
+<tr>
+<td>CTA кнопка</td>
+<td><code>inline-block</code></td>
+<td><code>block</code> (на всю ширину)</td>
+</tr>
+<tr>
+<td>Font h1</td>
+<td><code>--font-size-4xl</code></td>
+<td><code>--font-size-3xl</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>7. Палитра</h2>
+<table>
+<thead>
+<tr>
+<th>Токен</th>
+<th>Значение</th>
+<th>Использование</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--color-primary</code></td>
+<td>#173B6E</td>
+<td>Заголовки, кнопки hover, иконки</td>
+</tr>
+<tr>
+<td><code>--color-primary-hover</code></td>
+<td>#12315D</td>
+<td>Второе меню hover</td>
+</tr>
+<tr>
+<td><code>--color-primary-soft</code></td>
+<td>#DEE8F5</td>
+<td>Кнопки соцсетей, фоны акцентов</td>
+</tr>
+<tr>
+<td><code>--color-primary-line</code></td>
+<td>#C8D7EE</td>
+<td>Разделители, бордеры</td>
+</tr>
+<tr>
+<td><code>--color-accent</code></td>
+<td>#2F6FB3</td>
+<td>Ссылки</td>
+</tr>
+<tr>
+<td><code>--color-accent-warm</code></td>
+<td>#C88A3D</td>
+<td>CTA-кнопки, тёплые акценты</td>
+</tr>
+<tr>
+<td><code>--color-accent-warm-hover</code></td>
+<td>#B07832</td>
+<td>CTA-кнопки hover</td>
+</tr>
+<tr>
+<td><code>--color-accent-warm-soft</code></td>
+<td>#F5E7D3</td>
+<td>Фоны для тёплых блоков</td>
+</tr>
+<tr>
+<td><code>--color-bg</code></td>
+<td>#F7F9FC</td>
+<td>Фон страницы</td>
+</tr>
+<tr>
+<td><code>--color-surface</code></td>
+<td>#FFFFFF</td>
+<td>Фон карточек</td>
+</tr>
+<tr>
+<td><code>--color-text</code></td>
+<td>#1B2430</td>
+<td>Основной текст</td>
+</tr>
+<tr>
+<td><code>--color-text-muted</code></td>
+<td>#5B6B7F</td>
+<td>Лейблы, описания</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>8. Как использовать в ТЗ</h2>
+<p>Каждый файл <code>page-specs/*.md</code> содержит:</p>
+<pre><code class="language-markdown">## Дизайн
+→ Общие правила: [01-design-guide.md](01-design-guide.md)
+
+### Отличия от гайда
+(Только то, что отличается — особые размеры, цвета,布局)
+</code></pre>
+<p>Если страница полностью следует гайду — раздел «Отличия» пустой.</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Otzyvy — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Otzyvy</span></nav>
+  <div class="md-content">
+    <h1>Отзывы (/otzyvy)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: <a href="../components/12-review-card.html">12-review-card.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Отзывы</td>
+<td>CMS <code>reviews</code> collection (author_name, author_photo, quote, rating, date)</td>
+</tr>
+<tr>
+<td>Виджет Яндекс.Карт</td>
+<td>iframe (захардкожен)</td>
+</tr>
+<tr>
+<td>CMS страница</td>
+<td><code>pages</code>, slug <code>otzyvy</code> — заголовок/SEO (TODO)</td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>reviews</code></h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>author_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Имя родителя</td>
+</tr>
+<tr>
+<td><code>author_photo</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Фото (необязательно)</td>
+</tr>
+<tr>
+<td><code>quote</code></td>
+<td>text</td>
+<td>✅</td>
+<td>Текст отзыва</td>
+</tr>
+<tr>
+<td><code>rating</code></td>
+<td>integer</td>
+<td>❌</td>
+<td>Оценка 1–5</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>datetime</td>
+<td>❌</td>
+<td>Дата отзыва</td>
+</tr>
+</tbody></table>
+<p>Текущие записи: bystritskaya, ghazakhetsyan, mamonova (все rating: 5, date: 2024).</p>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  h1: Отзывы родителей (Playfair Display)    │
+│  p: Что говорят о нас семьи наших учеников  │
+├─────────────────────────────────────────────┤
+│  Grid 3×: ReviewCard                        │
+│  (quote + rating stars + date + avatar/     │
+│   initials + author)                        │
+├─────────────────────────────────────────────┤
+│  SectionTitle h2 center: Отзывы на Яндекс    │
+│  p: Посмотрите реальные отзывы...           │
+│  Яндекс.Карта iframe (border, radius-lg)    │
+├─────────────────────────────────────────────┤
+│  CTA: «Хотите оставить отзыв?» + Button    │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p>Сортировка: по дате (новые первыми, <code>date</code> desc).</p>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ReviewCard</td>
+<td><code>ui/ReviewCard.astro</code></td>
+<td>Все отзывы из CMS</td>
+</tr>
+<tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>«Отзывы на Яндекс Картах»</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию»</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.reviews-hero</code></td>
+<td>Hero-секция (padding, text-align center)</td>
+</tr>
+<tr>
+<td><code>.reviews-hero__title</code></td>
+<td>h1 Playfair 5xl</td>
+</tr>
+<tr>
+<td><code>.reviews-hero__subtitle</code></td>
+<td>Подзаголовок muted</td>
+</tr>
+<tr>
+<td><code>.reviews-grid</code></td>
+<td>Grid 3× отзывов (1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.reviews-yandex</code></td>
+<td>Секция Яндекс.Карт (bg surface-alt)</td>
+</tr>
+<tr>
+<td><code>.reviews-yandex__widget</code></td>
+<td>iframe контейнер (border, radius-lg, overflow hidden)</td>
+</tr>
+<tr>
+<td><code>.reviews-cta</code></td>
+<td>CTA-баннер (bg primary)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/otzyvy/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Источник отзывов</td>
+<td>Виджет Яндекс.Карт</td>
+<td>CMS <code>reviews</code> + ReviewCard</td>
+</tr>
+<tr>
+<td>Яндекс.Карты</td>
+<td>Основной контент</td>
+<td>Дополнительная секция ниже</td>
+</tr>
+<tr>
+<td>Количество</td>
+<td>3 отзыва (из Яндекс)</td>
+<td>Все из CMS (пока 3)</td>
+</tr>
+<tr>
+<td>Рейтинг</td>
+<td>Звёзды в виджете</td>
+<td>FontAwesome-подобные ★☆ в ReviewCard</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите оставить отзыв?» → контакты</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Создать запись <code>pages/otzyvy</code> в CMS (CLI не сработал на Windows, нужно через Admin UI)</li>
+<li><input disabled="" type="checkbox"> Добавить больше отзывов в CMS</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

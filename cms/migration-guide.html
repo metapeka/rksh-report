@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration guide — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Migration guide</span></nav>
+  <div class="md-content">
+    <h1>Миграция контента с rksh-msk.ru</h1>
+<h2>Обзор</h2>
+<p>Полный перенос контента с сайта <a href="https://rksh-msk.ru">https://rksh-msk.ru</a> (WordPress) на EmDash CMS.</p>
+<p><strong>Объём:</strong> 38 страниц, сотни изображений, видео, документы.</p>
+<p><strong>Источник контента:</strong> <code>docs/content-summary.md</code> — уже собранный текст всех страниц.</p>
+<hr>
+<h2>Этапы миграции</h2>
+<h3>Этап 1: Аудит и сопоставление</h3>
+<p>✅ <strong>Сделано:</strong></p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Спаршены все 38 страниц</li>
+<li><input checked="" disabled="" type="checkbox"> Определена структура меню</li>
+<li><input checked="" disabled="" type="checkbox"> Загружены медиафайлы (лого, фото)</li>
+<li><input checked="" disabled="" type="checkbox"> Сопоставлены URL</li>
+</ul>
+<p><strong>Результат:</strong> <code>docs/site-structure.md</code>, <code>docs/content-summary.md</code></p>
+<hr>
+<h3>Этап 2: Подготовка EmDash схемы</h3>
+<p>✅ <strong>Сделано:</strong></p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Создан базовый <code>seed.json</code> с <code>pages</code>, <code>posts</code>, <code>settings</code></li>
+<li><input checked="" disabled="" type="checkbox"> Настроены меню <code>primary</code>, <code>secondary</code>, <code>footer</code></li>
+<li><input checked="" disabled="" type="checkbox"> Заполнены контакты, логотип</li>
+</ul>
+<p><strong>Задача:</strong> Добавить новые коллекции (teachers, schedule, advantages, media, courses_*, prices, reviews, sveden_sections)</p>
+<p><strong>Файл:</strong> <code>01-schema-collections.md</code> — полное описание всех коллекций.</p>
+<hr>
+<h3>Этап 3: Перенос контента</h3>
+<p><strong>Способ 1: Ручной (для 38 страниц — приемлемо)</strong></p>
+<ol>
+<li>Открыть админку <code>/_emdash/admin</code></li>
+<li>Для каждой страницы (согласно <code>content-summary.md</code>):<ul>
+<li>Контент → Страницы → Создать</li>
+<li>Заполнить title, slug</li>
+<li>Вставить контент из <code>content-summary.md</code></li>
+<li><strong>Использовать блоки</strong> из <code>@rksh/blocks</code> где возможно</li>
+<li>Сохранить → Опубликовать</li>
+</ul>
+</li>
+</ol>
+<p><strong>Порядок страниц (приоритет):</strong></p>
+<ol>
+<li>Главная (home) — базовая страница</li>
+<li>Страницы меню: О школе, Цены, Контакты, Отзывы</li>
+<li>Уровни школы: 0 класс, начальная, средняя</li>
+<li>Курсы (дошкольники, школьники)</li>
+<li>Дополнительные: Расписание, Преподаватели, Преимущества, Медиа</li>
+<li>Сведения, Политика</li>
+</ol>
+<p><strong>Способ 2: Автоматический (скриптом)</strong></p>
+<p>Написать Node.js скрипт <code>scripts/import-content.js</code>:</p>
+<pre><code class="language-javascript">import { createClient } from &quot;emdash&quot;;
+import content from &quot;../docs/content-summary.json&quot;;
+
+const client = createClient({
+  url: &quot;http://localhost:4321&quot;,
+  token: process.env.EMDASH_TOKEN, // нужно создать API token
+});
+
+for (const page of content.pages) {
+  await client.entries.create(&quot;pages&quot;, {
+    data: {
+      title: page.title,
+      slug: page.slug,
+      content: page.content, // в формате Portable Text
+    },
+    status: &quot;published&quot;,
+  });
+}
+</code></pre>
+<p><strong>Требуется:</strong> API токен с правами <code>content:create</code>.</p>
+<hr>
+<h3>Этап 4: Перенос медиа</h3>
+<h4>Изображения</h4>
+<ol>
+<li><strong>Скачать все изображения</strong> со старого сайта:</li>
+</ol>
+<pre><code class="language-bash"># WordPress uploads
+wget -r -np -nH --cut-dirs=1 \
+  -A jpg,jpeg,png,gif,webp,svg \
+  https://rksh-msk.ru/wp-content/uploads/
+# Сохранить в temp/
+</code></pre>
+<ol start="2">
+<li><strong>Загрузить в EmDash:</strong><ul>
+<li>Через админку (по одному) — долго</li>
+<li>Через API массово:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-javascript">// scripts/upload-media.js
+const FormData = require(&#39;form-data&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+async function uploadFile(filepath) {
+  const form = new FormData();
+  form.append(&#39;file&#39;, fs.createReadStream(filepath));
+  
+  const res = await fetch(&#39;http://localhost:4321/_emdash/api/media/upload&#39;, {
+    method: &#39;POST&#39;,
+    body: form,
+    headers: form.getHeaders(),
+  });
+  
+  const data = await res.json();
+  console.log(`Uploaded: ${filepath} → ${data.url}`);
+  return data;
+}
+
+// Пройти по папке temp/uploads/ и загрузить все
+</code></pre>
+<ol start="3">
+<li><strong>Обновить URL в контенте:</strong><ul>
+<li>Было: <code>https://rksh-msk.ru/wp-content/uploads/2022/07/logo1-473.png</code></li>
+<li>Стало: <code>/_emdash/api/media/file/&lt;id&gt;</code></li>
+<li>Нужен скрипт для замены:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-sql">-- Вручную через SQL (опасно!)
+UPDATE entries 
+SET content = replace(content, &#39;https://rksh-msk.ru/wp-content/&#39;, &#39;/_emdash/api/media/file/&#39;)
+WHERE collection=&#39;pages&#39;;
+</code></pre>
+<p><strong>Лучше:</strong> при импорте контента сразу подставлять правильные URL.</p>
+<hr>
+<h4>Видео</h4>
+<ol>
+<li><p><strong>Видео с сайта</strong> — скачивать не нужно (большие файлы). Лучше:</p>
+<ul>
+<li>Если уже на YouTube — оставить embed-код</li>
+<li>Если локальные — загрузить через админку (лимиты!)</li>
+</ul>
+</li>
+<li><p><strong>Включить в <code>media</code> коллекцию</strong> тип <code>video</code>, хранить YouTube ID или файл.</p>
+</li>
+</ol>
+<hr>
+<h4>Документы (PDF)</h4>
+<ul>
+<li>Скачать из <code>wp-content/uploads/</code> (политика, лицензии)</li>
+<li>Загрузить в EmDash через API</li>
+<li>Заполнить <code>documents</code> коллекцию</li>
+</ul>
+<hr>
+<h3>Этап 5: Настройка redirects (301)</h3>
+<p>Старые URL → новые.</p>
+<p><strong>Список редиректов (из <code>site-structure.md</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Старый URL</th>
+<th>Новый URL</th>
+<th>Тип</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td><code>/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/o-shkole/</code></td>
+<td><code>/o-shkole/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/raspisanie/</code></td>
+<td><code>/raspisanie/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/prepodavateli/</code></td>
+<td><code>/prepodavateli/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/czeny/</code></td>
+<td><code>/czeny/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/media/</code></td>
+<td><code>/media/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/otzyvy/</code></td>
+<td><code>/otzyvy/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/kontakty/</code></td>
+<td><code>/kontakty/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/sveden/</code></td>
+<td><code>/sveden/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/0klass/</code></td>
+<td><code>/0klass/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/nachalnaya-shkola/</code></td>
+<td><code>/nachalnaya-shkola/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/doshkolniki/</code></td>
+<td><code>/doshkolniki/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/shkolniki/</code></td>
+<td><code>/shkolniki/</code></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>/podgotovka-attestacii/</code></td>
+<td><code>/podgotovka-attestacii/</code></td>
+<td>200</td>
+</tr>
+</tbody></table>
+<p><strong>Implementation:</strong>
+<code>src/middleware.ts</code>:</p>
+<pre><code class="language-typescript">export const onRequest = async (context) =&gt; {
+  const { url } = context;
+  const path = url.pathname;
+  
+  const redirects: Record&lt;string, string&gt; = {
+    // если старые URL отличались
+    &quot;/about&quot;: &quot;/o-shkole/&quot;,
+  };
+  
+  if (redirects[path]) {
+    return Response.redirect(new URL(redirects[path], url), 301);
+  }
+};
+</code></pre>
+<hr>
+<h3>Этап 6: SEO перенос</h3>
+<ol>
+<li><strong>Meta title/description</strong> — если были в WordPress, перенести в SEO-поля страниц</li>
+<li><strong>Sitemap</strong> — уведомить поисковики о новом sitemap (<code>/sitemap.xml</code>)</li>
+<li><strong>robots.txt</strong> — проверить, нет ли блокировок</li>
+<li><strong>Google Search Console</strong> — добавить property, передать права</li>
+<li><strong>Yandex.Webmaster</strong> — аналогично</li>
+</ol>
+<hr>
+<h3>Этап 7: Проверка</h3>
+<p><strong>Чек-лист валидации:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Все 38 страниц доступны по ожидаемым URL</li>
+<li><input disabled="" type="checkbox"> Все изображения загружены и отображаются</li>
+<li><input disabled="" type="checkbox"> Меню работают (все ссылки кликабельны)</li>
+<li><input disabled="" type="checkbox"> Формы (если есть) отправляются</li>
+<li><input disabled="" type="checkbox"> SEO-теги presence (view-source)</li>
+<li><input disabled="" type="checkbox"> Schema.org разметка (валидатор)</li>
+<li><input disabled="" type="checkbox"> Mobile responsive (Chrome DevTools)</li>
+<li><input disabled="" type="checkbox"> Accessibility (axe DevTools, WAVE)</li>
+<li><input disabled="" type="checkbox"> Скорость загрузки (PageSpeed Insights) — LCP &lt; 2.5s</li>
+<li><input disabled="" type="checkbox"> Нет 404 в Network tab</li>
+<li><input disabled="" type="checkbox"> Нет console errors</li>
+</ul>
+<hr>
+<h2>Автоматизация миграции</h2>
+<h3>Скрипт <code>scripts/migrate.js</code></h3>
+<pre><code class="language-javascript">#!/usr/bin/env node
+
+import fs from &quot;fs&quot;;
+import path from &quot;path&quot;;
+import { createClient } from &quot;emdash&quot;;
+
+const client = createClient({
+  url: &quot;http://localhost:4321&quot;,
+  token: process.env.EMDASH_TOKEN,
+});
+
+const content = JSON.parse(fs.readFileSync(&quot;../docs/content-summary.json&quot;));
+
+async function migrate() {
+  for (const page of content.pages) {
+    try {
+      await client.entries.create(&quot;pages&quot;, {
+        data: {
+          title: page.title,
+          slug: page.slug,
+          content: parsePortableText(page.content), // конвертация HTML → Portable Text
+        },
+        status: &quot;published&quot;,
+      });
+      console.log(`✅ ${page.title}`);
+    } catch (err) {
+      console.error(`❌ ${page.title}:`, err.message);
+    }
+  }
+}
+
+migrate();
+</code></pre>
+<p><strong>Запуск:</strong></p>
+<pre><code class="language-bash">EMDASH_TOKEN=xxx node scripts/migrate.js
+</code></pre>
+<hr>
+<h3>Конвертация HTML → Portable Text</h3>
+<p>Текст в <code>content-summary.md</code> — plain HTML? Нужно преобразовать в Portable Text JSON.</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-html">&lt;h2&gt;Преимущества&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Маленькие классы&lt;/li&gt;
+  &lt;li&gt;Чуткие учителя&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>→ Portable Text:</p>
+<pre><code class="language-json">[
+  { &quot;_type&quot;: &quot;block&quot;, &quot;style&quot;: &quot;h2&quot;, &quot;children&quot;: [{ &quot;_type&quot;: &quot;span&quot;, &quot;text&quot;: &quot;Преимущества&quot; }] },
+  { &quot;_type&quot;: &quot;list&quot;, &quot;listItem&quot;: &quot;number&quot;, &quot;children&quot;: [
+    { &quot;_type&quot;: &quot;span&quot;, &quot;text&quot;: &quot;Маленькие классы&quot; },
+    { &quot;_type&quot;: &quot;span&quot;, &quot;text&quot;: &quot;Чуткие учителя&quot; }
+  ]}
+]
+</code></pre>
+<p><strong>Инструмент:</strong> <code>html-to-portabletext</code> пакет или написать самому.</p>
+<hr>
+<h2>Сложные случаи</h2>
+<h3>Галерея изображений</h3>
+<p><strong>На старом сайте:</strong> галерея на JavaScript (возможно, галерея-плагин).<br><strong>В EmDash:</strong> нужно создать <code>media</code> коллекцию с <code>type: &quot;gallery&quot;</code> и массивом <code>items</code>.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Собрать все URL изображений галереи</li>
+<li>Создать запись в <code>media</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;gallery&quot;,
+  &quot;title&quot;: &quot;Фотогалерея школы&quot;,
+  &quot;items&quot;: [
+    { &quot;url&quot;: &quot;photo1.jpg&quot;, &quot;caption&quot;: &quot;Корпус&quot; },
+    { &quot;url&quot;: &quot;photo2.jpg&quot;, &quot;caption&quot;: &quot;Учебный класс&quot; }
+  ]
+}
+</code></pre>
+<ol start="3">
+<li>На странице <code>/fotogalereya/</code> отрендерить компонент Gallery, который берёт эту запись.</li>
+</ol>
+<hr>
+<h3>Формы (контакты)</h3>
+<p><strong>На старом сайте:</strong> форма отправлялась на PHP-скрипт.<br><strong>В EmDash:</strong> нужно написать плагин форм (см. <code>06-forms-integrations.md</code>).</p>
+<p><strong>Временное решение:</strong> простую форму на Netlify Forms или Formspree, пока своя не готова.</p>
+<hr>
+<h3>Видеоархив</h3>
+<p>Старый сайт: возможно, YouTube-embed или локальные файлы.<br>Нужно:</p>
+<ol>
+<li>Найти все YouTube ID</li>
+<li>Создать <code>media</code> записи с <code>type: &quot;video&quot;</code></li>
+<li>На странице <code>/videoarhiv/</code> — список видео (компонент VideoList)</li>
+</ol>
+<hr>
+<h3>Отзывы</h3>
+<p>Стандартные текстовые отзывы (сейчас пусто).<br>После создания <code>reviews</code> коллекции — добавить через админку вручную или импорт.</p>
+<hr>
+<h2>Откат (rollback)</h2>
+<p>Если миграция сломала что-то:</p>
+<ol>
+<li><strong>Бэкап БД:</strong> уже сделан (<code>data.db.backup</code>)</li>
+<li><strong>Восстановить:</strong></li>
+</ol>
+<pre><code class="language-bash">cp data.db.backup data.db
+# перезапустить сервер
+</code></pre>
+<ol start="3">
+<li><strong>Медиа:</strong> вернуть папку <code>uploads/</code> из бэкапа</li>
+</ol>
+<p><strong>Важно:</strong> делать бэкап <strong>перед каждой большой миграцией</strong>.</p>
+<hr>
+<h2>Частые проблемы миграции</h2>
+<h3>Контент потерял форматирование</h3>
+<p><strong>Причина:</strong> HTML → Portable Text конвертация простая, теги <code>&lt;strong&gt;</code> не стали <code>bold</code>.</p>
+<p><strong>Решение:</strong> улучшить парсер HTML→Portable Text, или ручная правка.</p>
+<h3>Изображения битые</h3>
+<p><strong>Проверить:</strong></p>
+<pre><code class="language-bash">find uploads/ -type f -size 0  # пустые файлы
+grep -r &quot;broken-image-url&quot; src/
+</code></pre>
+<hr>
+<h3>Slug конфликты</h3>
+<p><strong>Problem:</strong> два разных WordPress-поста получили одинаковый slug после транслитерации.</p>
+<p><strong>Solution:</strong> добавить цифру (<code>o-shkole-2</code>), обновить меню.</p>
+<hr>
+<h2>Проверка целостности</h2>
+<h3>Список всех страниц</h3>
+<pre><code class="language-sql">SELECT id, title, status FROM entries WHERE collection=&#39;pages&#39; ORDER BY id;
+</code></pre>
+<h3>Количество медиафайлов</h3>
+<pre><code class="language-bash">find uploads/ -type f | wc -l
+</code></pre>
+<h3>Проверить битые ссылки (link checker)</h3>
+<p>Скрипт на Node:</p>
+<pre><code class="language-javascript">import { getEmDashCollection } from &quot;emdash&quot;;
+const { entries } = await getEmDashCollection(&quot;pages&quot;, { limit: 100 });
+
+for (const entry of entries) {
+  // распарсить Portable Text, найти все Links
+  // проверить, соответствует ли URL существующей странице
+}
+</code></pre>
+<hr>
+<h2>Документирование миграции</h2>
+<p>В репозитории создать <code>MIGRATION.md</code> с:</p>
+<ol>
+<li>Дата миграции</li>
+<li>Список импортированных страниц ( slugs )</li>
+<li>Количество медиафайлов</li>
+<li>Неразрешённые проблемы (битые ссылки, missing images)</li>
+<li>rollback инструкция</li>
+</ol>
+<hr>
+<h2>После миграции</h2>
+<h3>Информирование</h3>
+<ul>
+<li><strong>Администрация:</strong> «контент перенесён, проверьте»</li>
+<li><strong>Поисковики:</strong> обновить sitemap в Search Console</li>
+<li><strong>Партнёры:</strong> обновить ссылки (если были)</li>
+</ul>
+<h3>Мониторинг</h3>
+<ul>
+<li>404 errors (через Google Search Console)</li>
+<li>Crawl stats (частота индексации)</li>
+<li>Traffic drop? (возможные проблемы с SEO)</li>
+</ul>
+<hr>
+<h2>Полезные команды</h2>
+<pre><code class="language-bash"># Список всех slugs
+sqlite3 data.db &quot;SELECT id, json_extract(data, &#39;$.title&#39;) FROM entries WHERE collection=&#39;pages&#39;;&quot;
+
+# Поиск по тексту (в контенте)
+sqlite3 data.db &quot;SELECT id FROM entries WHERE content LIKE &#39;%школа%&#39;;&quot;
+
+# Количество записей
+sqlite3 data.db &quot;SELECT collection, COUNT(*) FROM entries GROUP BY collection;&quot;
+
+# Экспорт в JSON
+sqlite3 data.db &quot;SELECT * FROM entries WHERE collection=&#39;pages&#39;&quot; &gt; pages.json
+</code></pre>
+<hr>
+<h2>Links</h2>
+<ul>
+<li><code>01-schema-collections.md</code> — какие коллекции создавать</li>
+<li><code>05-content-workflow.md</code> — как вводить контент в админке</li>
+<li><code>docs/content-summary.md</code> — исходный контент</li>
+</ul>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Создать скрипт <code>import-content.js</code></li>
+<li><input disabled="" type="checkbox"> Написать конвертер HTML → Portable Text</li>
+<li><input disabled="" type="checkbox"> Загрузить все изображения со старого сайта</li>
+<li><input disabled="" type="checkbox"> Перенести контент в порядке приоритета</li>
+<li><input disabled="" type="checkbox"> Настроить 301 redirects</li>
+<li><input disabled="" type="checkbox"> Обновить sitemap и robots.txt</li>
+<li><input disabled="" type="checkbox"> Протестировать все URL (Link checker)</li>
+<li><input disabled="" type="checkbox"> Сделать бэкап перед миграцией</li>
+<li><input disabled="" type="checkbox"> Задокументировать все的手動 шаги</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

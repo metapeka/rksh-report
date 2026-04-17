@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page specs guide — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Page specs guide</span></nav>
+  <div class="md-content">
+    <h1>Правила написания page-specs</h1>
+<p>Файлы в <code>docs/page-specs/</code> — это ТЗ по каждой странице. Они нужны, чтобы:</p>
+<ul>
+<li>Агент или разработчик понимал структуру страницы до начала кода</li>
+<li>Было легко вернуться к странице позже и вспомнить решения</li>
+<li>Все spec&#39;и были единообразны</li>
+</ul>
+<hr>
+<h2>Именование</h2>
+<p>Файл называется по slug страницы: <code>index.md</code>, <code>kontakty.md</code>, <code>o-shkole.md</code>, <code>czeny.md</code>, <code>0klass.md</code>.</p>
+<hr>
+<h2>Обязательные разделы</h2>
+<p>Каждый spec <strong>обязательно</strong> содержит:</p>
+<h3>1. Заголовок и статус</h3>
+<pre><code class="language-markdown"># Название страницы (/slug)
+
+## Статус: ⬜ Не начата / 🔨 В работе / ✅ Готова
+</code></pre>
+<h3>2. Контент</h3>
+<p>Откуда берутся данные. Для каждого блока на странице:</p>
+<pre><code class="language-markdown">| Данные | Откуда |
+|--------|--------|
+| Заголовок | `pages` collection, slug `o-shkole` |
+| Список X | `teachers` collection, orderBy `data.order` asc |
+| Текст Y | Статический (из rksh-msk.ru) |
+</code></pre>
+<p>Если используется коллекция — перечислить <strong>используемые поля</strong>:</p>
+<pre><code class="language-markdown">### Поля коллекции teachers
+
+| Поле | Тип | Используется как |
+|------|-----|-----------------|
+| `full_name` | string | Заголовок карточки |
+| `photo` | image | Аватар (fallback: инициалы) |
+</code></pre>
+<h3>3. Структура страницы</h3>
+<p>Визуальная схема — ASCII-арт или нумерованный список секций с указанием:</p>
+<ul>
+<li>Понятного названия блока</li>
+<li>Источника данных (CMS / статика)</li>
+<li>Фона секции (если отличается от <code>--color-bg</code>)</li>
+<li>Ключевых визуальных элементов</li>
+</ul>
+<pre><code class="language-markdown">## Структура страницы
+
+1. **Hero** — Фон: --color-primary. h1 + announce + CTA. Данные: статика
+2. **Преимущества** — Фон: --color-bg. 6 карточек из CMS (advantages)
+3. **CTA-баннер** — Фон: --color-primary. Кнопка: --color-accent-warm
+</code></pre>
+<hr>
+<h2>Условные разделы</h2>
+<p>Включать <strong>только если применимо</strong>. Если раздел пуст — не включать.</p>
+<h3>4. Отличия от гайда</h3>
+<p>Только отклонения от <a href="01-design-guide.html">01-design-guide.md</a>. Если всё по гайду — раздел не нужен.</p>
+<pre><code class="language-markdown">| Элемент | По гайду | Здесь | Причина |
+|---------|----------|-------|---------|
+| h1 размер | --font-size-4xl | --font-size-5xl | Крупный акцент на главной |
+</code></pre>
+<h3>5. Компоненты</h3>
+<p>Какие файлы участвуют. Включать если есть специфичные компоненты или если страница сложная.</p>
+<pre><code class="language-markdown">| Компонент | Файл | Тип |
+|-----------|------|-----|
+| Base layout | `src/layouts/Base.astro` | Общий |
+| Шаблон | `src/pages/o-shkole.astro` | Специфичный |
+| ScheduleTable | `src/components/ScheduleTable.astro` | Общий |
+</code></pre>
+<h3>6. Отличия от оригинала</h3>
+<p>Сравнение с rksh-msk.ru. Включать для первых страниц или если есть существенные отличия.</p>
+<h3>7. SVG-иконки</h3>
+<p>Если на странице есть иконки — перечислить их с описанием path и цветом.</p>
+<h3>8. TODO</h3>
+<p>Что нужно доделать. Только конкретные задачи, не абстрактные.</p>
+<hr>
+<h2>Порядок работы</h2>
+<ol>
+<li><strong>До кода</strong> — создать spec со статусом «⬜ Не начата», заполнить Контент и Структуру</li>
+<li><strong>Во время</strong> — обновлять статус на «🔨 В работе», добавлять отличия от гайда</li>
+<li><strong>После</strong> — статус «✅ Готова», заполнить все разделы, обновить <a href="00-pages-overview.html">00-pages-overview.md</a></li>
+</ol>
+<hr>
+<h2>Чего не писать</h2>
+<ul>
+<li>Не дублировать дизайн-гайд — только отличия</li>
+<li>Не писать CSS-код (кроме ключевых решений в «Отличиях»)</li>
+<li>Не описывать Base layout, Header, Footer — они общие для всех страниц</li>
+<li>Не придумывать контент — берём только с rksh-msk.ru или из CMS</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

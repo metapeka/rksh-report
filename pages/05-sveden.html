@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sveden — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Sveden</span></nav>
+  <div class="md-content">
+    <h1>Сведения об образовательной организации (/sveden)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: <a href="../components/17-document-list.html">17-document-list.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Разделы сведений</td>
+<td>CMS <code>sveden_sections</code> collection (section, content, order)</td>
+</tr>
+<tr>
+<td>Документы</td>
+<td>CMS <code>documents</code> collection (title, category, date, file, description, sveden_section)</td>
+</tr>
+<tr>
+<td>Навигация</td>
+<td>Генерируется из списка разделов</td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>sveden_sections</code></h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Заголовок раздела</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>portableText</td>
+<td>✅</td>
+<td>Контент раздела</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>integer</td>
+<td>✅</td>
+<td>Порядок сортировки</td>
+</tr>
+</tbody></table>
+<p>13 записей: Основные сведения, Структура и органы управления, Документы, Образование, Образовательные стандарты, Руководство, Педагогический состав, Материально-техническое обеспечение, Стипендии и меры поддержки, Платные образовательные услуги, Финансово-хозяйственная деятельность, Вакантные места, Доступная среда.</p>
+<h3>CMS коллекция <code>documents</code></h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Название документа</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Категория</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>datetime</td>
+<td>❌</td>
+<td>Дата</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>image</td>
+<td>❌</td>
+<td>Файл документа</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Описание</td>
+</tr>
+<tr>
+<td><code>sveden_section</code></td>
+<td>reference</td>
+<td>❌</td>
+<td>Привязка к разделу сведений</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Коллекция <code>documents</code> создана, но записи пока отсутствуют.</p>
+</blockquote>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  h1: Сведения об образовательной организации│
+│  p: Подзаголовок                            │
+├──────────┬──────────────────────────────────┤
+│  Нав     │  Контент раздела                 │
+│  Основ-  │  (PortableText из CMS)           │
+│  ные     │                                  │
+│  свед-   │  Документы (если есть)           │
+│  ния     │  DocumentList                    │
+│  Структ- │                                  │
+│  ура     ├──────────────────────────────────┤
+│  Документ│  Следующий раздел...             │
+│  ...     │                                  │
+└──────────┴──────────────────────────────────┘
+</code></pre>
+<p>Навигация слева (десктоп) / аккордеон (мобилка). Сортировка разделов по <code>order</code>.</p>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>h1 заголовок</td>
+</tr>
+<tr>
+<td>DocumentList</td>
+<td><code>ui/DocumentList.astro</code></td>
+<td>Документы в разделах</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.sveden-hero</code></td>
+<td>Hero-секция</td>
+</tr>
+<tr>
+<td><code>.sveden-layout</code></td>
+<td>Grid 2×: навигация + контент</td>
+</tr>
+<tr>
+<td><code>.sveden-nav</code></td>
+<td>Боковая навигация (sticky)</td>
+</tr>
+<tr>
+<td><code>.sveden-nav__link</code></td>
+<td>Ссылка раздела</td>
+</tr>
+<tr>
+<td><code>.sveden-nav__link--active</code></td>
+<td>Активный раздел (accent-warm)</td>
+</tr>
+<tr>
+<td><code>.sveden-section</code></td>
+<td>Секция контента</td>
+</tr>
+<tr>
+<td><code>.sveden-section__content</code></td>
+<td>PortableText контент</td>
+</tr>
+<tr>
+<td><code>.sveden-documents</code></td>
+<td>Обёртка DocumentList</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/sveden/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Разделы</td>
+<td>Стандартный перечень Минобрнауки</td>
+<td>Те же 13 разделов из CMS</td>
+</tr>
+<tr>
+<td>Документы</td>
+<td>Списки PDF-файлов</td>
+<td>DocumentList с кнопкой «Скачать»</td>
+</tr>
+<tr>
+<td>Навигация</td>
+<td>Табы</td>
+<td>Sticky sidebar слева</td>
+</tr>
+<tr>
+<td>Адаптив</td>
+<td>—</td>
+<td>Аккордеон на мобилке</td>
+</tr>
+<tr>
+<td>Контент</td>
+<td>Захардкожен</td>
+<td>CMS sveden_sections (PortableText)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Загрузить документы в CMS <code>documents</code></li>
+<li><input disabled="" type="checkbox"> Привязать документы к разделам через <code>sveden_section</code> reference</li>
+<li><input disabled="" type="checkbox"> Создать запись <code>pages/sveden</code> в CMS (если не создана)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

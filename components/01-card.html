@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Card</span></nav>
+  <div class="md-content">
+    <h1>01 · Card · Базовый</h1>
+<p>Универсальный контейнер с фоном, скруглением и бордером/тенью. Основа для ProgramCard, TeacherCard, ReviewCard, SeatsCard.</p>
+<p>→ Дизайн-гайд: <a href="../page-specs/01-design-guide.html">../page-specs/01-design-guide.md</a>
+→ Код: <code>src/components/ui/Card.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Варианты</h2>
+<table>
+<thead>
+<tr>
+<th>Вариант</th>
+<th>Когда</th>
+<th>Фон</th>
+<th>Бордер</th>
+<th>Тень</th>
+<th>Дефолт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>surface</strong></td>
+<td>По умолчанию</td>
+<td><code>--color-surface</code></td>
+<td><code>1px solid --color-primary-line</code></td>
+<td><code>--shadow-sm</code>, hover → <code>--shadow-md</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>elevated</strong></td>
+<td>Акцент, важный элемент</td>
+<td><code>--color-surface</code></td>
+<td>none</td>
+<td><code>--shadow-lg</code></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>muted</strong></td>
+<td>Приглушённый, неактивный</td>
+<td><code>--color-surface-alt</code></td>
+<td>none</td>
+<td>none</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>dark</strong></td>
+<td>На тёмном фоне</td>
+<td>прозрачный</td>
+<td><code>1px solid rgba(255,255,255,0.2)</code></td>
+<td>none</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import Card from &#39;../components/ui/Card.astro&#39;;
+---
+
+&lt;Card&gt;Содержимое&lt;/Card&gt;
+&lt;Card variant=&quot;elevated&quot;&gt;Важное&lt;/Card&gt;
+&lt;Card variant=&quot;muted&quot;&gt;Мест нет&lt;/Card&gt;
+&lt;Card variant=&quot;dark&quot;&gt;На тёмном фоне&lt;/Card&gt;
+</code></pre>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/Card.astro</code>.</p>
+</blockquote>
+<pre><code class="language-css">.card              /* корень */
+.card--elevated    /* вариант: усиленная тень */
+.card--muted      /* вариант: приглушённый */
+.card--dark       /* вариант: на тёмном фоне */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>padding: <code>--spacing-2xl</code> (3rem) → мобилка <code>--spacing-xl</code> (2rem)</li>
+<li>border-radius: <code>--radius-xl</code> (1rem)</li>
+<li>transition: <code>--transition-base</code></li>
+</ul>
+<hr>
+<h2>Состав</h2>
+<p>Card — базовый, не собирается из других. Является основой для:</p>
+<ul>
+<li><strong>ProgramCard</strong> = Card surface + Badge ×2 + description + Link</li>
+<li><strong>TeacherCard</strong> = Card surface + Avatar + name + position</li>
+<li><strong>ReviewCard</strong> = Card surface + quote + author footer</li>
+<li><strong>SeatsCard</strong> = Card surface (или muted) + class name + spots count</li>
+</ul>
+<hr>
+<h2>Где используется</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+<th>Вариант</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Главная (/)</td>
+<td>ProgramCard</td>
+<td>surface</td>
+</tr>
+<tr>
+<td>Главная (/)</td>
+<td>TeacherCard</td>
+<td>surface</td>
+</tr>
+<tr>
+<td>Главная (/)</td>
+<td>ReviewCard</td>
+<td>surface</td>
+</tr>
+<tr>
+<td>Главная (/)</td>
+<td>SeatsCard</td>
+<td>surface / muted</td>
+</tr>
+<tr>
+<td>Цены (/czeny)</td>
+<td>Тарифные карточки</td>
+<td>elevated</td>
+</tr>
+<tr>
+<td>Преподаватели (/prepodavateli)</td>
+<td>TeacherCard</td>
+<td>surface</td>
+</tr>
+<tr>
+<td>Отзывы (/otzyvy)</td>
+<td>ReviewCard</td>
+<td>surface</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="02-section-title.html">02 · SectionTitle</a> — заголовок секции над карточками</li>
+<li><a href="03-badge.html">03 · Badge</a> — бейджи внутри ProgramCard</li>
+<li><a href="04-button.html">04 · Button</a> — CTA внутри Card</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

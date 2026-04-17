@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pages templates — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Pages templates</span></nav>
+  <div class="md-content">
+    <h1>Шаблоны страниц и роутинг</h1>
+<h2>Обзор системы маршрутизации</h2>
+<p>Astro использует <strong>файл-базированный роутинг</strong>:</p>
+<pre><code>src/pages/
+├── index.astro              →  /
+├── posts.astro              →  /news/  (список)
+├── posts/[id].astro         →  /posts/[id]  (детальная)
+├── pages/[slug].astro       →  /[slug]  (любая статическая страница)
+└── (другие маршруты)...
+</code></pre>
+<p><strong>Важно:</strong> Страницы из коллекции <code>pages</code> (EmDash) обслуживаются одним шаблоном <code>pages/[slug].astro</code>. Это <strong>динамический SSR-роут</strong> — страница генерируется на каждый запрос на основе slug.</p>
+<hr>
+<h2>Список всех страниц проекта</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>URL</th>
+<th>Коллекция</th>
+<th>Шаблон</th>
+<th>Статус</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Главная</td>
+<td><code>/</code></td>
+<td>page (slug=<code>home</code>)</td>
+<td><code>index.astro</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Новости (список)</td>
+<td><code>/news/</code></td>
+<td><code>posts</code> (collection)</td>
+<td><code>posts.astro</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Новость (детальная)</td>
+<td><code>/posts/[id]</code></td>
+<td><code>posts</code></td>
+<td><code>posts/[id].astro</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>О школе</td>
+<td><code>/o-shkole/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️ Нет в seed</td>
+</tr>
+<tr>
+<td>Расписание</td>
+<td><code>/raspisanie/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Преподаватели</td>
+<td><code>/prepodavateli/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Преимущества</td>
+<td><code>/preimushhestva/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Цены</td>
+<td><code>/czeny/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Контакты</td>
+<td><code>/kontakty/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Отзывы</td>
+<td><code>/otzyvy/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Сведения</td>
+<td><code>/sveden/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Политика</td>
+<td><code>/politika/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>0 класс</td>
+<td><code>/0klass/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>Начальная школа</td>
+<td><code>/nachalnaya-shkola/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>Средняя школа</td>
+<td><code>/srednyaya-shkola/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>Курсы дошкольников</td>
+<td><code>/doshkolniki/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>Курс: Подготовка 4-7</td>
+<td><code>/doshkolniki/podgotovka-k-shkole-ot-4-do-7-let/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>Курс: Я Сам(а)</td>
+<td><code>/doshkolniki/ya-sam/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>Курс: Кулинарный</td>
+<td><code>/doshkolniki/kulinarnyj-kurs/</code></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td>... и ещё ~10 курсов</td>
+<td></td>
+<td><code>pages</code></td>
+<td><code>pages/[slug].astro</code></td>
+<td>⬜</td>
+</tr>
+</tbody></table>
+<p><strong>Всего:</strong> ~38 страниц (см. <code>docs/content-summary.md</code>)</p>
+<hr>
+<h2>Шаблоны Astro</h2>
+<h3><code>src/layouts/Base.astro</code></h3>
+<p><strong>Назначение:</strong> базовый layout всех страниц.Подключает:</p>
+<ul>
+<li>Header (основное меню)</li>
+<li>SecondMenu (второе меню)</li>
+<li><code>&lt;slot /&gt;</code> — контент страницы</li>
+<li>Footer</li>
+<li>Скрипт для dropdown-меню (клик вне закрывает)</li>
+</ul>
+<p><strong>Props:</strong></p>
+<pre><code class="language-typescript">interface Props {
+  title?: string; // defaults to &quot;РКШ — Русская Классическая Школа&quot;
+}
+</code></pre>
+<p><strong>Использование:</strong></p>
+<pre><code class="language-astro">&lt;Base title=&quot;О школе&quot;&gt;
+  &lt;h1&gt;Заголовок страницы&lt;/h1&gt;
+  &lt;p&gt;Контент...&lt;/p&gt;
+&lt;/Base&gt;
+</code></pre>
+<hr>
+<h3><code>src/pages/index.astro</code></h3>
+<p><strong>URL:</strong> <code>/</code><br><strong>Тип:</strong> SSR page<br><strong>Логика:</strong></p>
+<ol>
+<li>Загружает последние 10 новостей из <code>posts</code> (<code>getEmDashCollection</code>)</li>
+<li>Отображает их списком под приветствием</li>
+<li>Но <strong>основной контент главной</strong> (hero, features, advantages) должен управляться через запись в <code>pages</code> с slug=<code>home</code></li>
+</ol>
+<p><strong>Текущее состояние:</strong></p>
+<ul>
+<li>Есть статический HTML с заголовком «Добро пожаловать!»</li>
+<li>Нет интеграции с блоками <code>@rksh/blocks</code></li>
+<li><strong>Необходимо:</strong> заменить на <code>&lt;PortableText value={homePage.data.content} /&gt;</code></li>
+</ul>
+<p><strong>План:</strong></p>
+<pre><code class="language-astro">---
+import Base from &quot;../layouts/Base.astro&quot;;
+import { getEmDashEntry } from &quot;emdash&quot;;
+
+const { entry: home, cacheHint } = await getEmDashEntry(&quot;pages&quot;, &quot;home&quot;);
+Astro.cache.set(cacheHint);
+---
+
+&lt;Base title={home.data.title}&gt;
+  &lt;PortableText value={home.data.content} /&gt;
+&lt;/Base&gt;
+</code></pre>
+<hr>
+<h3><code>src/pages/pages/[slug].astro</code></h3>
+<p><strong>URL:</strong> <code>/[slug]</code> (любой slug из <code>pages</code>)<br><strong>Тип:</strong> Dynamic SSR route<br><strong>Параметр:</strong> <code>slug</code> (из URL)</p>
+<p><strong>Логика:</strong></p>
+<pre><code class="language-typescript">export async function getStaticPaths() {
+  const { entries } = await getEmDashCollection(&quot;pages&quot;, { limit: 100 });
+  return entries.map(entry =&gt; ({
+    params: { slug: entry.id },
+    props: { entry }
+  }));
+}
+
+// При запросе /o-shkole/:
+const { entry: page, cacheHint } = await getEmDashEntry(&quot;pages&quot;, slug);
+Astro.cache.set(cacheHint);
+</code></pre>
+<p><strong>Важно:</strong> <code>getStaticPaths</code> здесь <strong>не генерирует статически</strong> — это просто список всех slugs, которые Astro зарегистрирует как routable. Фактические данные загружаются <strong>на каждый запрос</strong> (SSR).</p>
+<p><strong>Рендер:</strong></p>
+<pre><code class="language-astro">&lt;Base title={page.data.title}&gt;
+  &lt;article&gt;
+    &lt;h1&gt;{page.data.title}&lt;/h1&gt;
+    &lt;PortableText value={page.data.content} /&gt;
+  &lt;/article&gt;
+&lt;/Base&gt;
+</code></pre>
+<hr>
+<h3><code>src/pages/posts.astro</code></h3>
+<p><strong>URL:</strong> <code>/news/</code><br><strong>Тип:</strong> SSR page<br><strong>Логика:</strong> список всех новостей (ограничено 20, сортировка по дате публикации desc)</p>
+<p><strong>Показ:</strong> заголовок новости, excerpt (если есть), дата</p>
+<p><strong>TODO:</strong> добавить пагинацию (сейчас лимит 20)</p>
+<hr>
+<h3><code>src/pages/posts/[id].astro</code></h3>
+<p><strong>URL:</strong> <code>/posts/[id]</code> (id = slug новости)<br><strong>Тип:</strong> Dynamic SSR route<br><strong>Логика:</strong> <code>getEmDashEntry(&quot;posts&quot;, id)</code></p>
+<p><strong>Рендер:</strong> PortableText + мета-информация (дата)</p>
+<hr>
+<h2>Динамические vs Статические страницы</h2>
+<table>
+<thead>
+<tr>
+<th>Характеристика</th>
+<th>Статические (SSG)</th>
+<th>Динамические (SSR)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Генерация</td>
+<td>Билд-тайм</td>
+<td>Рантайм (на каждый запрос)</td>
+</tr>
+<tr>
+<td>Кэш</td>
+<td>CDN/файлы</td>
+<td>In-memory/Redis (cacheHint)</td>
+</tr>
+<tr>
+<td>Подходит для</td>
+<td>Маркетинг-лендинги, docs</td>
+<td>CMS-контент, блоги</td>
+</tr>
+<tr>
+<td><code>getStaticPaths</code></td>
+<td>✅ Генерирует файлы</td>
+<td>❌ Не используем для CMS</td>
+</tr>
+</tbody></table>
+<p><strong>Правило EmDash:</strong> ВСЕ страницы с контентом из БД — <strong>SSR только</strong>. Никакого <code>getStaticPaths</code> для CMS-записей.</p>
+<hr>
+<h2>Slug (URL-идентификатор)</h2>
+<p><strong>Что такое slug?</strong></p>
+<ul>
+<li>human-readable идентификатор в URL: <code>/o-shkole/</code>, <code>prepodavateli/</code></li>
+<li>генерируется автоматически из <code>title</code> (транслитерация, lowercase, hyphens)</li>
+<li>можно редактировать в админке</li>
+<li>должен быть <strong>уникальным</strong> в пределах коллекции</li>
+</ul>
+<p><strong>Пример:</strong></p>
+<pre><code>title: &quot;О школе&quot; → slug: &quot;o-shkole&quot;
+title: &quot;Наши преподаватели&quot; → slug: &quot;nashi-prepodavateli&quot; (но обычно `prepodavateli`)
+</code></pre>
+<p><strong>Важно:</strong> <code>entry.id</code> возвращает slug. В <code>getEmDashEntry(collection, id)</code> второй аргумент — это slug, а не ULID.</p>
+<hr>
+<h2>Параметры маршрута</h2>
+<p><code>pages/[slug].astro</code>:</p>
+<pre><code class="language-typescript">const { slug } = Astro.params; // из URL
+</code></pre>
+<p>Примеры:</p>
+<ul>
+<li><code>/o-shkole/</code> → slug = <code>&quot;o-shkole&quot;</code></li>
+<li><code>/czeny/</code> → slug = <code>&quot;czeny&quot;</code></li>
+</ul>
+<hr>
+<h2>404 сторона</h2>
+<p><strong>Не создана.</strong> Нужно создать <code>src/pages/[...slug].astro</code> или <code>404.astro</code>.</p>
+<p><strong>Рекомендация:</strong></p>
+<pre><code class="language-astro">---
+import Base from &quot;../layouts/Base.astro&quot;;
+---
+&lt;Base title=&quot;Страница не найдена&quot;&gt;
+  &lt;h1&gt;404 — Страница не найдена&lt;/h1&gt;
+  &lt;p&gt;Запрошенная страница не существует.&lt;/p&gt;
+  &lt;a href=&quot;/&quot;&gt;Вернуться на главную&lt;/a&gt;
+&lt;/Base&gt;
+</code></pre>
+<hr>
+<h2>Redirects (перенаправления)</h2>
+<p>Сейчас нет. Можно добавить:</p>
+<ul>
+<li><code>src/pages/[...slug].astro</code> — ловить все несуществующие slugs → 404</li>
+<li>Или middleware для редиректов со старого сайта:</li>
+</ul>
+<pre><code class="language-typescript">// src/middleware.ts
+export const onRequest = async (context) =&gt; {
+  const { url } = context;
+  if (url.pathname.startsWith(&quot;/old-page&quot;)) {
+    return Response.redirect(new URL(&quot;/new-page&quot;, url), 301);
+  }
+};
+</code></pre>
+<hr>
+<h2>Мета-теги страниц</h2>
+<p><strong>Как задать title/description для каждой страницы?</strong></p>
+<ol>
+<li>В <code>Base.astro</code>:</li>
+</ol>
+<pre><code class="language-astro">&lt;head&gt;
+  &lt;title&gt;{title}&lt;/title&gt;
+  &lt;!-- EmDash добавляет SEO через EmDashHead? --&gt;
+&lt;/head&gt;
+</code></pre>
+<ol start="2">
+<li>Использовать <code>getSeoMeta()</code> из <code>emdash</code>:</li>
+</ol>
+<pre><code class="language-astro">---
+import { getSeoMeta } from &quot;emdash&quot;;
+const seo = await getSeoMeta({ title: page.data.title, description: page.data.excerpt });
+---
+&lt;Base title={seo.title}&gt;
+  &lt;head&gt;
+    &lt;EmDashHead /&gt;
+  &lt;/head&gt;
+  ...
+&lt;/Base&gt;
+</code></pre>
+<p><strong>Пока упрощённо:</strong> передаём <code>title</code> в <code>Base</code>. Для SEO нужен отдельный блок или поле в <code>pages</code>.</p>
+<hr>
+<h2>Резервные варианты (fallback)</h2>
+<p>Если страница не найдена (<code>getEmDashEntry</code> вернул null):</p>
+<pre><code class="language-typescript">const { entry, cacheHint } = await getEmDashEntry(&quot;pages&quot;, slug);
+if (!entry) {
+  return Astro.redirect(&quot;/404&quot;);
+  // или рендерить 404 прямо здесь
+}
+</code></pre>
+<hr>
+<h2>Кэширование страниц</h2>
+<p><strong>Обязательно</strong> на каждой странице:</p>
+<pre><code class="language-typescript">Astro.cache.set(cacheHint);
+</code></pre>
+<p>Без этого:</p>
+<ul>
+<li>При редактировании страницы в админке изменения не появятся на фронте</li>
+<li>Кэш EmDash не будет инвалидироваться</li>
+</ul>
+<hr>
+<h2>Страницы-коллекции vs одиночные записи</h2>
+<ul>
+<li><code>posts</code> — коллекция, имеет список (<code>posts.astro</code>) и детальную (<code>posts/[id].astro</code>)</li>
+<li><code>pages</code> — каждый slug = отдельная страница, <strong>нет</strong> списка страниц (кроме главной)</li>
+</ul>
+<p><strong>Если нужен список страниц</strong> (например, все курсы):</p>
+<pre><code class="language-typescript">const { entries } = await getEmDashCollection(&quot;courses_preschool&quot;);
+</code></pre>
+<p>И рендерить в <code>CollectionPage.astro</code>.</p>
+<hr>
+<h2>Планы по шаблонам</h2>
+<p><strong>Сейчас реализовано:</strong></p>
+<ul>
+<li>✅ Базовая страница (<code>pages/[slug]</code>)</li>
+<li>✅ Список новостей (<code>posts.astro</code>)</li>
+<li>✅ Детальная новость (<code>posts/[id]astro</code>)</li>
+</ul>
+<p><strong>Нужно добавить:</strong></p>
+<ul>
+<li><code>src/pages/raspisanie.astro</code> — отдельный шаблон с таблицами (а не через PortableText)</li>
+<li><code>src/pages/prepodavateli.astro</code> — сетка карточек (или через PortableText + блок teachers)</li>
+<li><code>src/pages/czeny.astro</code> — таблица цен (блок <code>price-table</code>)</li>
+<li><code>src/pages/media.astro</code> — галерея + видеоархив</li>
+<li><code>src/pages/otzyvy.astro</code> — отзывы + форма</li>
+<li><code>src/pages/0klass.astro</code> — страница уровня</li>
+<li><code>src/pages/doshkolniki.astro</code> — список курсов</li>
+<li><code>src/pages/doshkolniki/[slug].astro</code> — детальная страница курса</li>
+</ul>
+<p><strong>Альтернатива:</strong> всё через <code>pages/[slug]</code> + PortableText блоки. Проще, но менее гибко для сложных интерфейсов (фильтры, сортировка).</p>
+<hr>
+<h2>Динамические route parameters</h2>
+<p><strong>Пример:</strong> <code>/doshkolniki/podgotovka-k-shkole-ot-4-do-7-let/</code></p>
+<p>Если хотим отдельный шаблон:</p>
+<pre><code>src/pages/doshkolniki/[slug].astro
+</code></pre>
+<p>Можно получить slug курса и загружать данные из <code>courses_preschool</code> по нему.</p>
+<p><strong>Структура:</strong></p>
+<pre><code class="language-typescript">const { slug } = Astro.params; // &quot;podgotovka-k-shkole-ot-4-do-7-let&quot;
+const { entry: course } = await getEmDashEntry(&quot;courses_preschool&quot;, slug);
+</code></pre>
+<hr>
+<h2>i18n (международность)</h2>
+<p><strong>Пока:</strong> только русский язык (<code>lang=&quot;ru&quot;</code> в Base.astro).</p>
+<p><strong>Планы:</strong> если понадобится английская версия:</p>
+<ul>
+<li>Создать <code>src/pages/en/</code> с такими же шаблонами</li>
+<li>Использовать <code>getEmDashEntry</code> с фильтром по <code>lang</code> (нужно добавить поле <code>lang</code> в коллекции)</li>
+<li>Или дублировать каждую запись с отдельным slug (<code>o-shkole-en</code>)</li>
+</ul>
+<hr>
+<h2>Best practices</h2>
+<ol>
+<li><strong>Всегда</strong> <code>Astro.cache.set(cacheHint)</code> после <code>getEmDash*</code> запросов</li>
+<li><strong>Никогда</strong> не использовать <code>getStaticPaths</code> для CMS-контента</li>
+<li><strong>Изображения</strong> — <code>&lt;Image image={...} /&gt;</code> из <code>emdash/ui</code></li>
+<li><strong>Ссылки</strong> — использовать <code>entry.id</code> (slug), а не <code>entry.data.id</code> (ULID)</li>
+<li><strong>Обработка ошибок:</strong> проверять <code>if (!entry)</code>, рендерить 404</li>
+</ol>
+<hr>
+<h2>Связанные документы</h2>
+<ul>
+<li><code>01-schema-collections.md</code> — какие коллекции используются</li>
+<li><code>02-blocks-plugin.md</code> — как рендерятся блоки в PortableText</li>
+<li><code>05-content-workflow.md</code> — как создавать/редактировать страницы в админке</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

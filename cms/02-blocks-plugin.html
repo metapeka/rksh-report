@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blocks plugin — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Blocks plugin</span></nav>
+  <div class="md-content">
+    <h1>Плагин <code>@rksh/blocks</code>: кастомные блоки Portable Text</h1>
+<h2>Назначение</h2>
+<p>Плагин добавляет 7 типов кастомных блоков в редактор Portable Text EmDash, чтобы быстро создавать структурированные страницы без ручного форматирования.</p>
+<p><strong>Проблема, которую решает:</strong>
+Без плагина каждый блок (hero, карточки преимуществ, таблица расписания) пришлось бы собирать из параграфов, заголовков и таблиц вручную. Это долго и непоследовательно. Плагин даёт готовые шаблоны с предопределёнными полями.</p>
+<hr>
+<h2>Структура плагина</h2>
+<pre><code>plugins/rksh-blocks/
+├── package.json              # Мета: name=&quot;@rksh/blocks&quot;, exports
+├── src/
+│   ├── index.ts              # PluginDescriptor (build-time)
+│   │   └── возвращает: { id, version, entrypoint, componentsEntry }
+│   ├── sandbox-entry.ts      # createPlugin() — runtime определение
+│   │   └── admin.portableTextBlocks: [ 7 типов блоков ]
+│   └── astro/
+│       ├── index.ts          # export const blockComponents = { ... }
+│       ├── Hero.astro        # Компонент rksh.hero
+│       ├── Features.astro    # rksh.features
+│       ├── Principles.astro  # rksh.principles
+│       ├── Advantages.astro  # rksh.advantages
+│       ├── Schedule.astro    # rksh.schedule
+│       ├── Teachers.astro    # rksh.teachers
+│       └── Cta.astro         # rksh.cta
+</code></pre>
+<h3>Разделение контекстов (важно!)</h3>
+<p><strong>Build-time</strong> (<code>src/index.ts</code>):</p>
+<ul>
+<li>Импортится в <code>astro.config.mjs</code> через <code>rkshBlocks()</code></li>
+<li>Возвращает <code>PluginDescriptor</code> — только метаданные, без side-effects</li>
+<li>Не может использовать <code>definePlugin()</code>, API EmDash</li>
+</ul>
+<p><strong>Runtime</strong> (<code>src/sandbox-entry.ts</code>):</p>
+<ul>
+<li>Загружается на сервере при обработке запроса</li>
+<li>Экспортирует <strong>именованную функцию</strong> <code>createPlugin(options)</code></li>
+<li>Вызывает <code>definePlugin({...})</code> — тут уже можно использовать hooks, storage, admin config</li>
+<li>Именно здесь объявляются <code>admin.portableTextBlocks</code></li>
+</ul>
+<p><strong>Ошибка <code>createPlugin is not a function</code> возникает, когда:</strong></p>
+<ul>
+<li><code>sandbox-entry.ts</code> экспортирует <code>export default definePlugin({...})</code></li>
+<li>EmDash ищет <code>createPlugin</code> как named export, а не default</li>
+<li><strong>Решение:</strong> всегда <code>export function createPlugin() { return definePlugin({...}) }</code></li>
+</ul>
+<hr>
+<h2>Типы блоков (полная спецификация)</h2>
+<h3>1. <code>rksh.hero</code> — Hero-секция</h3>
+<p><strong>Purpose:</strong> Визуальный заголовок страницы с фоном, подзаголовком и CTA-кнопкой.</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«Частная школа РКШ — Москва, Куркино»</td>
+</tr>
+<tr>
+<td><code>subtitle</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Идет набор на 2025-2026 учебный год»</td>
+</tr>
+<tr>
+<td><code>cta_text</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Получить презентацию»</td>
+</tr>
+<tr>
+<td><code>cta_url</code></td>
+<td>string</td>
+<td>❌</td>
+<td><code>/kontakty</code> или <code>#presentation</code></td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>plugins/rksh-blocks/src/astro/Hero.astro</code></p>
+<p><strong>Стили:</strong></p>
+<ul>
+<li>Фон: <code>var(--color-primary)</code> (тёмно-синий)</li>
+<li>Текст: белый</li>
+<li>Кнопка: <code>var(--color-accent-warm)</code> (тёплый жёлто-коричневый)</li>
+<li>Отступы: <code>4xl</code> сверху/снизу</li>
+</ul>
+<p><strong>Использование:</strong></p>
+<ul>
+<li>Главная страница</li>
+<li>Все основные страницы (О школе, Цены, Контакты...)</li>
+</ul>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>Если <code>cta_text</code> пустой — кнопка не отображается</li>
+<li><code>cta_url</code> без <code>title</code> — ссылка не появляется</li>
+</ul>
+<hr>
+<h3>2. <code>rksh.features</code> — Карточки особенностей</h3>
+<p><strong>Purpose:</strong> Сетка из 6 карточек с номерами, заголовками и описаниями. Для «6 преимуществ», «6 особенностей программы».</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Заголовок секции (например «Почему выбирают нас»)</td>
+</tr>
+<tr>
+<td><code>f1_title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Заголовок карточки 1</td>
+</tr>
+<tr>
+<td><code>f1_desc</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Описание карточки 1</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>… (аналогично f2–f6)</td>
+</tr>
+<tr>
+<td><code>f6_title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Заголовок карточки 6</td>
+</tr>
+<tr>
+<td><code>f6_desc</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Описание карточки 6</td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>Features.astro</code></p>
+<p><strong>Логика компонента:</strong></p>
+<pre><code class="language-typescript">const features = [
+  { title: f1_title, desc: f1_desc },
+  ...
+].filter(f =&gt; f.title); // автоматически убирает пустые
+</code></pre>
+<p><strong>Стили:</strong></p>
+<ul>
+<li>Сетка: <code>grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))</code> → 3×2 на десктопе</li>
+<li>Карточка: фон <code>surface</code>, борader <code>primary-line</code>, hover → shadow + accent border</li>
+<li>Номер: крупный (<code>4xl</code>), цвет <code>primary-soft</code> (светло-синий)</li>
+</ul>
+<p><strong>Использование:</strong></p>
+<ul>
+<li>Главная: «6 ключевых преимуществ»</li>
+<li>О школе: «6 особенностей нашей программы»</li>
+</ul>
+<p><strong>Ограничение:</strong> Жёстко 6 слотов. Чтобы добавить 7-ю карточку — нужно менять код плагина и компонент.</p>
+<hr>
+<h3>3. <code>rksh.principles</code> — Принципы обучения</h3>
+<p><strong>Purpose:</strong> Нумерованный список принципов образовательной философии школы. Визуально похож на <code>features</code>, но с другим стилем (может использоваться для «Миссия», «Наши принципы»).</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Наши принципы»</td>
+</tr>
+<tr>
+<td><code>p1_title</code> – <code>p6_title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«Без домашних заданий», «Маленькие классы»...</td>
+</tr>
+<tr>
+<td><code>p1_desc</code> – <code>p6_desc</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Описание принципа</td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>Principles.astro</code> (реализация аналогична <code>Features.astro</code>, другие CSS-классы)</p>
+<p><strong>Стили:</strong></p>
+<ul>
+<li>Номер: <code>font-size: 4xl</code>, <code>opacity: 0.5</code></li>
+<li>Карточка: возможно, без бордера, просто разделитель</li>
+</ul>
+<p><strong>Использование:</strong></p>
+<ul>
+<li>Страница «О школе» — секция «Принципы обучения»</li>
+<li>Главная — «Миссия» (но там уже есть advantages)</li>
+</ul>
+<hr>
+<h3>4. <code>rksh.advantages</code> — Преимущества (numbered list)</h3>
+<p><strong>Purpose:</strong> Нумерованный список преимуществ, визуально отличим от <code>features</code> и <code>principles</code>. Может использоваться для блока «Чем мы лучше обычной школы».</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>a1_title</code> – <code>a6_title</code></td>
+<td>string</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>a1_desc</code> – <code>a6_desc</code></td>
+<td>string</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>Advantages.astro</code></p>
+<p><strong>Стили:</strong> Отличаются от <code>features</code>:</p>
+<ul>
+<li>Может быть без карточек, просто numbered list</li>
+<li>Номера выделены жирно, возможно в круге</li>
+</ul>
+<p><strong>Пример контента (из content-summary.md):</strong></p>
+<ol>
+<li>«Классы до 15 человек»</li>
+<li>«Работаем в удобном режиме с 8:00 до 19:00»</li>
+<li>«Высокое качество образования по системе РКШ»
+... (6 пунктов)</li>
+</ol>
+<hr>
+<h3>5. <code>rksh.schedule</code> — Таблица расписания</h3>
+<p><strong>Purpose:</strong> Таблица занятий для одного класса/группы.</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Расписание 1 класса»</td>
+</tr>
+<tr>
+<td><code>class_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«1 класс»</td>
+</tr>
+<tr>
+<td><code>time_range</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«8:00 — 14:00»</td>
+</tr>
+<tr>
+<td><code>mon</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Математика, Русский, Физкультура»</td>
+</tr>
+<tr>
+<td><code>tue</code></td>
+<td>string</td>
+<td>❌</td>
+<td>…</td>
+</tr>
+<tr>
+<td><code>wed</code></td>
+<td>string</td>
+<td>❌</td>
+<td>…</td>
+</tr>
+<tr>
+<td><code>thu</code></td>
+<td>string</td>
+<td>❌</td>
+<td>…</td>
+</tr>
+<tr>
+<td><code>fri</code></td>
+<td>string</td>
+<td>❌</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>Schedule.astro</code></p>
+<p><strong>Рендер:</strong></p>
+<pre><code class="language-html">&lt;table&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Пн&lt;/th&gt;&lt;th&gt;8:00–9:00&lt;/th&gt;...&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Понедельник&lt;/td&gt;&lt;td&gt;mon content&lt;/td&gt;&lt;/tr&gt;
+    ...
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</code></pre>
+<p><strong>Ограничение:</strong> Один блок = один класс. Для 10 классов нужно 10 блоков на странице (неудобно). <strong>Планируется заменить на связь с коллекцией <code>schedule</code>.</strong></p>
+<hr>
+<h3>6. <code>rksh.teachers</code> — Карточки преподавателей</h3>
+<p><strong>Purpose:</strong> Сетка из 1–3 карточек педагогов (сейчас ограничено 3).</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Наши преподаватели»</td>
+</tr>
+<tr>
+<td><code>t1_name</code> – <code>t3_name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«Иванов Иван Иванович»</td>
+</tr>
+<tr>
+<td><code>t1_role</code> – <code>t3_role</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«Учитель математики»</td>
+</tr>
+<tr>
+<td><code>t1_desc</code> – <code>t3_desc</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Стаж 15 лет...»</td>
+</tr>
+<tr>
+<td><code>t1_photo</code> – <code>t3_photo</code></td>
+<td>string (URL)</td>
+<td>❌</td>
+<td><code>https://.../ivanov.jpg</code></td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>Teachers.astro</code></p>
+<p><strong>Рендер:</strong></p>
+<pre><code class="language-html">&lt;div class=&quot;teachers-grid&quot;&gt;
+  &lt;article class=&quot;teacher-card&quot;&gt;
+    &lt;img src={t1_photo} alt={t1_name} /&gt;
+    &lt;h3&gt;{t1_name}&lt;/h3&gt;
+    &lt;p&gt;{t1_role}&lt;/p&gt;
+    &lt;p&gt;{t1_desc}&lt;/p&gt;
+  &lt;/article&gt;
+  ...
+&lt;/div&gt;
+</code></pre>
+<p><strong>Ограничение:</strong> Жёстко 3 карточки. Нельзя добавить 4-го педагога без изменения кода.</p>
+<p><strong>Планы:</strong> Переделать на связь с коллекцией <code>teachers</code> → тогда блок будет запрашивать всех педагогов из БД.</p>
+<hr>
+<h3>7. <code>rksh.cta</code> — CTA-секция</h3>
+<p><strong>Purpose:</strong> Заключительный блок с призывом к действию.</p>
+<p><strong>Поля:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«Остались вопросы?»</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>«Оставьте заявку, и мы вам перезвоним»</td>
+</tr>
+<tr>
+<td><code>button_text</code></td>
+<td>string</td>
+<td>✅</td>
+<td>«Оставить заявку»</td>
+</tr>
+<tr>
+<td><code>button_url</code></td>
+<td>string</td>
+<td>✅</td>
+<td><code>/kontakty</code></td>
+</tr>
+</tbody></table>
+<p><strong>Компонент:</strong> <code>Cta.astro</code></p>
+<p><strong>Стили:</strong></p>
+<ul>
+<li>Центрированный блок</li>
+<li>Фон: <code>var(--color-surface-alt)</code> (светло-синий)</li>
+<li>Кнопка: акцентный цвет</li>
+<li>Отступы: <code>3xl</code></li>
+</ul>
+<hr>
+<h2>Редактирование блоков в админке</h2>
+<h3>Механизм Block Kit</h3>
+<p>EmDash использует <a href="https://docs.emdashcms.com/plugins/portable-text-blocks/">Block Kit</a> — форму на основе Slack-like полей. Каждый блок в <code>admin.portableTextBlocks</code> описывает:</p>
+<pre><code class="language-typescript">{
+  type: &quot;rksh.hero&quot;,
+  label: &quot;Hero-секция&quot;,
+  icon: &quot;link&quot;, // или &quot;image&quot;, &quot;video&quot;, &quot;code&quot;
+  description: &quot;...&quot;,
+  fields: [
+    { type: &quot;text_input&quot;, action_id: &quot;title&quot;, label: &quot;Заголовок&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;subtitle&quot;, label: &quot;Подзаголовок&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;cta_text&quot;, label: &quot;Текст кнопки&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;cta_url&quot;, label: &quot;Ссылка кнопки&quot; },
+  ]
+}
+</code></pre>
+<p><strong>Типы полей Block Kit:</strong></p>
+<ul>
+<li><code>text_input</code> — однострочное текстовое поле</li>
+<li><code>textarea</code> — многострочное</li>
+<li><code>select</code> — выпадающий список (нужен <code>options: [{value, label}]</code>)</li>
+<li><code>url</code> — валидация URL</li>
+<li><code>image_upload</code> — загрузка изображения (пока не используется)</li>
+</ul>
+<h3>Как добавлять валидацию</h3>
+<p>Сейчас все поля необязательные. Чтобы сделать обязательным:</p>
+<pre><code class="language-typescript">{ type: &quot;text_input&quot;, action_id: &quot;title&quot;, label: &quot;Заголовок&quot;, required: true }
+</code></pre>
+<p>EmDash не пропустит сохранение, если поле пустое.</p>
+<h3>Как добавить的选择 (dropdown)</h3>
+<pre><code class="language-typescript">{ type: &quot;select&quot;, action_id: &quot;cta_style&quot;, label: &quot;Стиль кнопки&quot;, 
+  options: [
+    { value: &quot;primary&quot;, label: &quot;Основной&quot; },
+    { value: &quot;secondary&quot;, label: &quot;Вторичный&quot; }
+  ]
+}
+</code></pre>
+<p>В компоненте: <code>const { cta_style } = Astro.props.node;</code></p>
+<hr>
+<h2>Расширение плагина</h2>
+<h3>Сценарий: Нужно 8 карточек в <code>features</code></h3>
+<p><strong>Шаги:</strong></p>
+<ol>
+<li><p><strong>Обновить <code>sandbox-entry.ts</code></strong> — добавить поля <code>f7_title</code>, <code>f7_desc</code>, <code>f8_title</code>, <code>f8_desc</code> в <code>fields</code> массиве для <code>rksh.features</code></p>
+</li>
+<li><p><strong>Обновить компонент <code>Features.astro</code>:</strong></p>
+</li>
+</ol>
+<pre><code class="language-astro">const { title, f1_title, f1_desc, ..., f8_title, f8_desc } = Astro.props.node;
+const features = [
+  { title: f1_title, desc: f1_desc },
+  ...
+  { title: f8_title, desc: f8_desc },
+].filter(f =&gt; f.title);
+</code></pre>
+<p>Или лучше преобразовать в массив:</p>
+<pre><code class="language-typescript">const featureCount = 8;
+const features = Array.from({ length: featureCount }, (_, i) =&gt; ({
+  title: Astro.props.node[`f${i+1}_title`],
+  desc: Astro.props.node[`f${i+1}_desc`],
+})).filter(f =&gt; f.title);
+</code></pre>
+<ol start="3">
+<li><p><strong>Обновить CSS</strong>, если нужно изменить сетку (с 6 на 8 карточек)</p>
+</li>
+<li><p><strong>Перезапустить dev-сервер</strong> (плагин пересобирается)</p>
+</li>
+<li><p><strong>Обновить документацию</strong> (<code>02-blocks-plugin.md</code>)</p>
+</li>
+</ol>
+<hr>
+<h3>Сценарий: Добавить новый блок <code>rksh.price-table</code></h3>
+<p><strong>1. Определить поля в <code>sandbox-entry.ts</code>:</strong></p>
+<pre><code class="language-typescript">{
+  type: &quot;rksh.price-table&quot;,
+  label: &quot;Таблица цен&quot;,
+  icon: &quot;table&quot;,
+  fields: [
+    { type: &quot;text_input&quot;, action_id: &quot;title&quot;, label: &quot;Заголовок&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;program&quot;, label: &quot;Программа&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;grade&quot;, label: &quot;Класс&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;price_monthly&quot;, label: &quot;Цена в месяц&quot; },
+    { type: &quot;text_input&quot;, action_id: &quot;price_year&quot;, label: &quot;Годовая цена&quot; },
+  ]
+}
+</code></pre>
+<p><strong>2. Создать компонент <code>PriceTable.astro</code>:</strong></p>
+<pre><code class="language-astro">---
+const { title, program, grade, price_monthly, price_year } = Astro.props.node;
+---
+&lt;section class=&quot;price-table&quot;&gt;
+  &lt;h2&gt;{title}&lt;/h2&gt;
+  &lt;table&gt;...&lt;/table&gt;
+&lt;/section&gt;
+&lt;style&gt;...&lt;/style&gt;
+</code></pre>
+<p><strong>3. Экспортировать в <code>astro/index.ts</code>:</strong></p>
+<pre><code class="language-typescript">export const blockComponents = {
+  // ... existing
+  &quot;rksh.price-table&quot;: PriceTable,
+};
+</code></pre>
+<p><strong>4. Использовать на странице Цены</strong> → добавить блок через <code>/</code> в редакторе.</p>
+<hr>
+<h3>Сценарий: Подключить изображения в <code>teachers</code></h3>
+<p><strong>Сейчас:</strong> <code>t1_photo</code> — строка с URL (текстовое поле).<br><strong>Хотим:</strong> загружать через медиа-библиотеку.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>В <code>sandbox-entry.ts</code> изменить тип поля:</li>
+</ol>
+<pre><code class="language-typescript">{ type: &quot;image_upload&quot;, action_id: &quot;t1_photo&quot;, label: &quot;Фото 1&quot; }
+</code></pre>
+<p>Или оставить <code>text_input</code>, но в компоненте использовать <code>&lt;Image image={...} /&gt;</code> из <code>emdash/ui</code>.</p>
+<ol start="2">
+<li>В <code>Teachers.astro</code>:</li>
+</ol>
+<pre><code class="language-astro">import { Image } from &quot;emdash/ui&quot;;
+&lt;Image image={t1_photo} alt={t1_name} /&gt;
+</code></pre>
+<p><code>image</code> должен быть объектом <code>{src, alt}</code>. Если в админке загружено через медиа-библиотеку, EmDash сам подставит правильный объект.</p>
+<hr>
+<h2>Стилизация</h2>
+<p>Каждый компонент содержит <code>&lt;style&gt;</code> внутри. Это <strong>scoped styles</strong> (Astro по умолчанию).</p>
+<p><strong>Глобальные переменные:</strong> компоненты используют <code>var(--color-*)</code>, <code>var(--spacing-*)</code> из <code>src/styles/tokens.css</code>.</p>
+<p><strong>Изменение стиля всех блоков:</strong></p>
+<ol>
+<li>Отредактировать <code>tokens.css</code> (палитра, шрифты, spacing)</li>
+<li>Или переписать CSS внутри каждого <code>.astro</code> файла</li>
+</ol>
+<p><strong>Рекомендация:</strong> вынести общие классы (<code>.rksh-section</code>, <code>.rksh-container</code>) в <code>global.css</code>, а в компонентах использовать только <code>@apply</code> или уточняющие селекторы.</p>
+<hr>
+<h2>Отладка</h2>
+<h3>Блоки не отображаются на фронте</h3>
+<ol>
+<li>Проверить, что <code>PortableText</code> импортирован:</li>
+</ol>
+<pre><code class="language-astro">import { PortableText } from &quot;emdash/ui&quot;;
+&lt;PortableText value={page.data.content} /&gt;
+</code></pre>
+<ol start="2">
+<li><p>Убедиться, что <code>blockComponents</code> экспортированы в <code>plugins/rksh-blocks/src/astro/index.ts</code></p>
+</li>
+<li><p>Проверить консоль браузера: ошибки импорта компонентов?</p>
+</li>
+<li><p>Проверить серверные логи: <code>createPlugin is not a function</code> → плагин не загружен</p>
+</li>
+</ol>
+<h3>Блоки не видны в админке (не появляются в <code>/</code> меню)</h3>
+<ol>
+<li>Перезапустить dev-сервер (плагин подгружается при старте)</li>
+<li>Проверить <code>astro.config.mjs</code> — есть ли <code>plugins: [rkshBlocks()]</code></li>
+<li>Убедиться, что в <code>sandbox-entry.ts</code> блоки объявлены под <code>admin.portableTextBlocks</code></li>
+<li>Проверить версии <code>emdash</code> и <code>@rksh/blocks</code> — совместимость по peerDependencies</li>
+</ol>
+<h3>Изменения в коде не применяются</h3>
+<ul>
+<li>Dev-сервер должен перезапуститься (Vite HMR может не подхватить плагин)</li>
+<li>Полностью остановить и запустить заново</li>
+<li>Очистить кэш: <code>rm -rf .astro/ node_modules/.vite</code></li>
+</ul>
+<hr>
+<h2>Планы по улучшению</h2>
+<h3>Краткосрочные</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Увеличить <code>teachers</code> до 6–8 карточек (сейчас 3)</li>
+<li><input disabled="" type="checkbox"> Добавить валидацию <code>required: true</code> для ключевых полей</li>
+<li><input disabled="" type="checkbox"> Сделать <code>schedule</code> динамическим (связь с коллекцией)</li>
+<li><input disabled="" type="checkbox"> Добавить блок <code>price-table</code> для страницы цен</li>
+</ul>
+<h3>Среднесрочные</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Поддержка изображений в <code>features</code> (иконки)</li>
+<li>[ ]responsive-проверка всех блоков (телефон, планшет)</li>
+<li><input disabled="" type="checkbox"> Доступность: ARIA labels, фокусы</li>
+<li><input disabled="" type="checkbox"> Локализация: поддержка мультиязычности (если включена в EmDash)</li>
+</ul>
+<h3>Долгосрочные</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Переписать все блоки на использование <strong>коллекций</strong> вместо hard-coded полей</li>
+<li><input disabled="" type="checkbox"> Создать UI для настройки блоков (визуальный редактор)</li>
+<li><input disabled="" type="checkbox"> Экранирование/валидация XSS (пользовательский контент в <code>portableText</code>)</li>
+</ul>
+<hr>
+<h2>Ссылки</h2>
+<ul>
+<li><a href="https://docs.emdashcms.com/plugins/creating-plugins/">EmDash Plugins Docs</a></li>
+<li><a href="https://docs.emdashcms.com/plugins/portable-text-blocks/">Portable Text Block Types</a></li>
+<li><a href="https://docs.emdashcms.com/plugins/block-kit/">Block Kit Fields</a></li>
+<li>Наш плагин: <code>plugins/rksh-blocks/</code></li>
+</ul>
+<hr>
+<h2>Чек-лист разработчика</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Новая версия плагина → обновить <code>version</code> в <code>index.ts</code> и <code>package.json</code></li>
+<li><input disabled="" type="checkbox"> После изменений → <code>npm run dev</code> и проверка в админке</li>
+<li><input disabled="" type="checkbox"> Обновить эту документацию при любом изменении полей/компонентов</li>
+<li><input disabled="" type="checkbox"> Протестировать в админке: добавление блока, сохранение, публикация, фронт</li>
+<li><input disabled="" type="checkbox"> Проконсультироваться с дизайнером (если меняются стили)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

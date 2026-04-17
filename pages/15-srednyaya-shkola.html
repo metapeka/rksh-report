@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Srednyaya shkola — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Srednyaya shkola</span></nav>
+  <div class="md-content">
+    <h1>Средняя школа (/srednyaya-shkola)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>все данные</td>
+<td>Захардкожены в шаблоне (<code>src/pages/srednyaya-shkola.astro</code>)</td>
+</tr>
+<tr>
+<td>Hero-факты</td>
+<td>Массив <code>facts</code> (возраст, группа, цена)</td>
+</tr>
+<tr>
+<td>Причины</td>
+<td>Массив <code>reasons</code> (6 причин: title + desc)</td>
+</tr>
+<tr>
+<td>Карточки особенностей</td>
+<td>То же, что в ns-about (4 карточки, общие стили)</td>
+</tr>
+<tr>
+<td>Расписание (режим дня)</td>
+<td>Массив <code>schedule</code> (6 временных слотов)</td>
+</tr>
+<tr>
+<td>Предметы</td>
+<td>Массив <code>subjects</code> (12 предметов: name + hours)</td>
+</tr>
+<tr>
+<td>Каникулы</td>
+<td>Массив <code>holidays</code> (4 периода)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Данные не вынесены в CMS — обновляются вручную. Стили ns-about* — общие с <code>/nachalnaya-shkola</code>.</p>
+</blockquote>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────┐
+│  ss-hero                                   │
+│  SectionTitle h1: Средняя школа            │
+│  p: 5–9 классы • продолжение…              │
+│  3× Fact (возраст / группа / цена)         │
+│  Button warm: Записаться на экскурсию      │
+├─────────────────────────────────────────────┤
+│  ss-reasons  (bg: surface-alt)             │
+│  SectionTitle h2 center: 6 причин…         │
+│  Grid 3×: 6 карточек с номерами              │
+│  ┌──────┐ ┌──────┐ ┌──────┐              │
+│  │ ①    │ │ ②    │ │ ③    │              │
+│  │Пробл.│ │Жажда │ │Карьер│              │
+│  ├──────┤ ├──────┤ ├──────┤              │
+│  │ ④    │ │ ⑤    │ │ ⑥    │              │
+│  │Готов.│ │Конфл.│ │ОГЭ  │              │
+│  └──────┘ └──────┘ └──────┘              │
+├─────────────────────────────────────────────┤
+│  ss-about                                  │
+│  SectionTitle h2 center: Особенности…      │
+│  Grid 2×: 4 карточки (ns-about__*)         │
+│  ┌──────────────┐ ┌──────────────┐         │
+│  │ 5–6 уроков   │ │ до 15 чел.   │         │
+│  │ ежедневно    │ │ в классе     │         │
+│  ├──────────────┤ ├──────────────┤         │
+│  │ Продлёнка     │ │ Подготовка   │         │
+│  │ до 19:00     │ │ к аттестации │         │
+│  └──────────────┘ └──────────────┘         │
+├─────────────────────────────────────────────┤
+│  ss-schedule  (bg: surface-alt)            │
+│  SectionTitle h2 center: Режим дня          │
+│  ss-timeline (вертикальный)                 │
+│  ┌────────────────────────────────────────┐│
+│  │ 9:00–10:30   ●  Образовательная   │ ← primary   │
+│  │ 10:30–10:50  ●  Завтрак            │ ← warm bg   │
+│  │ 10:50–13:10  ●  Образовательная   │ ← primary   │
+│  │ 13:10–13:30  ●  Обед               │ ← warm bg   │
+│  │ 13:30–14:10  ●  Образовательная   │ ← primary   │
+│  │ 14:10–16:00  ●  Самоподготовка    │ ← success   │
+│  └────────────────────────────────────────┘│
+├─────────────────────────────────────────────┤
+│  ss-subjects                               │
+│  SectionTitle h2 center: Предметная сетка  │
+│  p.note: Точное расписание в конце августа│
+│  12× ss-subject (карточки с прогресс-баром) │
+│  ┌ Русский язык           6 ак.ч. ████████ ┐│
+│  │ Арифметика              5 ак.ч. ██████   ││
+│  │ Английский язык          4 ак.ч. █████   ││
+│  │ ...                                       ││
+│  └──────────────────────────────────────────┘│
+├─────────────────────────────────────────────┤
+│  ss-holidays  (bg: surface-alt)            │
+│  SectionTitle h2 center: Каникулы           │
+│  table.klass-table (4 строки)               │
+├─────────────────────────────────────────────┤
+│  ss-cta  (bg: primary, text: surface)       │
+│  h2: Запишите ребёнка в среднюю школу      │
+│  p: Приходите на экскурсию…                │
+│  Button warm lg: Записаться на экскурсию    │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base layout</td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Обёртка</td>
+</tr>
+<tr>
+<td>SectionTitle</td>
+<td><code>src/components/ui/SectionTitle.astro</code></td>
+<td>h1, h2 (center)</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>src/components/ui/Button.astro</code></td>
+<td>Hero CTA, нижний CTA</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Карточки причин, особенности, timeline, предметная сетка, каникулы — нативный HTML, не отдельные компоненты.</p>
+</blockquote>
+<hr>
+<h2>Уникальные стили</h2>
+<h3>Таймлайн (режим дня) — цветовое кодирование</h3>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Тип слота</th>
+<th>Цвет левого бордера</th>
+<th>Фон</th>
+<th>Цвет точки</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.ss-timeline__row--study</code></td>
+<td>Уроки</td>
+<td><code>--color-primary</code> (синий)</td>
+<td><code>--color-surface</code></td>
+<td><code>--color-primary</code></td>
+</tr>
+<tr>
+<td><code>.ss-timeline__row--break</code></td>
+<td>Завтрак/обед</td>
+<td><code>--color-accent-warm</code> (оранжевый)</td>
+<td><code>--color-accent-warm-soft</code></td>
+<td><code>--color-accent-warm</code></td>
+</tr>
+<tr>
+<td><code>.ss-timeline__row--prep</code></td>
+<td>Самоподготовка</td>
+<td><code>--color-success</code> (зелёный)</td>
+<td><code>--color-surface</code></td>
+<td><code>--color-success</code></td>
+</tr>
+</tbody></table>
+<h3>Предметная сетка (SubjectGrid)</h3>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.ss-subjects__grid</code></td>
+<td>Flex-column, gap md, max-width narrow</td>
+</tr>
+<tr>
+<td><code>.ss-subject</code></td>
+<td>Карточка: bg surface, border primary-line, radius lg</td>
+</tr>
+<tr>
+<td><code>.ss-subject__header</code></td>
+<td>Flex space-between (название + часы)</td>
+</tr>
+<tr>
+<td><code>.ss-subject__name</code></td>
+<td>semibold, sm, color text</td>
+</tr>
+<tr>
+<td><code>.ss-subject__hours</code></td>
+<td>xs, bold, color accent-warm</td>
+</tr>
+<tr>
+<td><code>.ss-subject__bar-track</code></td>
+<td>Трек прогресс-бара: height 6px, bg surface-alt, radius 3px</td>
+</tr>
+<tr>
+<td><code>.ss-subject__bar</code></td>
+<td>Заполнение: bg primary, radius 3px, width = (hours/6)*100%</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.ss-hero</code></td>
+<td>Hero, text-align center, padding 4xl/2xl</td>
+</tr>
+<tr>
+<td><code>.ss-hero__facts</code></td>
+<td>Flex-ряд (gap 2xl)</td>
+</tr>
+<tr>
+<td><code>.ss-fact__val</code></td>
+<td>Playfair Display, 2xl, bold, color primary</td>
+</tr>
+<tr>
+<td><code>.ss-reasons</code></td>
+<td>Секция причин, bg surface-alt</td>
+</tr>
+<tr>
+<td><code>.ss-reasons__grid</code></td>
+<td>Grid 3× (gap lg)</td>
+</tr>
+<tr>
+<td><code>.ss-reason__num</code></td>
+<td>Кружок с номером: bg accent-warm, color surface, radius 50%</td>
+</tr>
+<tr>
+<td><code>.ss-reason__title</code></td>
+<td>Inter, semibold, lg</td>
+</tr>
+<tr>
+<td><code>.ss-reason__desc</code></td>
+<td>sm, muted</td>
+</tr>
+<tr>
+<td><code>.ss-about</code></td>
+<td>Секция особенностей</td>
+</tr>
+<tr>
+<td><code>.ss-schedule</code></td>
+<td>Секция режима дня, bg surface-alt</td>
+</tr>
+<tr>
+<td><code>.ss-timeline</code></td>
+<td>Flex-column, gap 1px, max-width narrow</td>
+</tr>
+<tr>
+<td><code>.ss-timeline__row</code></td>
+<td>Flex, align-items center, bg surface, radius md</td>
+</tr>
+<tr>
+<td><code>.ss-timeline__time</code></td>
+<td>semibold, sm, color primary, min-width 110px</td>
+</tr>
+<tr>
+<td><code>.ss-timeline__dot</code></td>
+<td>8px круг, flex-shrink 0</td>
+</tr>
+<tr>
+<td><code>.ss-timeline__label</code></td>
+<td>sm, color text</td>
+</tr>
+<tr>
+<td><code>.ss-holidays</code></td>
+<td>Секция каникул, bg surface-alt</td>
+</tr>
+</tbody></table>
+<h3>Адаптив (≤768px)</h3>
+<ul>
+<li><code>.ss-hero</code> → padding 2xl/lg</li>
+<li><code>.ss-reasons</code> → padding 2xl</li>
+<li><code>.ss-reasons__grid</code> → grid-template-columns 1fr</li>
+<li><code>.ss-about</code>, <code>.ss-schedule</code>, <code>.ss-subjects</code>, <code>.ss-holidays</code> → padding 2xl</li>
+<li><code>.ss-timeline__time</code> → min-width 90px, font-size xs</li>
+<li><code>.ns-about__grid</code> → grid-template-columns 1fr</li>
+<li><code>.ss-cta</code> → padding 2xl</li>
+<li><code>.btn</code> внутри <code>.ss-cta</code> → width 100%</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/srednyaya-shkola/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Блок «6 причин»</td>
+<td>Нет</td>
+<td>Новая секция с пронумерованными карточками</td>
+</tr>
+<tr>
+<td>Режим дня</td>
+<td>Простой текст/таблица</td>
+<td>Цветовой таймлайн (study/break/prep)</td>
+</tr>
+<tr>
+<td>Предметная сетка</td>
+<td>Таблица</td>
+<td>Карточки с прогресс-баром (часы/6 × 100%)</td>
+</tr>
+<tr>
+<td>Каникулы</td>
+<td>В составе общей информации</td>
+<td>Отдельная секция с таблицей</td>
+</tr>
+<tr>
+<td>Карточки особенностей</td>
+<td>Нет</td>
+<td>2×2 grid ( reused from ns-about)</td>
+</tr>
+<tr>
+<td>Отзывы</td>
+<td>Есть (виджет)</td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>CTA-баннер</td>
+<td>Нет</td>
+<td>Финальная секция с Button warm</td>
+</tr>
+<tr>
+<td>Шрифты</td>
+<td>Roboto Slab / Source Sans Pro</td>
+<td>Playfair Display / Inter</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Рассмотреть вынос расписания (режим дня) в CMS</li>
+<li><input disabled="" type="checkbox"> Рассмотреть вынос предметной сетки в CMS (динамические часы)</li>
+<li><input disabled="" type="checkbox"> Общий стили ns-about__* с <code>/nachalnaya-shkola</code> — вынести в общий CSS или компонент</li>
+<li><input disabled="" type="checkbox"> Рассмотреть SubjectGrid как отдельный компонент</li>
+<li><input disabled="" type="checkbox"> Рассмотреть Timeline как отдельный компонент</li>
+<li><input disabled="" type="checkbox"> Добавить отзывы/виджет (есть в оригинале, отсутствует на нашем сайте)</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post card — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Post card</span></nav>
+  <div class="md-content">
+    <h1>25 · PostCard</h1>
+<p>Карточка новости для списка и блока «Другие новости».</p>
+<h2>Расположение</h2>
+<p><code>src/components/ui/PostCard.astro</code></p>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>Обязательный</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>✅</td>
+<td>Заголовок новости</td>
+</tr>
+<tr>
+<td><code>href</code></td>
+<td><code>string</code></td>
+<td>✅</td>
+<td>Ссылка на детальную страницу</td>
+</tr>
+<tr>
+<td><code>excerpt</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Анонс (обрезается до 3 строк)</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>ISO-строка даты, форматируется в «10 апреля 2024 г.»</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Название категории (отображается Badge)</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td><code>{ id, src?, alt?, width?, height? }</code></td>
+<td>❌</td>
+<td>Объект изображения EmDash (через <code>&lt;Image&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Дополнительный CSS-класс</td>
+</tr>
+</tbody></table>
+<h2>Варианты</h2>
+<ol>
+<li><strong>С изображением</strong> — показывает <code>16:9</code> обложку поверх карточки</li>
+<li><strong>Без изображения</strong> — карточка без блока изображения</li>
+<li><strong>Без категории</strong> — не показывает Badge</li>
+</ol>
+<h2>Использование</h2>
+<pre><code class="language-astro">&lt;PostCard
+  title={post.data.title}
+  href={`/news/${post.id}`}
+  excerpt={post.data.excerpt}
+  date={post.data.publishedAt?.toISOString()}
+  category={categoryLabel}
+  image={post.data.featured_image}
+/&gt;
+</code></pre>
+<h2>Стили</h2>
+<ul>
+<li>Фон: <code>--color-surface</code>, граница <code>--color-primary-line</code></li>
+<li>Hover: <code>shadow-lg</code> + <code>translateY(-2px)</code></li>
+<li>Изображение: <code>object-fit: cover</code>, zoom при hover</li>
+<li>Excerpt: <code>-webkit-line-clamp: 3</code></li>
+<li>Адаптивность: на мобильных карточка растягивается на всю ширину</li>
+</ul>
+<h2>Styleguide</h2>
+<p>Секция 26 в <code>/styleguide</code> — 3 демо: с изображением, без изображения, без категории.</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

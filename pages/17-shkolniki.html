@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shkolniki — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Shkolniki</span></nav>
+  <div class="md-content">
+    <h1>Курсы для школьников — <code>/shkolniki</code></h1>
+<p><strong>Статус:</strong> 🔨 В работе (страница не создана)</p>
+<p><strong>Дизайн-гайд:</strong> <code>docs/rksh-emdash-theme-spec.md</code> — палитра, типографика, компоненты</p>
+<hr>
+<h2>Контент</h2>
+<h3>Источники данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Источник</th>
+<th>Формат</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Список курсов</td>
+<td>CMS-коллекция <code>courses_school</code> (план) или frontmatter</td>
+<td>Массив объектов</td>
+</tr>
+<tr>
+<td>Заголовок hero</td>
+<td>Хардкод</td>
+<td>Строка</td>
+</tr>
+<tr>
+<td>Описание hero</td>
+<td>Хардкод</td>
+<td>Строка</td>
+</tr>
+<tr>
+<td>Ссылка на цены</td>
+<td>Хардкод на <code>/czeny</code></td>
+<td>URL</td>
+</tr>
+</tbody></table>
+<h3>Структура course item</h3>
+<pre><code>{
+  title: string      — Название курса
+  link: string       — URL дочерней страницы
+  badges: string[]   — Массив бейджей (возраст, размер группы, формат)
+  desc: string       — Краткое описание
+}
+</code></pre>
+<h3>Курсы (8 шт., по данным rksh-msk.ru)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Курс</th>
+<th>Link</th>
+<th>Badges</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Техника чтения</td>
+<td><code>/shkolniki/tehnika-chteniya/</code></td>
+<td><code>7–11 лет</code>, <code>15 занятий</code></td>
+<td>Рост скорости чтения в 2-5 раз, интерес к чтению, правильное чтение</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Каллиграфия «Пишу красиво»</td>
+<td><code>/shkolniki/kalligrafiya-pishu-krasivo/</code></td>
+<td><code>6+ лет</code>, <code>до 6 чел.</code>, <code>2 р/нед</code></td>
+<td>Улучшение почерка, безотрывное письмо, развитие памяти и внимания</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Таблица умножения</td>
+<td><code>/shkolniki/tablicza-umnozheniya/</code></td>
+<td><code>10 занятий × 60 мин</code></td>
+<td>Устный счёт, автоматизация навыка, вычислительные приёмы</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Русский без проблем</td>
+<td><code>/shkolniki/russkij-bez-problem/</code></td>
+<td><code>10 занятий × 90 мин</code></td>
+<td>Орфографическая зоркость, ошибок меньше в 5-6 раз, навык самопроверки</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Продлёнка на 5</td>
+<td><code>/shkolniki/prodlenka-na-5/</code></td>
+<td><code>Пн-Пт</code>, <code>12:00–19:00</code>, <code>до 15 чел.</code></td>
+<td>Домашнее задание, горячее питание, прогулка, дополнительные занятия</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Математика, решение задач</td>
+<td><code>/shkolniki/matematika-reshenie-zadach/</code></td>
+<td>—</td>
+<td>Минимум контента на оригинальном сайте</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Живопись</td>
+<td><code>/shkolniki/zhivopis/</code></td>
+<td><code>1 р/нед</code>, <code>90 мин</code>, <code>до 8 чел.</code></td>
+<td>Творческое развитие, мелкая моторика, воображение</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Шахматы</td>
+<td><code>/shkolniki/shahmaty/</code></td>
+<td><code>4–13 лет</code>, <code>1-2 р/нед</code>, <code>50 мин</code>, <code>до 8 чел.</code></td>
+<td>Стратегическое мышление, дисциплина, дебютный репертуар</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌─────────────────────────────────────────────────┐
+│ .sh-hero                                        │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h1&gt; Курсы для школьников                  │ │
+│ │  &lt;p&gt;  Дополнительные занятия для учеников     │ │
+│ │       1–9 классов: письменная речь, счёт,     │ │
+│ │       логика, творчество и продлёнка          │ │
+│ │  [Записаться] → /kontakty                   │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .sh-courses          bg: --color-surface-alt     │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h2&gt; Все курсы                 (center)    │ │
+│ │                                             │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 1 │ │ Course 2 │   2-col grid    │ │
+│ │  │ badges   │ │ badges   │                 │ │
+│ │  │ title    │ │ title    │                 │ │
+│ │  │ desc     │ │ desc     │                 │ │
+│ │  │ Подробнее│ │ Подробнее│                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 3 │ │ Course 4 │                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 5 │ │ Course 6 │                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ │  ┌──────────┐ ┌──────────┐                 │ │
+│ │  │ Course 7 │ │ Course 8 │                 │ │
+│ │  └──────────┘ └──────────┘                 │ │
+│ └─────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────┤
+│ .sh-prices-link                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │  &lt;h2&gt; Стоимость курсов                      │ │
+│ │  &lt;p&gt;  Подробные цены на все курсы —          │ │
+│ │       на странице «Цены»                     │ │
+│ │  [Перейти к ценам] → /czeny                 │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+</code></pre>
+<h3>Секции по порядку</h3>
+<ol>
+<li><strong>Hero</strong> — заголовок h1, описание, CTA-кнопка «Записаться»</li>
+<li><strong>Все курсы</strong> — 2-колоночная сетка карточек курсов с бейджами (аналогично <code>/doshkolniki</code>)</li>
+<li><strong>Стоимость курсов</strong> — центрированный блок со ссылкой на страницу цен</li>
+</ol>
+<h3>Паттерн</h3>
+<p>Страница следует тому же паттерну, что и <code>/doshkolniki</code>:</p>
+<ul>
+<li>Классы с префиксом <code>sh-</code> вместо <code>dk-</code></li>
+<li>Та же сетка карточек, бейджи, кнопки</li>
+<li>Тот же блок-линк на цены</li>
+</ul>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Base</code></td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Все страницы (layout)</td>
+</tr>
+<tr>
+<td><code>SectionTitle</code></td>
+<td><code>src/components/ui/SectionTitle.astro</code></td>
+<td>Hero h1, «Все курсы» h2</td>
+</tr>
+<tr>
+<td><code>Badge</code></td>
+<td><code>src/components/ui/Badge.astro</code></td>
+<td>Бейджи возраста, формата, размера группы</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>src/components/ui/Button.astro</code></td>
+<td>«Записаться» (variant=warm), «Перейти к ценам» (default)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<p>Стили — scoped в <code>shkolniki.astro</code> (тег <code>&lt;style&gt;</code>). Классы с префиксом <code>sh-</code> по аналогии с <code>dk-</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.sh-hero</code></td>
+<td>Hero-секция: padding 4xl/2xl, text-align center</td>
+</tr>
+<tr>
+<td><code>.sh-hero__inner</code></td>
+<td>Ограничение ширины: <code>--container-narrow</code></td>
+</tr>
+<tr>
+<td><code>.sh-hero__lead</code></td>
+<td>Подзаголовок: font-size lg, muted text</td>
+</tr>
+<tr>
+<td><code>.sh-courses</code></td>
+<td>Секция курсов: bg <code>--color-surface-alt</code>, padding 4xl</td>
+</tr>
+<tr>
+<td><code>.sh-courses__grid</code></td>
+<td>2-col CSS grid, gap lg</td>
+</tr>
+<tr>
+<td><code>.sh-course</code></td>
+<td>Карточка курса: flex column, bg surface, border primary-line, radius lg, padding xl, hover shadow/border-accent</td>
+</tr>
+<tr>
+<td><code>.sh-course__badges</code></td>
+<td>Flex wrap для бейджей</td>
+</tr>
+<tr>
+<td><code>.sh-course__title</code></td>
+<td>Заголовок карточки: font-weight semibold, size lg</td>
+</tr>
+<tr>
+<td><code>.sh-course__desc</code></td>
+<td>Описание: font-size sm, muted text, flex-grow</td>
+</tr>
+<tr>
+<td><code>.sh-course__link</code></td>
+<td>Ссылка «Подробнее →»: font-weight semibold, color accent</td>
+</tr>
+<tr>
+<td><code>.sh-prices-link</code></td>
+<td>Секция цен: padding 4xl</td>
+</tr>
+<tr>
+<td><code>.sh-prices__inner</code></td>
+<td>Center, max-width narrow</td>
+</tr>
+<tr>
+<td><code>.sh-prices__title</code></td>
+<td>h2 цены: font-family heading, bold, size 3xl, color primary</td>
+</tr>
+<tr>
+<td><code>.sh-prices__desc</code></td>
+<td>Описание цены: size lg, muted</td>
+</tr>
+</tbody></table>
+<h3>Медиа-запрос (≤768px)</h3>
+<ul>
+<li>Hero padding → 2xl/lg</li>
+<li>Courses padding → 2xl</li>
+<li>Grid → 1 колонка</li>
+<li>Prices padding → 2xl</li>
+</ul>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>EmDash (план)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Макет</td>
+<td>Вертикальный список ссылок-пунктов меню</td>
+<td>2-колоночная сетка карточек</td>
+</tr>
+<tr>
+<td>Бейджи</td>
+<td>Нет</td>
+<td>Badge для возраста, формата, размера группы</td>
+</tr>
+<tr>
+<td>Hero</td>
+<td>Нет</td>
+<td>Добавлен hero-блок с h1, lead, CTA</td>
+</tr>
+<tr>
+<td>Описания</td>
+<td>Только названия курсов в меню</td>
+<td>Краткое описание под каждым курсом</td>
+</tr>
+<tr>
+<td>Ссылка «Подробнее»</td>
+<td>Нет</td>
+<td>Добавлена на каждой карточке</td>
+</tr>
+<tr>
+<td>Блок «Стоимость»</td>
+<td>Нет</td>
+<td>Добавлен блок-линк на страницу цен</td>
+</tr>
+<tr>
+<td>Курс «Математика»</td>
+<td>Одна строка в меню, минимум контента</td>
+<td>Включён в список, явно помечен как с минимальным описанием</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Создать файл <code>src/pages/shkolniki.astro</code></li>
+<li><input disabled="" type="checkbox"> Перенести courses из frontmatter в CMS-коллекцию <code>courses_school</code> при готовности seed</li>
+<li><input disabled="" type="checkbox"> Добавить иконки/изображения к карточкам курсов, когда появятся медиа</li>
+<li><input disabled="" type="checkbox"> Решить вопрос с курсом «Математика, решение задач» — на оригинале минимум контента, нужен ли подробный desc</li>
+<li><input disabled="" type="checkbox"> SEO: добавить meta-теги (description, og) для страницы курсов школьников</li>
+<li><input disabled="" type="checkbox"> Проверить корректность ссылок на дочерние страницы курсов</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

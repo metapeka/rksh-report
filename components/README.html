@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>README — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>README</span></nav>
+  <div class="md-content">
+    <h1>Библиотека компонентов РКШ</h1>
+<p>Каталог повторяющихся UI-паттернов проекта. Агент использует его как справочник: вместо «сделай карточку как-нибудь» → «используй Card variant=surface».</p>
+<h2>Как читать</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Что внутри</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="00-guide.html">00-guide.md</a></td>
+<td>Правила: структура spec&#39;а, уровни, как менять, архитектурные решения</td>
+</tr>
+<tr>
+<td><a href="00-catalog.html">00-catalog.md</a></td>
+<td>Быстрый индекс: номер → название → тип → где используется</td>
+</tr>
+<tr>
+<td><code>01-card.md</code>, <code>02-section-title.md</code> …</td>
+<td>Spec отдельного компонента</td>
+</tr>
+</tbody></table>
+<h2>Архитектурные решения</h2>
+<h3>Пропы, не CSS-классы</h3>
+<p>Компоненты принимают <strong>варианты через проп <code>variant</code></strong>, не через CSS-классы:</p>
+<pre><code class="language-astro">✅ &lt;Card variant=&quot;elevated&quot;&gt;
+❌ &lt;Card class=&quot;card--elevated&quot;&gt;
+</code></pre>
+<p>Причины:</p>
+<ul>
+<li>TypeScript ловит опечатки (<code>variant=&quot;elavated&quot;</code> → ошибка, <code>class=&quot;card--elavated&quot;</code> → молча ломается)</li>
+<li>Агент получает однозначную инструкцию: «Используй Card variant=muted»</li>
+<li>Редизайн в одном месте: меняешь <code>Card.astro</code> → все страницы обновляются</li>
+<li>Ограниченный API лучше свободы — агент не придумает несуществующий вариант</li>
+</ul>
+<h3>Единственная точка правды</h3>
+<p><strong>Код</strong> (<code>src/components/ui/Card.astro</code>) — единственная точка правды для CSS.
+<strong>Spec</strong> (<code>docs/components/01-card.md</code>) — справочник для агента, не копипаст-источник.
+Spec ссылается на <code>.astro</code>-файл. Если расходится — код приоритет.</p>
+<h3>Showcase-страница</h3>
+<p><code>/styleguide</code> — живой превью всех компонентов. <strong>Только в dev</strong>, в продакшене редиректит на 404.</p>
+<p>При добавлении нового компонента — добавить секцию на styleguide.</p>
+<h3>Нумерация</h3>
+<table>
+<thead>
+<tr>
+<th>Диапазон</th>
+<th>Уровень</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01–09</td>
+<td>Базовые (атомарные)</td>
+</tr>
+<tr>
+<td>10–19</td>
+<td>Составные (из базовых + CMS-данные)</td>
+</tr>
+<tr>
+<td>20–29</td>
+<td>Страничные (уникальные для одной страницы)</td>
+</tr>
+</tbody></table>
+<h2>Принцип</h2>
+<ol>
+<li><strong>Не дублируй дизайн-гайд</strong> — компонент ссылается на <a href="../page-specs/01-design-guide.html">page-specs/01-design-guide.md</a>, описывает только своё</li>
+<li><strong>Единственная точка правды</strong> — <code>.astro</code>-файл = код, <code>.md</code>-файл = документация для агента</li>
+<li><strong>Агент сначала сюда</strong> — перед созданием нового UI-паттерна агент смотрит каталог и берёт существующий</li>
+</ol>
+<h2>Уровни компонентов</h2>
+<table>
+<thead>
+<tr>
+<th>Уровень</th>
+<th>Описание</th>
+<th>Примеры</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Базовый</strong></td>
+<td>Атомарные, используются везде</td>
+<td>Card, Button, Badge, SectionTitle, IconList</td>
+</tr>
+<tr>
+<td><strong>Составной</strong></td>
+<td>Собраны из базовых, привязаны к данным CMS</td>
+<td>ProgramCard, TeacherCard, ReviewCard, SeatsCard</td>
+</tr>
+<tr>
+<td><strong>Страничный</strong></td>
+<td>Уникальный для одной страницы</td>
+<td>Hero, MissionQuote, EnrollSteps</td>
+</tr>
+</tbody></table>
+<h2>Процесс добавления нового компонента</h2>
+<ol>
+<li>Паттерн замечен на <strong>2+ страницах</strong> → вынести</li>
+<li>Создать <code>src/components/ui/X.astro</code> с пропом <code>variant</code></li>
+<li>Создать <code>docs/components/NN-x.md</code> (следуя <a href="00-guide.html">00-guide.md</a>)</li>
+<li>Добавить секцию на <code>src/pages/styleguide.astro</code></li>
+<li>Обновить <code>docs/components/00-catalog.md</code></li>
+<li>Заменить inline-код на страницах на <code>&lt;X variant=&quot;...&quot;&gt;</code></li>
+</ol>
+<h2>Структура файлов</h2>
+<pre><code>docs/components/           ← документация для агента
+  README.md                ← этот файл (入口)
+  00-guide.md              ← правила написания spec&#39;ов
+  00-catalog.md            ← быстрый индекс
+  01-card.md               ← spec Card
+  02-section-title.md      ← (следующие)
+
+src/components/ui/         ← единая точка правды (код)
+  Card.astro               ← базовый компонент
+  Button.astro             ← (следующие)
+
+src/pages/
+  styleguide.astro         ← живой showcase (dev-only)
+</code></pre>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

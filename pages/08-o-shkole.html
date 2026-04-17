@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O shkole — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>O shkole</span></nav>
+  <div class="md-content">
+    <h1>О школе (/o-shkole)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Компоненты: SectionTitle, PrincipleList, Button</p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Вводный текст (РКШ описание)</td>
+<td>Захардкожено в шаблоне (<code>src/pages/o-shkole.astro</code>)</td>
+</tr>
+<tr>
+<td>Особенности обучения (6 карточек)</td>
+<td>Захардкожено (<code>features</code> — icon, title, description)</td>
+</tr>
+<tr>
+<td>Принципы обучения (6 принципов)</td>
+<td>Захардкожено (<code>principles</code> — title, description)</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Захардкожено (заголовок, описание, кнопка → /kontakty)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Весь контент захардкожен. CMS-коллекция для этой страницы пока не создана.</p>
+</blockquote>
+<h3>Структура страницы</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  about-hero (text-align center)             │
+│  SectionTitle h1: О школе                   │
+│  p.lead: «Русская Классическая Школа — это  │
+│     современная инновационная образовательная│
+│     система…» (Playfair xl, primary)         │
+│  p.sub: «Открыла двери в 2020 году…» (muted)│
+├─────────────────────────────────────────────┤
+│  about-features (bg surface-alt, padding 4xl)│
+│  SectionTitle h2 center: Особенности обучения│
+│  Grid 3×: about-feature cards                │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐     │
+│  │ 📖 Учебники│ │ ✏️ Письмо  │ │ 🧮 Наглядн.│     │
+│  │   РКШ    │ │  пером    │ │  пособия  │     │
+│  ├──────────┤ ├──────────┤ ├──────────┤     │
+│  │ 👥 Малые │ │ 🌐 Доп.   │ │ ☀️ Продлёнка│     │
+│  │  классы  │ │  предметы │ │  до 19:00 │     │
+│  └──────────┘ └──────────┘ └──────────┘     │
+│  (1× на мобилке)                            │
+├─────────────────────────────────────────────┤
+│  about-principles (padding 4xl)             │
+│  SectionTitle h2 center: Принципы обучения  │
+│  PrincipleList variant=accent (6 принципов)  │
+│  (narrow max-width, centered)               │
+├─────────────────────────────────────────────┤
+│  about-cta (bg primary, text surface)       │
+│  h2: Хотите узнать больше?                  │
+│  p: Приходите на экскурсию — увидите школу  │
+│     своими глазами и зададите все вопросы    │
+│  Button variant=warm size=lg → /kontakty    │
+│  «Записаться на экскурсию»                  │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SectionTitle</td>
+<td><code>ui/SectionTitle.astro</code></td>
+<td>h1 «О школе», h2 «Особенности обучения», h2 «Принципы обучения»</td>
+</tr>
+<tr>
+<td>PrincipleList</td>
+<td><code>ui/PrincipleList.astro</code></td>
+<td>6 принципов, variant=accent</td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию» (variant=warm, size=lg)</td>
+</tr>
+<tr>
+<td>Base</td>
+<td><code>layouts/Base.astro</code></td>
+<td>Обёртка страницы</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.about-hero</code></td>
+<td>Hero-секция (padding 4xl→2xl, text-align center)</td>
+</tr>
+<tr>
+<td><code>.about-hero__lead</code></td>
+<td>Лид-абзац (Playfair xl, primary, line-height relaxed)</td>
+</tr>
+<tr>
+<td><code>.about-hero__sub</code></td>
+<td>Подзаголовок (muted, lg, relaxed)</td>
+</tr>
+<tr>
+<td><code>.about-features</code></td>
+<td>Секция особенностей (bg surface-alt, padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.about-features__grid</code></td>
+<td>Grid 3× (1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.about-feature</code></td>
+<td>Карточка особенности (bg surface, border primary-line, radius lg, hover shadow+accent)</td>
+</tr>
+<tr>
+<td><code>.about-feature__icon</code></td>
+<td>Иконка-контейнер (3rem sq, bg primary-soft, radius md, primary color)</td>
+</tr>
+<tr>
+<td><code>.about-feature__title</code></td>
+<td>h3 (base-family, semibold, lg)</td>
+</tr>
+<tr>
+<td><code>.about-feature__desc</code></td>
+<td>Описание (muted, sm, relaxed)</td>
+</tr>
+<tr>
+<td><code>.about-principles</code></td>
+<td>Секция принципов (padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.about-principles__list</code></td>
+<td>Контейнер списков (narrow, centered)</td>
+</tr>
+<tr>
+<td><code>.about-cta</code></td>
+<td>CTA-баннер (bg primary, text surface, padding 4xl)</td>
+</tr>
+<tr>
+<td><code>.about-cta__title</code></td>
+<td>CTA заголовок (surface color)</td>
+</tr>
+<tr>
+<td><code>.about-cta__desc</code></td>
+<td>CTA описание (rgba white 0.85, lg, relaxed)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/o-shkole/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Вводный текст</td>
+<td>Текст в абзаце</td>
+<td>Playfair Display лид-абзац + muted подзаголовок</td>
+</tr>
+<tr>
+<td>Особенности</td>
+<td>Маркированный список с иконками</td>
+<td>Grid 3× карточек с SVG-иконками, hover-эффект</td>
+</tr>
+<tr>
+<td>Принципы</td>
+<td>Простой нумерованный список</td>
+<td>PrincipleList variant=accent (кружки accent-warm)</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите узнать больше?» → Button warm → /kontakty</td>
+</tr>
+<tr>
+<td>Горячее питание</td>
+<td>Упоминается в оригинале</td>
+<td>Не включено в текущую версию (TODO)</td>
+</tr>
+<tr>
+<td>Доп. педагоги</td>
+<td>Упоминается «английский, история, музыка»</td>
+<td>В карточке «Дополнительные предметы»</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Вынести <code>features</code> и <code>principles</code> в CMS (коллекция или страница <code>pages/o-shkole</code>)</li>
+<li><input disabled="" type="checkbox"> Добавить «Горячее питание от сертифицированного поставщика» из оригинала</li>
+<li><input disabled="" type="checkbox"> Создать запись <code>pages/o-shkole</code> в CMS для SEO-заголовка</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section title — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Section title</span></nav>
+  <div class="md-content">
+    <h1>02 · SectionTitle · Базовый</h1>
+<p>Заголовок секции с 3 вариантами отображения и 4 размерами.</p>
+<p>→ Дизайн-гайд: <a href="../page-specs/01-design-guide.html">../page-specs/01-design-guide.md</a>
+→ Код: <code>src/components/ui/SectionTitle.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Варианты</h2>
+<h3><code>center</code> (по умолчанию)</h3>
+<p>Центрированный заголовок. <code>text-align: center</code>, <code>margin-bottom: var(--spacing-2xl)</code>.</p>
+<h3><code>underline</code></h3>
+<p>Заголовок с подчёркиванием (<code>border-bottom: 3px solid --color-accent-warm</code>). <code>display: block; width: fit-content</code>. Можно центрировать комбинацией <code>variant=&quot;underline&quot;</code> + <code>class=&quot;section-title--center&quot;</code>.</p>
+<h3><code>left</code></h3>
+<p>Заголовок с выравниванием влево. <code>text-align: left</code>, <code>margin-bottom: var(--spacing-2xl)</code>.</p>
+<h3>Размеры (проп <code>as</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Проп <code>as</code></th>
+<th>Элемент</th>
+<th>Размер</th>
+<th>Шрифт</th>
+<th>Вес</th>
+<th>Цвет</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>h1</code></td>
+<td><code>&lt;h1&gt;</code></td>
+<td><code>--font-size-4xl</code> (2.25rem)</td>
+<td>Playfair Display</td>
+<td>bold</td>
+<td><code>--color-primary</code></td>
+</tr>
+<tr>
+<td><code>h2</code></td>
+<td><code>&lt;h2&gt;</code></td>
+<td><code>--font-size-3xl</code> (1.875rem)</td>
+<td>Playfair Display</td>
+<td>semibold</td>
+<td><code>--color-primary</code></td>
+</tr>
+<tr>
+<td><code>h3</code></td>
+<td><code>&lt;h3&gt;</code></td>
+<td><code>--font-size-xl</code> (1.25rem)</td>
+<td>Inter</td>
+<td>semibold</td>
+<td><code>--color-text</code></td>
+</tr>
+<tr>
+<td><code>h4</code></td>
+<td><code>&lt;h4&gt;</code></td>
+<td><code>--font-size-lg</code> (1.125rem)</td>
+<td>Inter</td>
+<td>semibold</td>
+<td><code>--color-text</code></td>
+</tr>
+</tbody></table>
+<p>Мобильные размеры (≤768px): h1→3xl, h2→2xl, h3→lg.</p>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import SectionTitle from &#39;../components/ui/SectionTitle.astro&#39;;
+---
+
+&lt;!-- Центрированный h2 (по умолчанию) --&gt;
+&lt;SectionTitle&gt;Почему выбирают РКШ&lt;/SectionTitle&gt;
+
+&lt;!-- Центрированный h1 --&gt;
+&lt;SectionTitle as=&quot;h1&quot;&gt;Цены&lt;/SectionTitle&gt;
+
+&lt;!-- Подчёркнутый h3 (подраздел) --&gt;
+&lt;SectionTitle variant=&quot;underline&quot; as=&quot;h3&quot;&gt;Кулинарный курс&lt;/SectionTitle&gt;
+
+&lt;!-- Подчёркнутый h2, по центру --&gt;
+&lt;SectionTitle variant=&quot;underline&quot; as=&quot;h2&quot; class=&quot;section-title--center&quot;&gt;Курсы для школьников&lt;/SectionTitle&gt;
+
+&lt;!-- Выравнивание влево --&gt;
+&lt;SectionTitle variant=&quot;left&quot;&gt;Принципы обучения&lt;/SectionTitle&gt;
+</code></pre>
+<hr>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>variant</code></td>
+<td><code>&#39;center&#39; | &#39;underline&#39; | &#39;left&#39;</code></td>
+<td><code>&#39;center&#39;</code></td>
+<td>Вариант отображения</td>
+</tr>
+<tr>
+<td><code>as</code></td>
+<td><code>&#39;h1&#39; | &#39;h2&#39; | &#39;h3&#39; | &#39;h4&#39;</code></td>
+<td><code>&#39;h2&#39;</code></td>
+<td>Уровень заголовка и размер</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Дополнительные CSS-классы</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/SectionTitle.astro</code>.
+Стили глобальные (<code>&lt;style is:global&gt;</code>) — динамические имена классов не работают со scoped CSS.</p>
+</blockquote>
+<pre><code>.section-title              /* корень: heading font, bold, primary, tight line-height */
+.section-title--center      /* text-align: center, margin-bottom: 2xl */
+.section-title--underline   /* display: block, width: fit-content, border-bottom: 3px accent-warm, padding-bottom: sm */
+.section-title--left        /* text-align: left, margin-bottom: 2xl */
+.section-title--h1          /* font-size: 4xl */
+.section-title--h2          /* font-size: 3xl, font-weight: semibold */
+.section-title--h3          /* font-size: xl, Inter, semibold, color: text */
+.section-title--h4          /* font-size: lg, Inter, semibold, color: text */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>underline: <code>border-bottom: 3px solid var(--color-accent-warm)</code>, <code>padding-bottom: var(--spacing-sm)</code></li>
+<li>margin-top для underline: h2→4xl, h3→3xl, h4→2xl</li>
+<li><code>:first-child</code> сбрасывает <code>margin-top: 0</code></li>
+</ul>
+<hr>
+<h2>Где используется</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Главная (/)</td>
+<td>Все заголовки секций</td>
+</tr>
+<tr>
+<td>Цены (/czeny)</td>
+<td>h1 «Цены», h2 «0 класс»/«Курсы», h3 подразделы</td>
+</tr>
+<tr>
+<td>Отзывы (/otzyvy)</td>
+<td>h2 «Отзывы на Яндекс Картах»</td>
+</tr>
+<tr>
+<td>Преподаватели (/prepodavateli)</td>
+<td>h1 «Наши преподаватели»</td>
+</tr>
+<tr>
+<td>Сведения (/sveden)</td>
+<td>h2 разделы</td>
+</tr>
+<tr>
+<td>Styleguide</td>
+<td>Все варианты</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="01-card.html">01 · Card</a> — контейнер под SectionTitle</li>
+<li><a href="04-button.html">04 · Button</a> — CTA под SectionTitle</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Index</span></nav>
+  <div class="md-content">
+    <h1>Главная (/)</h1>
+<h2>Статус: ✅ Готова</h2>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hero-блок</td>
+<td>Статический текст (из контента rksh-msk.ru)</td>
+</tr>
+<tr>
+<td>Миссия</td>
+<td>Статический текст</td>
+</tr>
+<tr>
+<td>Преимущества (6 шт.)</td>
+<td><code>advantages</code> collection, orderBy <code>data.order</code> asc</td>
+</tr>
+<tr>
+<td>Набор в классы</td>
+<td>Статическая таблица (10 классов)</td>
+</tr>
+<tr>
+<td>Программы (6 шт.)</td>
+<td><code>programs</code> collection, orderBy <code>data.order</code> asc</td>
+</tr>
+<tr>
+<td>Чем мы лучше</td>
+<td>Статический список (6 пунктов)</td>
+</tr>
+<tr>
+<td>Преподаватели</td>
+<td><code>teachers</code> collection, limit 6</td>
+</tr>
+<tr>
+<td>Как записаться</td>
+<td>Статический (4 шага)</td>
+</tr>
+<tr>
+<td>Отзывы (3 шт.)</td>
+<td><code>reviews</code> collection, limit 3</td>
+</tr>
+<tr>
+<td>CTA-баннер</td>
+<td>Статический текст</td>
+</tr>
+</tbody></table>
+<h3>Поля коллекции advantages</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Заголовок карточки</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>text</td>
+<td>Описание под заголовком</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>integer</td>
+<td>Сортировка</td>
+</tr>
+</tbody></table>
+<h3>Поля коллекции programs</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Заголовок карточки</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>school / courses / camp</td>
+</tr>
+<tr>
+<td><code>age_range</code></td>
+<td>string</td>
+<td>Бейдж возраста</td>
+</tr>
+<tr>
+<td><code>group_size</code></td>
+<td>string</td>
+<td>Бейдж размера группы</td>
+</tr>
+<tr>
+<td><code>short_desc</code></td>
+<td>text</td>
+<td>Описание</td>
+</tr>
+<tr>
+<td><code>page_url</code></td>
+<td>string</td>
+<td>Ссылка «Подробнее →»</td>
+</tr>
+<tr>
+<td><code>cta_text</code></td>
+<td>string</td>
+<td>Текст ссылки</td>
+</tr>
+<tr>
+<td><code>cta_url</code></td>
+<td>string</td>
+<td>Запасной URL ссылки</td>
+</tr>
+</tbody></table>
+<h3>Поля коллекции teachers</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>full_name</code></td>
+<td>string</td>
+<td>Имя</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td>Должность</td>
+</tr>
+<tr>
+<td><code>photo</code></td>
+<td>image</td>
+<td>Аватар (fallback: инициалы)</td>
+</tr>
+</tbody></table>
+<h3>Поля коллекции reviews</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Используется</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>author_name</code></td>
+<td>string</td>
+<td>Имя автора</td>
+</tr>
+<tr>
+<td><code>quote</code></td>
+<td>text</td>
+<td>Текст отзыва</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Структура страницы</h2>
+<pre><code>┌──────────────────────────────────────────────────┐
+│ 1. HERO                                         │
+│    Фон: --color-primary (#173B6E)               │
+│    h1: Частная школа РКШ                         │
+│    Город, announce, уровни обучения             │
+│    CTA: «Получить презентацию» + телефон        │
+├──────────────────────────────────────────────────┤
+│ 2. МИССИЯ                                       │
+│    Фон: --color-accent-warm-soft (#F5E7D3)      │
+│    blockquote: «Мы такие же родители...»         │
+├──────────────────────────────────────────────────┤
+│ 3. ПРЕИМУЩЕСТВА (из CMS)                        │
+│    Фон: --color-bg                               │
+│    h2: «Почему выбирают РКШ»                     │
+│    6 карточек: нумерация + заголовок + desc      │
+├──────────────────────────────────────────────────┤
+│ 4. НАБОР В КЛАССЫ                               │
+│    Фон: --color-surface-alt (#EEF3F9)            │
+│    h2: «Набор в классы на 2025–2026»             │
+│    Grid 5×2: карточки (класс + места)            │
+│    Цвет: зелёный (есть), красный (нет)           │
+├──────────────────────────────────────────────────┤
+│ 5. УРОВНИ ОБУЧЕНИЯ (из CMS)                      │
+│    Фон: --color-bg                               │
+│    h2: «Уровни обучения»                         │
+│    Grid 3×2: карточки программ                   │
+│    Бейджи: возраст, размер группы                │
+├──────────────────────────────────────────────────┤
+│ 6. ЧЕМ МЫ ЛУЧШЕ                                  │
+│    Фон: --color-primary-soft (#EAF1FB)           │
+│    h2: «Чем мы лучше обычной школы»              │
+│    Grid 2×3: SVG-иконки + текст                  │
+│    Иконки: --color-accent-warm (#C88A3D)         │
+├──────────────────────────────────────────────────┤
+│ 7. ПРЕПОДАВАТЕЛИ (из CMS)                        │
+│    Фон: --color-bg                               │
+│    h2: «Наши преподаватели»                      │
+│    Grid 3×: аватар/инициалы + ФИО + должность   │
+│    Ссылка: «Все преподаватели →»                 │
+├──────────────────────────────────────────────────┤
+│ 8. КАК ЗАПИСАТЬСЯ                                │
+│    Фон: --color-surface-alt                      │
+│    h2: «Как записаться»                          │
+│    Grid 4×: номер + заголовок + описание         │
+├──────────────────────────────────────────────────┤
+│ 9. ОТЗЫВЫ (из CMS)                               │
+│    Фон: --color-bg                               │
+│    h2: «Отзывы родителей»                        │
+│    Grid 3×: цитата + имя автора                  │
+│    Ссылка: «Все отзывы →»                        │
+├──────────────────────────────────────────────────┤
+│ 10. CTA-БАННЕР                                   │
+│     Фон: --color-primary (#173B6E)               │
+│     h2: «Приходите на экскурсию!»                │
+│     Кнопка: --color-accent-warm                  │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Отличия от гайдлайнов</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>По гайду</th>
+<th>Здесь</th>
+<th>Причина</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hero h1</td>
+<td><code>--font-size-4xl</code></td>
+<td><code>--font-size-5xl</code></td>
+<td>Крупный акцент на главной</td>
+</tr>
+<tr>
+<td>Hero CTA цвет текста</td>
+<td><code>#fff</code></td>
+<td><code>--color-primary</code></td>
+<td>Тёплая кнопка на тёмном</td>
+</tr>
+<tr>
+<td>Иконки «Чем мы лучше»</td>
+<td><code>stroke-width: 1.5</code> outline</td>
+<td><code>fill: currentColor</code> solid</td>
+<td>Стиль Material更适合для данного блока</td>
+</tr>
+<tr>
+<td>Иконки «Чем мы лучше» цвет</td>
+<td><code>--color-primary</code></td>
+<td><code>--color-accent-warm</code></td>
+<td>Тёплый акцент для уюта</td>
+</tr>
+<tr>
+<td>Набор карточки</td>
+<td><code>box-shadow: --shadow-lg</code></td>
+<td><code>border + --shadow-sm → --shadow-md hover</code></td>
+<td>Легче для мелких карточек</td>
+</tr>
+<tr>
+<td>Seats карточка «Мест нет»</td>
+<td>—</td>
+<td><code>opacity: 0.7</code>, фон <code>--surface-alt</code></td>
+<td>Визуально приглушённый</td>
+</tr>
+<tr>
+<td>Teacher аватар</td>
+<td>—</td>
+<td>80px круг + инициалы fallback</td>
+<td>Нет фото у большинства</td>
+</tr>
+<tr>
+<td>Programs бейджи</td>
+<td>—</td>
+<td><code>--color-primary-soft</code> фон</td>
+<td>age_range + group_size</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Тип</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base layout</td>
+<td><code>src/layouts/Base.astro</code></td>
+<td>Общий</td>
+</tr>
+<tr>
+<td>Шаблон страницы</td>
+<td><code>src/pages/index.astro</code></td>
+<td>Специфичный</td>
+</tr>
+<tr>
+<td>Header</td>
+<td><code>src/components/Header.astro</code></td>
+<td>Общий</td>
+</tr>
+<tr>
+<td>SecondMenu</td>
+<td><code>src/components/SecondMenu.astro</code></td>
+<td>Общий</td>
+</tr>
+<tr>
+<td>Footer</td>
+<td><code>src/components/Footer.astro</code></td>
+<td>Общий</td>
+</tr>
+</tbody></table>
+<p>Все блоки главной встроены в <code>index.astro</code> (не вынесены в отдельные компоненты).</p>
+<hr>
+<h2>SVG-иконки блока «Чем мы лучше»</h2>
+<table>
+<thead>
+<tr>
+<th>Пункт</th>
+<th>Иконка</th>
+<th>Описание path</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Классы до 15 человек</td>
+<td>Группа людей</td>
+<td><code>M16 11c1.66...</code> (two people)</td>
+</tr>
+<tr>
+<td>Режим 8:00–19:00</td>
+<td>Часы</td>
+<td><code>M11.99 2C6.47...</code> (clock outline)</td>
+</tr>
+<tr>
+<td>Качество образования</td>
+<td>Шапка выпускника</td>
+<td><code>M5 13.18v4L12...</code> (academic cap)</td>
+</tr>
+<tr>
+<td>Домашки в школе</td>
+<td>Галочка</td>
+<td><code>M9 16.17L4.83...</code> (checkmark)</td>
+</tr>
+<tr>
+<td>Без стрессов</td>
+<td>Сердце</td>
+<td><code>M12 21.35l-1.45...</code> (heart)</td>
+</tr>
+<tr>
+<td>Полюбят учиться</td>
+<td>Лампочка</td>
+<td><code>M9 21c0 .55...</code> (lightbulb)</td>
+</tr>
+</tbody></table>
+<p>Стиль: solid fill (<code>fill=&quot;currentColor&quot;</code>), 24×24px, цвет <code>--color-accent-warm</code>.</p>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hero</td>
+<td>Фоновое фото + текст поверх</td>
+<td>Чистый тёмно-синий фон</td>
+</tr>
+<tr>
+<td>Миссия</td>
+<td>Текст в обычном блоке</td>
+<td>blockquote на тёплом фоне</td>
+</tr>
+<tr>
+<td>Преимущества</td>
+<td>Иконки + текст</td>
+<td>Нумерация + заголовок + описание</td>
+</tr>
+<tr>
+<td>Набор в классы</td>
+<td>Таблица HTML</td>
+<td>Карточки-грид 5×2</td>
+</tr>
+<tr>
+<td>Уровни</td>
+<td>Таблица HTML</td>
+<td>Карточки с бейджами</td>
+</tr>
+<tr>
+<td>«Чем мы лучше»</td>
+<td>Маркированный список</td>
+<td>SVG-иконки + двухколоночный грид</td>
+</tr>
+<tr>
+<td>Преподаватели</td>
+<td>Нет блока</td>
+<td>Динамический грид из CMS</td>
+</tr>
+<tr>
+<td>Как записаться</td>
+<td>Нумерованный список</td>
+<td>4 карточки с номерами</td>
+</tr>
+<tr>
+<td>Отзывы</td>
+<td>Виджет Яндекс.Карт</td>
+<td>Карточки из CMS</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Кнопка в Hero</td>
+<td>Отдельный баннер внизу</td>
+</tr>
+<tr>
+<td>Данные</td>
+<td>Захардкожены</td>
+<td>Частично CMS, частично статика</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Hero: добавить фоновое изображение (когда будет фото школы)</li>
+<li><input disabled="" type="checkbox"> Отзывы: подключить виджет Яндекс.Карт как альтернативу</li>
+<li><input disabled="" type="checkbox"> Набор в классы: вынести в CMS (programs.spots_available) для динамичности</li>
+<li><input disabled="" type="checkbox"> Миссия: вынести текст в CMS (pages collection)</li>
+<li><input disabled="" type="checkbox"> Вынести повторяющиеся блоки (Advantages, Reviews) в отдельные компоненты</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

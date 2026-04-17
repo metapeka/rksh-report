@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video card — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Video card</span></nav>
+  <div class="md-content">
+    <h1>21 · VideoCard · Страничный</h1>
+<p>Карточка видео для видеоархива: обложка + кнопка play + подпись. Клик — переход по внешней ссылке. Hover — зум + play-оверлей.</p>
+<p>→ Код: <code>src/components/ui/VideoCard.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Состав</h2>
+<p>VideoCard = a.video-card &gt; div.thumb (img + div.play) + p.title</p>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import VideoCard from &#39;../components/ui/VideoCard.astro&#39;;
+---
+
+&lt;VideoCard
+  title=&quot;Экскурсия по школе&quot;
+  url=&quot;https://youtu.be/xxxxx&quot;
+  thumbnailUrl=&quot;/uploads/video1.jpg&quot;
+  thumbnailAlt=&quot;Экскурсия по школе&quot;
+/&gt;
+</code></pre>
+<hr>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Подпись под видео</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Ссылка на видео (открывается в новой вкладке)</td>
+</tr>
+<tr>
+<td><code>thumbnailUrl</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>URL обложки видео</td>
+</tr>
+<tr>
+<td><code>thumbnailAlt</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Alt-текст обложки</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Дополнительные CSS-классы</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/VideoCard.astro</code>.</p>
+</blockquote>
+<pre><code> .video-card                /* корень: a, border, radius-lg, no underline */
+ .video-card:hover          /* shadow-lg, translateY(-2px) */
+ .video-card__thumb         /* aspect-ratio 16/9, relative, overflow hidden */
+ .video-card__thumb-img     /* 100%, object-fit cover, hover scale(1.05) */
+ .video-card__thumb-placeholder /* flex center, muted icon */
+ .video-card__play          /* absolute inset, flex center, opacity 0→1 on hover */
+ .video-card__title         /* sm, text, nowrap, ellipsis */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>border: <code>1px solid var(--color-primary-line)</code></li>
+<li>border-radius: <code>var(--radius-lg)</code></li>
+<li>aspect-ratio: <code>16 / 9</code></li>
+<li>play button: полупрозрачный круг с треугольником, появляется при hover</li>
+<li>hover image zoom: <code>scale(1.05)</code>, <code>transition-slow</code></li>
+<li>link: <code>target=&quot;_blank&quot;</code>, <code>rel=&quot;noopener noreferrer&quot;</code></li>
+</ul>
+<hr>
+<h2>Где использует</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Медиа (/media)</td>
+<td>Сетка видеоархива (3 колонки)</td>
+</tr>
+<tr>
+<td>Styleguide</td>
+<td>Демо</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="20-gallery-card.html">20 · GalleryCard</a> — карточка фото</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pills nav — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Pills nav</span></nav>
+  <div class="md-content">
+    <h1>28 · PillsNav — горизонтальная pills-навигация</h1>
+<p>Горизонтальный ряд кнопок-пилюль для переключения контента или фильтрации.</p>
+<h2>Расположение</h2>
+<p><code>src/components/ui/PillsNav.astro</code></p>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>Обязательный</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>items</code></td>
+<td><code>{ label: string; value: string }[]</code></td>
+<td>✅</td>
+<td>Список пунктов</td>
+</tr>
+<tr>
+<td><code>active</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Значение активного пункта</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Дополнительный CSS-класс</td>
+</tr>
+</tbody></table>
+<h2>Визуал</h2>
+<ul>
+<li>Неактивная пилюля: <code>background: --color-surface</code>, <code>border: 1px solid --color-primary-line</code>, <code>color: --color-text-muted</code>, <code>border-radius: --radius-lg</code></li>
+<li>Активная пилюля: <code>background: --color-primary</code>, <code>color: --color-surface</code>, <code>border-color: --color-primary</code></li>
+<li>Hover: <code>border-color: --color-accent</code>, <code>color: --color-primary</code></li>
+</ul>
+<h2>Использование</h2>
+<pre><code class="language-astro">&lt;PillsNav
+  items={[
+    { label: &#39;Дошкольники&#39;, value: &#39;preschool&#39; },
+    { label: &#39;Школьники&#39;, value: &#39;school&#39; },
+  ]}
+  active=&quot;preschool&quot;
+/&gt;
+</code></pre>
+<p>Обычно используется вместе с JS-обработчиком кликов на родительской странице.</p>
+<h2>Styleguide</h2>
+<p>Секция 21 в <code>/styleguide</code> — демо PillsNav.</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

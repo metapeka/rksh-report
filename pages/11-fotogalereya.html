@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fotogalereya — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link nav__link--active">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#pages">Страницы</a><span class="breadcrumbs__sep">/</span><span>Fotogalereya</span></nav>
+  <div class="md-content">
+    <h1>Фотогалерея (/fotogalereya)</h1>
+<h2>Статус: 🔨 В работе</h2>
+<blockquote>
+<p>Фотогалерея — вкладка «Фотогалерея» на странице <code>/media</code>. Отдельной страницы <code>/fotogalereya</code> нет.</p>
+</blockquote>
+<p>→ Общие правила: <a href="01-design-guide.html">01-design-guide.md</a>
+→ Родительская страница: <code>src/pages/media.astro</code></p>
+<hr>
+<h2>Контент</h2>
+<h3>Источник данных</h3>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Откуда</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Фотографии</td>
+<td>CMS <code>media_gallery</code> collection</td>
+</tr>
+<tr>
+<td>Категории</td>
+<td>Вычисляются из <code>category</code> поля записей (<code>[...new Set(photos.map(p =&gt; p.data.category))]</code>)</td>
+</tr>
+</tbody></table>
+<h3>CMS коллекция <code>media_gallery</code></h3>
+<p>Seed-схема (устарела — не совпадает с кодом страницы):</p>
+<table>
+<thead>
+<tr>
+<th>Поле (seed)</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>image</code></td>
+<td>image</td>
+<td>✅</td>
+<td>Изображение</td>
+</tr>
+<tr>
+<td><code>alt</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Alt текст</td>
+</tr>
+<tr>
+<td><code>caption</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Подпись</td>
+</tr>
+</tbody></table>
+<p>Поля, используемые в коде страницы (фактические):</p>
+<table>
+<thead>
+<tr>
+<th>Поле (код)</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Заголовок → GalleryCard title</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>image</td>
+<td>Изображение → <code>image.src</code> для GalleryCard imageUrl</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>Категория для фильтрации</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ Расхождение: seed-схема не содержит полей <code>title</code> и <code>category</code>, которые использует страница. Схему нужно обновить через Admin UI.</p>
+</blockquote>
+<hr>
+<h3>Структура вкладки (внутри media.astro)</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  media-hero                                  │
+│  h1: Медиа                                   │
+│  p: Фотогалерея и видеоархив нашей школы      │
+├─────────────────────────────────────────────┤
+│  media-tabs                                  │
+│  [Фотогалерея] [Видео]  ← tabs               │
+├─────────────────────────────────────────────┤
+│  tab-photos (media-photos)                   │
+│  media-filters (если &gt;1 категории):           │
+│    [Все] [Категория1] [Категория2] ...        │
+│  media-grid--photos (4×):                     │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                │
+│  │ G  │ │ G  │ │ G  │ │ G  │  ← GalleryCard │
+│  │ C  │ │ C  │ │ C  │ │ C  │                │
+│  └────┘ └────┘ └────┘ └────┘                │
+│  ИЛИ                                         │
+│  media-empty: «Фотографии скоро появятся»     │
+├─────────────────────────────────────────────┤
+│  media-cta (bg: primary, text: surface)       │
+│  h2: Хотите увидеть школу своими глазами?      │
+│  p: Запишитесь на экскурсию...                 │
+│  Button warm lg → /kontakty                   │
+└─────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Компоненты</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Файл</th>
+<th>Где на странице</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GalleryCard</td>
+<td><code>ui/GalleryCard.astro</code></td>
+<td>Все фото из <code>media_gallery</code></td>
+</tr>
+<tr>
+<td>Button</td>
+<td><code>ui/Button.astro</code></td>
+<td>CTA «Записаться на экскурсию» (variant=warm, size=lg)</td>
+</tr>
+</tbody></table>
+<h3>GalleryCard props</h3>
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Подпись под фото</td>
+</tr>
+<tr>
+<td><code>imageUrl</code></td>
+<td>string</td>
+<td>URL изображения (<code>p.data.image?.src</code>)</td>
+</tr>
+<tr>
+<td><code>imageAlt</code></td>
+<td>string</td>
+<td>Alt-текст</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Уникальные стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.media-hero</code></td>
+<td>Hero-секция (padding 4xl→2xl, text-align center)</td>
+</tr>
+<tr>
+<td><code>.media-hero__title</code></td>
+<td>h1 Playfair 5xl primary (4xl на мобилке)</td>
+</tr>
+<tr>
+<td><code>.media-hero__subtitle</code></td>
+<td>muted lg narrow</td>
+</tr>
+<tr>
+<td><code>.media-tabs</code></td>
+<td>Панель табов (border-bottom primary-line)</td>
+</tr>
+<tr>
+<td><code>.media-tabs__list</code></td>
+<td>Flex, gap xl</td>
+</tr>
+<tr>
+<td><code>.media-tabs__btn</code></td>
+<td>Таб-кнопка (none bg, lg, medium, muted, pseudo underline 3px)</td>
+</tr>
+<tr>
+<td><code>.media-tabs__btn--active</code></td>
+<td>Активный таб (color primary, underline primary)</td>
+</tr>
+<tr>
+<td><code>.media-filters</code></td>
+<td>Фильтры-категории (flex wrap, gap sm)</td>
+</tr>
+<tr>
+<td><code>.media-filters__btn</code></td>
+<td>Pill-фильтр (bg surface, border primary-line, radius-lg)</td>
+</tr>
+<tr>
+<td><code>.media-filters__btn--active</code></td>
+<td>Активный фильтр (bg primary, color surface)</td>
+</tr>
+<tr>
+<td><code>.media-photos</code></td>
+<td>Секция фото (padding 2xl→4xl)</td>
+</tr>
+<tr>
+<td><code>.media-grid--photos</code></td>
+<td>Grid 4× фото (gap lg; 2× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.media-grid__item</code></td>
+<td>Обёртка GalleryCard (data-category для JS-фильтра)</td>
+</tr>
+<tr>
+<td><code>.media-grid__item--hidden</code></td>
+<td>display: none (скрыт фильтром)</td>
+</tr>
+<tr>
+<td><code>.media-empty</code></td>
+<td>Заглушка (padding 4xl, center)</td>
+</tr>
+<tr>
+<td><code>.media-cta</code></td>
+<td>CTA-баннер (bg primary, text surface)</td>
+</tr>
+<tr>
+<td><code>.media-cta__inner</code></td>
+<td>narrow, text-align center</td>
+</tr>
+<tr>
+<td><code>.media-cta__title</code></td>
+<td>color surface</td>
+</tr>
+<tr>
+<td><code>.media-cta__desc</code></td>
+<td>lg, rgba(255,255,255,0.85), line-height relaxed</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Отличия от оригинала (rksh-msk.ru/fotogalereya/)</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Оригинал</th>
+<th>Наш сайт</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>URL</td>
+<td>Отдельная страница <code>/fotogalereya/</code></td>
+<td>Вкладка на <code>/media</code></td>
+</tr>
+<tr>
+<td>Галерея</td>
+<td>Таймаут при скрейпинге (вероятно JS-галерея)</td>
+<td>GalleryCard grid 4×</td>
+</tr>
+<tr>
+<td>Фильтры</td>
+<td>Неизвестно</td>
+<td>Категории-фильтры (pill-кнопки)</td>
+</tr>
+<tr>
+<td>Лайтбокс</td>
+<td>Вероятно (типичная галерея WP)</td>
+<td>Нет (только карточки)</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>Нет</td>
+<td>«Хотите увидеть школу своими глазами?» + Button warm</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>TODO</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Обновить схему <code>media_gallery</code> — добавить поля <code>title</code> (string), <code>category</code> (string)</li>
+<li><input disabled="" type="checkbox"> Добавить записи-фото в CMS (пока коллекция пуста)</li>
+<li><input disabled="" type="checkbox"> Реализовать лайтбокс/модалку при клике на GalleryCard</li>
+<li><input disabled="" type="checkbox"> Решить: создать отдельную страницу <code>/fotogalereya</code> или оставить вкладкой на <code>/media</code></li>
+<li><input disabled="" type="checkbox"> Добавить страницу <code>pages/media</code> в CMS для SEO-мета</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>

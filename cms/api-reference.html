@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Api reference — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link nav__link--active">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#cms">CMS</a><span class="breadcrumbs__sep">/</span><span>Api reference</span></nav>
+  <div class="md-content">
+    <h1>Справочник API EmDash</h1>
+<h2>Content API</h2>
+<h3><code>getEmDashCollection(collection, options)</code></h3>
+<p>Получить список записей из коллекции.</p>
+<p><strong>Параметры:</strong></p>
+<pre><code class="language-typescript">interface GetCollectionOptions {
+  limit?: number;          // default 20, max 100
+  cursor?: string;         // пагинация (ULID)
+  orderBy?: Record&lt;string, &quot;asc&quot; | &quot;desc&quot;&gt;; // { published_at: &quot;desc&quot; }
+  where?: Record&lt;string, any&gt;; // фильтры: { status: &quot;published&quot; }
+  include?: string[];      // include related (если есть references)
+}
+</code></pre>
+<p><strong>Возвращает:</strong></p>
+<pre><code class="language-typescript">{
+  entries: Entry[];
+  nextCursor?: string;     // для следующей страницы
+  cacheHint: { ttl: number; tags: string[] }; // кэширование
+}
+</code></pre>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-typescript">const { entries, cacheHint } = await getEmDashCollection(&quot;posts&quot;, {
+  limit: 10,
+  orderBy: { published_at: &quot;desc&quot; },
+  where: { status: &quot;published&quot; },
+});
+Astro.cache.set(cacheHint);
+</code></pre>
+<hr>
+<h3><code>getEmDashEntry(collection, id)</code></h3>
+<p>Получить одну запись по slug (<code>id</code> = slug, не ULID).</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-typescript">const { entry, cacheHint } = await getEmDashEntry(&quot;pages&quot;, &quot;o-shkole&quot;);
+Astro.cache.set(cacheHint);
+</code></pre>
+<p><strong>Error:</strong> если запись не найдена → <code>entry</code> = null.</p>
+<hr>
+<h3><code>search(query, options)</code></h3>
+<p>Полнотекстовый поиск по индексируемым полям.</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-typescript">const results = await search(&quot;школа&quot;, {
+  collections: [&quot;pages&quot;, &quot;posts&quot;],
+  limit: 20,
+});
+</code></pre>
+<hr>
+<h2>Site Features API</h2>
+<h3><code>getSiteSettings()</code></h3>
+<p>Получить настройки сайта из коллекции <code>settings</code> (первая запись).</p>
+<pre><code class="language-typescript">const settings = await getSiteSettings();
+// settings.site_name, settings.logo, settings.phone_primary...
+</code></pre>
+<hr>
+<h3><code>getMenu(name)</code></h3>
+<p>Получить меню по имени (<code>primary</code>, <code>secondary</code>, <code>footer</code>).</p>
+<p><strong>Returns:</strong></p>
+<pre><code class="language-typescript">{
+  name: string;
+  items: MenuItem[];
+}
+// MenuItem: { label, url, target?, children: [] }
+</code></pre>
+<hr>
+<h3><code>getTerms(taxonomy)</code></h3>
+<p>Получить все термины таксономии.</p>
+<pre><code class="language-typescript">const categories = await getTerms(&quot;news_category&quot;);
+// [{ id, name, slug, description, parent? }]
+</code></pre>
+<hr>
+<h3><code>getTerm(taxonomy, slug)</code></h3>
+<p>Один термин по slug.</p>
+<pre><code class="language-typescript">const newsCategory = await getTerm(&quot;news_category&quot;, &quot;news&quot;);
+</code></pre>
+<hr>
+<h3><code>getEntryTerms(entry, taxonomy)</code></h3>
+<p>Получить термины, прикреплённые к записи.</p>
+<pre><code class="language-typescript">const postTerms = await getEntryTerms(post, &quot;news_category&quot;);
+</code></pre>
+<hr>
+<h3><code>getEntriesByTerm(taxonomy, termSlug, options)</code></h3>
+<p>Все записи, относящиеся к термину.</p>
+<pre><code class="language-typescript">const newsPosts = await getEntriesByTerm(&quot;news_category&quot;, &quot;news&quot;, {
+  limit: 10,
+});
+</code></pre>
+<hr>
+<h3><code>getWidgetArea(name)</code></h3>
+<p>Получить виджеты области.</p>
+<pre><code class="language-typescript">const sidebar = await getWidgetArea(&quot;sidebar&quot;);
+// [{ id, type, data: {...} }]
+</code></pre>
+<hr>
+<h3><code>getSection(name)</code></h3>
+<p>Получить секцию (если используется Sections feature).</p>
+<pre><code class="language-typescript">const hero = await getSection(&quot;home_hero&quot;);
+</code></pre>
+<hr>
+<h3><code>getSeoMeta(options)</code></h3>
+<p>Сгенерировать SEO-теги.</p>
+<pre><code class="language-typescript">const seo = await getSeoMeta({
+  title: &quot;О школе&quot;,
+  description: &quot;Описание...&quot;,
+  image: { src: &quot;/img/og.jpg&quot;, alt: &quot;...&quot; },
+  url: Astro.url,
+  type: &quot;website&quot;, // или &quot;article&quot;
+});
+// seo.tags: Array&lt;{ tag: string; attrs: Record&lt;string, string&gt; }&gt;
+</code></pre>
+<hr>
+<h2>Bylines API</h2>
+<p>Билайны — это авторы/сотрудники (Bylines collection).</p>
+<h3><code>getBylinesForEntries(entries)</code></h3>
+<p>Загрузить всех авторов для списка записей.</p>
+<pre><code class="language-typescript">const posts = await getEmDashCollection(&quot;posts&quot;, { limit: 10 });
+const bylines = await getBylinesForEntries(posts);
+// bylines: { [entryId]: Byline[] }
+</code></pre>
+<hr>
+<h3><code>getEntryBylines(entry)</code></h3>
+<p>Авторы конкретной записи.</p>
+<pre><code class="language-typescript">const postBylines = await getEntryBylines(post);
+</code></pre>
+<hr>
+<h2>Storage API (для плагинов)</h2>
+<p>Внутри <code>definePlugin()</code>:</p>
+<h3><code>ctx.storage.&lt;collection&gt;</code></h3>
+<p><strong>CRUD:</strong></p>
+<pre><code class="language-typescript">// Put (create/update)
+await ctx.storage.items!.put(&quot;item-id&quot;, { name: &quot;Test&quot; });
+
+// Get
+const item = await ctx.storage.items!.get(&quot;item-id&quot;);
+// item = { id, data: {...}, created_at, updated_at }
+
+// Query
+const result = await ctx.storage.items!.query({
+  filter: { status: &quot;active&quot; },
+  orderBy: { created_at: &quot;desc&quot; },
+  limit: 10,
+  cursor: &quot;...&quot;,
+});
+// result.items, result.nextCursor, result.hasMore
+
+// Delete
+await ctx.storage.items!.delete(&quot;item-id&quot;);
+
+// Count
+const count = await ctx.storage.items!.count();
+</code></pre>
+<p><strong>Индексы</strong> (задают в <code>PluginDescriptor.storage</code>):</p>
+<pre><code class="language-typescript">storage: {
+  logs: {
+    indexes: [&quot;timestamp&quot;, &quot;level&quot;, [&quot;level&quot;, &quot;timestamp&quot;]],
+  },
+},
+</code></pre>
+<hr>
+<h2>KV Store (плагины)</h2>
+<p>Key-value хранилище для настроек, кэша.</p>
+<pre><code class="language-typescript">// Set
+await ctx.kv.set(&quot;setting:key&quot;, value, { ttl: 3600 });
+
+// Get
+const val = await ctx.kv.get&lt;string&gt;(&quot;setting:key&quot;);
+
+// Delete
+await ctx.kv.delete(&quot;setting:key&quot;);
+
+// Batch
+await ctx.kv.setMany([
+  [&quot;key1&quot;, &quot;val1&quot;],
+  [&quot;key2&quot;, &quot;val2&quot;],
+]);
+</code></pre>
+<hr>
+<h2>Hooks API</h2>
+<h3>Список хуков</h3>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>When</th>
+<th>Параметры</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>plugin:install</code></td>
+<td>При установке плагина</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>plugin:uninstall</code></td>
+<td>При удалении</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>content:beforeSave</code></td>
+<td>Перед сохранением записи</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>content:afterSave</code></td>
+<td>После сохранения</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>content:afterDelete</code></td>
+<td>После удаления</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>content:beforePublish</code></td>
+<td>Перед публикацией</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>content:afterPublish</code></td>
+<td>После публикации</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>user:afterCreate</code></td>
+<td>После создания пользователя</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>user:beforeDelete</code></td>
+<td>Перед удалением пользователя</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+<tr>
+<td><code>media:afterUpload</code></td>
+<td>После загрузки файла</td>
+<td><code>(event, ctx)</code></td>
+</tr>
+</tbody></table>
+<h3>Пример hook</h3>
+<pre><code class="language-typescript">hooks: {
+  &quot;content:afterSave&quot;: async (event, ctx) =&gt; {
+    const { content, collection, isNew } = event;
+    ctx.log.info(&quot;Content saved&quot;, { collection, id: content.id });
+    
+    // Отправить уведомление в Telegram
+    await ctx.fetch(&quot;https://api.telegram.org/...&quot;, {
+      method: &quot;POST&quot;,
+      body: JSON.stringify({ text: `Новая запись: ${content.data.title}` }),
+    });
+  },
+}
+</code></pre>
+<p><strong>Опции хука:</strong></p>
+<pre><code class="language-typescript">{
+  priority: 100,  // порядок выполнения (меньше = раньше)
+  timeout: 5000,  // ms, после чего хук прерывается
+}
+</code></pre>
+<hr>
+<h2>Routes API (плагины)</h2>
+<p>API роуты доступны по <code>/_emdash/api/plugins/&lt;plugin-id&gt;/&lt;route&gt;</code>.</p>
+<pre><code class="language-typescript">routes: {
+  status: {
+    handler: async (ctx) =&gt; {
+      const count = await ctx.storage.items!.count();
+      return { count, version: &quot;1.0.0&quot; };
+    },
+    // auth: true // требует авторизации
+  },
+  
+  webhook: {
+    method: &quot;POST&quot;,
+    handler: async (ctx) =&gt; {
+      const body = await ctx.request.json();
+      // обработка
+      return { ok: true };
+    },
+  },
+}
+</code></pre>
+<p><strong>Использование:</strong></p>
+<pre><code class="language-bash">GET /_emdash/api/plugins/rksh-blocks/status
+POST /_emdash/api/plugins/rksh-forms/webhook
+</code></pre>
+<hr>
+<h2>Request Context</h2>
+<p>Внутри route/handler/<code>createPlugin()</code> доступен <code>ctx</code>:</p>
+<pre><code class="language-typescript">interface PluginContext {
+  log: Console;         // логгер
+  db: Database;         // доступ к БД (Kysely)
+  storage: Storage;     // ctx.storage.&lt;collection&gt;
+  kv: KV;              // key-value store
+  config: Record&lt;string, any&gt;; // настройки плагина
+  request: Request;     // текущий HTTP request (в route)
+  fetch: typeof fetch;  // для внешних запросов
+  env: Env;            // переменные окружения
+}
+</code></pre>
+<hr>
+<h2>UI Components (EmDash UI)</h2>
+<h3><code>PortableText</code></h3>
+<p>Рендерит Portable Text content.</p>
+<pre><code class="language-astro">import { PortableText } from &quot;emdash/ui&quot;;
+&lt;PortableText value={page.data.content} /&gt;
+</code></pre>
+<p><strong>Кастомные блоки:</strong> автоматически подключаются, если плагин экспортирует <code>blockComponents</code>.</p>
+<hr>
+<h3><code>Image</code></h3>
+<p>Оптимизированный компонент изображения.</p>
+<pre><code class="language-astro">import { Image } from &quot;emdash/ui&quot;;
+&lt;Image 
+  image={post.data.featured_image}
+  alt={post.data.featured_image.alt || &quot;...&quot;}
+  widths={[400, 800, 1200]}
+  sizes=&quot;(max-width: 768px) 100vw, 800px&quot;
+  loading=&quot;lazy&quot;
+/&gt;
+</code></pre>
+<hr>
+<h3><code>Comments</code>, <code>CommentForm</code></h3>
+<p>Комментарии к записям.</p>
+<pre><code class="language-astro">import { Comments, CommentForm } from &quot;emdash/ui&quot;;
+&lt;Comments entryId={post.data.id} /&gt;
+&lt;CommentForm entryId={post.data.id} /&gt;
+</code></pre>
+<hr>
+<h3><code>EmDashHead</code></h3>
+<p>Автоматическая вставка SEO-тегов, Open Graph.</p>
+<pre><code class="language-astro">import { EmDashHead } from &quot;emdash/ui&quot;;
+&lt;Base&gt;
+  &lt;head&gt;
+    &lt;EmDashHead /&gt;
+  &lt;/head&gt;
+  ...
+&lt;/Base&gt;
+</code></pre>
+<hr>
+<h2>Configuration API</h2>
+<h3><code>defineConfig()</code> (в <code>astro.config.mjs</code>)</h3>
+<pre><code class="language-javascript">import { defineConfig } from &quot;astro/config&quot;;
+import emdash, { sqlite, local } from &quot;emdash/astro&quot;;
+
+export default defineConfig({
+  integrations: [
+    emdash({
+      database: sqlite({ url: &quot;file:./data.db&quot; }),
+      storage: local({ directory: &quot;./uploads&quot;, baseUrl: &quot;/_emdash/api/media/file&quot; }),
+      plugins: [myPlugin()],
+      auth: { /* ... */ },
+    }),
+  ],
+});
+</code></pre>
+<hr>
+<h3><code>seed.json</code> schema</h3>
+<p><strong>Full schema reference:</strong> <a href="https://docs.emdashcms.com/reference/schema/">https://docs.emdashcms.com/reference/schema/</a></p>
+<p><strong>Ключевые разделы:</strong></p>
+<pre><code class="language-json">{
+  &quot;collections&quot;: [
+    {
+      &quot;slug&quot;: &quot;pages&quot;,
+      &quot;label&quot;: &quot;Страницы&quot;,
+      &quot;fields&quot;: [
+        { &quot;slug&quot;: &quot;title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: true },
+        { &quot;slug&quot;: &quot;content&quot;, &quot;type&quot;: &quot;portableText&quot; }
+      ]
+    }
+  ],
+  &quot;menus&quot;: [],
+  &quot;taxonomies&quot;: [],
+  &quot;widgetAreas&quot;: []
+}
+</code></pre>
+<hr>
+<h2>TypeScript Types</h2>
+<p>Автогенерируются из <code>seed.json</code> в <code>emdash-env.d.ts</code>.</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-typescript">// Глобальный namespace
+declare module &quot;emdash&quot; {
+  interface SiteSettings {
+    site_name: string;
+    logo: { src: string; alt: string };
+    // ...
+  }
+  
+  interface EntryCollection {
+    id: string;        // slug
+    data: {
+      title: string;
+      content: PortableText[];
+      // ...
+    };
+    // ...
+  }
+}
+</code></pre>
+<p><strong>Обновить типы:</strong></p>
+<pre><code class="language-bash">npx emdash types
+# или автоматически при dev старте
+</code></pre>
+<hr>
+<h2>CLI Commands</h2>
+<pre><code class="language-bash"># Инициализация (первый запуск)
+npx emdash init
+
+# Запуск dev-сервера
+npx emdash dev
+
+# Сборка типов
+npx emdash types
+
+# Применение миграций
+npx emdash migrate
+
+# Валидация seed
+npx emdash seed seed/seed.json --validate
+
+# Создание пользователя
+npx emdash user:create --email=... --role=...
+
+# Сброс пароля
+npx emdash user:reset-password --email=...
+
+# Экспорт контента
+npx emdash export --collection=pages --output=backup.json
+
+# Импорт контента
+npx emdash import --collection=pages --input=backup.json
+</code></pre>
+<hr>
+<h2>HTTP API (REST)</h2>
+<p>Прямые запросы к <code>/_emdash/api/*</code> — обычно обёрнуты в клиентские библиотеки, но можно использовать напрямую:</p>
+<h3>Collections</h3>
+<pre><code class="language-http">GET /_emdash/api/collections/pages/entries?limit=10
+POST /_emdash/api/collections/pages/entries
+  { &quot;data&quot;: { &quot;title&quot;: &quot;...&quot;, &quot;content&quot;: [...] } }
+</code></pre>
+<h3>Single entry</h3>
+<pre><code class="language-http">GET /_emdash/api/collections/pages/entries/:id
+PATCH /_emdash/api/collections/pages/entries/:id
+DELETE /_emdash/api/collections/pages/entries/:id
+</code></pre>
+<h3>Media</h3>
+<pre><code class="language-http">POST /_emdash/api/media/upload  (multipart/form-data)
+GET /_emdash/api/media/file/:id
+DELETE /_emdash/api/media/file/:id
+</code></pre>
+<h3>Authentication</h3>
+<pre><code class="language-http">POST /_emdash/api/auth/login
+  { &quot;email&quot;: &quot;...&quot;, &quot;password&quot;: &quot;...&quot; }
+→ returns { token, user }
+</code></pre>
+<hr>
+<h2>Error handling</h2>
+<h3>Стандартные ошибки EmDash</h3>
+<table>
+<thead>
+<tr>
+<th>Код</th>
+<th>Описание</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>400</td>
+<td>Bad Request (неверные поля)</td>
+<td><code>{ error: &quot;Validation failed&quot;, details: {...} }</code></td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td><code>{ error: &quot;Invalid credentials&quot; }</code></td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden (недостаточно прав)</td>
+<td><code>{ error: &quot;Cannot delete&quot; }</code></td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not found</td>
+<td><code>{ error: &quot;Entry not found&quot; }</code></td>
+</tr>
+<tr>
+<td>409</td>
+<td>Conflict (duplicate slug)</td>
+<td><code>{ error: &quot;Slug already exists&quot; }</code></td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal error</td>
+<td><code>{ error: &quot;Database error&quot;, code: &quot;SQLITE_BUSY&quot; }</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Pagination</h2>
+<p><strong>Cursor-based пагинация</strong> (рекомендуется):</p>
+<pre><code class="language-typescript">let cursor: string | undefined;
+while (true) {
+  const { entries, nextCursor } = await getEmDashCollection(&quot;posts&quot;, {
+    limit: 20,
+    cursor,
+    orderBy: { published_at: &quot;desc&quot; },
+  });
+  // render entries
+  if (!nextCursor) break;
+  cursor = nextCursor;
+}
+</code></pre>
+<hr>
+<h2>Caching</h2>
+<h3>Cache hints</h3>
+<p>Каждый запрос возвращает <code>cacheHint</code>:</p>
+<pre><code class="language-typescript">const { cacheHint } = await getEmDashEntry(&quot;pages&quot;, &quot;home&quot;);
+Astro.cache.set(cacheHint);
+// { ttl: 300, tags: [&quot;collection:pages&quot;, &quot;entry:home&quot;] }
+</code></pre>
+<p><strong>TTL (time-to-live):</strong></p>
+<ul>
+<li>pages: 600 сек (10 мин)</li>
+<li>posts: 300 сек (5 мин)</li>
+<li>media: 86400 сек (1 день)</li>
+</ul>
+<hr>
+<h2>Rate limiting</h2>
+<p>По умолчанию:</p>
+<ul>
+<li>API: 100 запросов/мин на IP</li>
+<li>Админка: 200 запросов/мин</li>
+</ul>
+<p>Можно настроить в <code>astro.config.mjs</code>.</p>
+<hr>
+<h2>Event System (Hooks)</h2>
+<p>См. <a href="#hooks-api">Hooks API</a>.<br>Каждый хук передаёт <code>event</code> и <code>ctx</code>.</p>
+<p><strong>Пример <code>content:afterSave</code>:</strong></p>
+<pre><code class="language-typescript">{
+  collection: &quot;pages&quot;,
+  content: Entry,
+  isNew: boolean,
+  previousVersion?: Entry,
+}
+</code></pre>
+<hr>
+<h2>Useful utilities</h2>
+<h3><code>slugify()</code></h3>
+<pre><code class="language-typescript">import { slugify } from &quot;emdash/utils&quot;;
+const slug = slugify(&quot;О школе&quot;); // &quot;o-shkole&quot;
+</code></pre>
+<hr>
+<h3><code>getClientIP(request)</code></h3>
+<pre><code class="language-typescript">import { getClientIP } from &quot;emdash/utils&quot;;
+const ip = getClientIP(Astro.request);
+</code></pre>
+<hr>
+<h2>Links</h2>
+<ul>
+<li><a href="https://docs.emdashcms.com/api/">Full API Reference</a></li>
+<li><a href="https://docs.emdashcms.com/reference/collections/">Collections</a></li>
+<li><a href="https://docs.emdashcms.com/reference/field-types/">Fields</a></li>
+<li><a href="https://docs.emdashcms.com/plugins/">Plugins</a></li>
+</ul>
+<hr>
+<p><strong>Note:</strong> This API is subject to change in EmDash v0.5.0. Always check <code>node_modules/emdash/dist/index.d.mts</code> for latest types.</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 18:09
+  </footer>
+</body>
+</html>
