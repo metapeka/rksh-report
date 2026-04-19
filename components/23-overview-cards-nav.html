@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overview cards nav — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../progress.html" class="nav__link">Ход проекта</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Overview cards nav</span></nav>
+  <div class="md-content">
+    <h1>29 · OverviewCardsNav — карточки-обзор навигация</h1>
+<p>Сетка мелких карточек для навигации внутри секции (например, подкурсы).</p>
+<h2>Расположение</h2>
+<p><code>src/components/ui/OverviewCardsNav.astro</code></p>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>Обязательный</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>items</code></td>
+<td><code>{ title: string; meta?: string; href: string }[]</code></td>
+<td>✅</td>
+<td>Список пунктов</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Дополнительный CSS-класс</td>
+</tr>
+</tbody></table>
+<h2>Визуал</h2>
+<ul>
+<li>Сетка: <code>grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))</code>, gap <code>--spacing-md</code></li>
+<li>Карточка: фон <code>--color-surface</code>, граница <code>--color-primary-line</code>, padding <code>--spacing-md</code>, border-radius <code>--radius-lg</code></li>
+<li>Hover: <code>border-color: --color-accent</code>, <code>box-shadow: --shadow-md</code>, <code>translateY(-2px)</code></li>
+<li>Title: <code>font-weight-semibold</code>, <code>font-size-sm</code>, <code>color: --color-text</code></li>
+<li>Meta: <code>font-size-xs</code>, <code>color: --color-text-muted</code></li>
+</ul>
+<h2>Использование</h2>
+<pre><code class="language-astro">&lt;OverviewCardsNav
+  items={[
+    { title: &#39;Подготовка к школе&#39;, meta: &#39;4–7 лет&#39;, href: &#39;/doshkolniki/podgotovka-k-shkole&#39; },
+    { title: &#39;Шахматы&#39;, meta: &#39;от 5 лет&#39;, href: &#39;/doshkolniki/shahmaty&#39; },
+  ]}
+/&gt;
+</code></pre>
+<h2>Styleguide</h2>
+<p>Секция 21 в <code>/styleguide</code> — демо OverviewCardsNav.</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
+  </footer>
+</body>
+</html>

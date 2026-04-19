@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Principle list — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../progress.html" class="nav__link">Ход проекта</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Principle list</span></nav>
+  <div class="md-content">
+    <h1>19 · PrincipleList · Страничный</h1>
+<p>Нумерованный список принципов обучения с 3 вариантами отображения.</p>
+<p>→ Код: <code>src/components/ui/PrincipleList.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Состав</h2>
+<p>PrincipleList = ol &gt; li × N (варианты: accent, timeline, minimal)</p>
+<p>Каждый элемент: номер/маркер + заголовок + описание.</p>
+<hr>
+<h2>Варианты</h2>
+<h3><code>accent</code> (по умолчанию)</h3>
+<p>Оранжевый круг с номером + заголовок (оранжевый, bold) + описание. Разделитель — <code>border-bottom</code>.</p>
+<h3><code>timeline</code></h3>
+<p>Вертикальная линия слева + синие круги с номерами + заголовок + описание.</p>
+<h3><code>minimal</code></h3>
+<p>Маркер <code>●</code> (оранжевый) + заголовок (semibold) + описание. Лёгкий разделитель.</p>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import PrincipleList from &#39;../components/ui/PrincipleList.astro&#39;;
+
+const principles = [
+  { title: &#39;Принцип сознательности&#39;, description: &#39;Механическое заучивание недопустимо&#39; },
+  { title: &#39;Принцип системности&#39;, description: &#39;Знания в строгой последовательности&#39; },
+  { title: &#39;Принцип постепенности&#39;, description: &#39;Переход после усвоения предыдущего&#39; },
+];
+---
+
+&lt;PrincipleList principles={principles} /&gt;
+&lt;PrincipleList principles={principles} variant=&quot;timeline&quot; /&gt;
+&lt;PrincipleList principles={principles} variant=&quot;minimal&quot; /&gt;
+</code></pre>
+<hr>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>principles</code></td>
+<td><code>Principle[]</code></td>
+<td>—</td>
+<td>Массив принципов (обязательный)</td>
+</tr>
+<tr>
+<td><code>variant</code></td>
+<td><code>&#39;accent&#39; | &#39;timeline&#39; | &#39;minimal&#39;</code></td>
+<td><code>&#39;accent&#39;</code></td>
+<td>Вариант отображения</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Дополнительные CSS-классы</td>
+</tr>
+</tbody></table>
+<h3>Principle</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>Заголовок принципа (обязательный)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>Описание принципа (обязательный)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/PrincipleList.astro</code>.</p>
+</blockquote>
+<pre><code>.principle-list                  /* ol: no list-style, no padding */
+.principle-list--accent         /* гибкий список с border-bottom */
+.principle-list--timeline        /* вертикальная линия слева, padding-left */
+.principle-list--minimal         /* лёгкий список с ● маркером */
+.principle-list__item            /* li: flex/timeline/padding */
+.principle-list__num             /* accent: оранжевый круг 2rem, white, bold */
+.principle-list__marker          /* timeline: синий круг 2rem, surface text */
+.principle-list__body            /* flex column, gap 2xs */
+.principle-list__title           /* base, semibold, text */
+.principle-list__title--accent  /* accent: warm, bold, base */
+.principle-list__desc            /* sm, muted, relaxed */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>accent num: <code>background: var(--color-accent-warm)</code>, <code>color: #fff</code>, <code>2rem</code>, <code>border-radius: 50%</code></li>
+<li>timeline num: <code>background: var(--color-primary)</code>, <code>color: var(--color-surface)</code>, <code>2rem</code></li>
+<li>timeline line: <code>2px solid var(--color-primary-line)</code></li>
+<li>minimal marker: <code>●</code>, <code>color: var(--color-accent-warm)</code></li>
+<li>Адаптив (≤768px): тоньше маркеры, меньше padding</li>
+</ul>
+<hr>
+<h2>Где использует</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Преимущества (/preimushhestva)</td>
+<td>Секция «Что же такое РКШ?» (4 варианта для выбора)</td>
+</tr>
+<tr>
+<td>Styleguide</td>
+<td>Демо</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="02-section-title.html">02 · SectionTitle</a> — заголовок секции</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
+  </footer>
+</body>
+</html>

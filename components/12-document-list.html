@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document list — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../progress.html" class="nav__link">Ход проекта</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Document list</span></nav>
+  <div class="md-content">
+    <h1>17 · DocumentList · Страничный</h1>
+<p>Список документов с названием, описанием, датой и кнопкой скачивания.</p>
+<p>→ Код: <code>src/components/ui/DocumentList.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Состав</h2>
+<p>DocumentList = ul.doc-list &gt; li.doc-list__item × N</p>
+<p>Каждый элемент: заголовок + описание + дата + ссылка «Скачать» с иконкой.</p>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import DocumentList from &#39;../components/ui/DocumentList.astro&#39;;
+
+const docs = [
+  { title: &#39;Устав&#39;, description: &#39;Устав образовательной организации&#39;, date: new Date(&#39;2024-01-15&#39;), file: { src: &#39;/uploads/ustav.pdf&#39; } },
+  { title: &#39;Лицензия&#39;, date: new Date(&#39;2024-03-01&#39;), file: { src: &#39;/uploads/license.pdf&#39; } },
+  { title: &#39;Приказ о зачислении&#39;, description: &#39;Приказ №12 от 01.09.2024&#39; },
+];
+---
+
+&lt;DocumentList documents={docs} /&gt;
+</code></pre>
+<hr>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>documents</code></td>
+<td><code>Document[]</code></td>
+<td>—</td>
+<td>Массив документов (обязательный)</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Дополнительные CSS-классы</td>
+</tr>
+</tbody></table>
+<h3>Document</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>Название документа (обязательный)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>Краткое описание</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td><code>Date | null</code></td>
+<td>Дата документа</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td><code>{ src?: string; alt?: string } | null</code></td>
+<td>Файл для скачивания</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td><code>string</code></td>
+<td>Категория</td>
+</tr>
+<tr>
+<td><code>sveden_section</code></td>
+<td><code>string</code></td>
+<td>Привязка к разделу сведений</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Если <code>file.src</code> отсутствует — ссылка «Скачать» не отображается. Если <code>date</code> null — дата не выводится.</p>
+</blockquote>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/DocumentList.astro</code>.</p>
+</blockquote>
+<pre><code>.doc-list              /* ul: flex column, gap sm */
+.doc-list__item        /* li: flex, justify-between, border, radius-md, padding md lg */
+.doc-list__item:hover  /* border-color: accent, shadow-sm */
+.doc-list__info        /* flex column, gap 2xs, min-width: 0 */
+.doc-list__title       /* font-weight: medium, color: text, size: base */
+.doc-list__desc        /* size: sm, color: muted, line-height: relaxed */
+.doc-list__meta        /* flex row, align-items: center, gap md, flex-shrink: 0 */
+.doc-list__date        /* size: sm, color: muted, nowrap */
+.doc-list__link        /* inline-flex, bg-primary-soft, color: primary, radius: md */
+.doc-list__link:hover  /* bg: primary, color: surface */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>border: <code>1px solid var(--color-primary-line)</code></li>
+<li>border-radius: <code>var(--radius-md)</code></li>
+<li>hover: <code>border-color: var(--color-accent)</code>, <code>box-shadow: var(--shadow-sm)</code></li>
+<li>download link: <code>background: var(--color-primary-soft)</code>, hover → <code>background: var(--color-primary)</code></li>
+<li>Адаптив (≤768px): <code>flex-direction: column</code></li>
+</ul>
+<hr>
+<h2>Где использует</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Сведения (/sveden)</td>
+<td>Списки документов в каждом разделе</td>
+</tr>
+<tr>
+<td>Styleguide</td>
+<td>Демо</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="02-section-title.html">02 · SectionTitle</a> — заголовки разделов сведений</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
+  </footer>
+</body>
+</html>

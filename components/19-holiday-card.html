@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holiday card — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../progress.html" class="nav__link">Ход проекта</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Holiday card</span></nav>
+  <div class="md-content">
+    <h1>HolidayCard</h1>
+<p>Карточка каникул — сетка 2× с эмодзи, названием и датами.</p>
+<p>→ Общие правила: <a href="00-guide.html">00-guide.md</a></p>
+<hr>
+<h2>Props</h2>
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>holidays</code></td>
+<td><code>Holiday[]</code></td>
+<td>✅</td>
+<td>Массив каникул</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Дополнительный CSS-класс</td>
+</tr>
+</tbody></table>
+<h3>Holiday</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип</th>
+<th>Обязательное</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td>✅</td>
+<td>Название (Осенние, Новогодние…)</td>
+</tr>
+<tr>
+<td><code>dates</code></td>
+<td><code>string</code></td>
+<td>✅</td>
+<td>Даты (28 октября – 5 ноября)</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>Эмодзи (🍂 🎄 ❄️ 🌱)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Варианты</h2>
+<p>Один вариант — сетка 2× с hover-эффектом.</p>
+<h3>По умолчанию</h3>
+<pre><code class="language-astro">&lt;HolidayCard holidays={[
+  { name: &quot;Осенние&quot;, dates: &quot;28 октября – 5 ноября&quot;, icon: &quot;🍂&quot; },
+  { name: &quot;Новогодние&quot;, dates: &quot;28 декабря – 8 января&quot;, icon: &quot;🎄&quot; },
+  { name: &quot;Зимние&quot;, dates: &quot;15 февраля – 23 февраля&quot;, icon: &quot;❄️&quot; },
+  { name: &quot;Весенние&quot;, dates: &quot;5 апреля – 13 апреля&quot;, icon: &quot;🌱&quot; },
+]} /&gt;
+</code></pre>
+<hr>
+<h2>Стили</h2>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.holiday-grid</code></td>
+<td>Grid 2× (1× на мобилке)</td>
+</tr>
+<tr>
+<td><code>.holiday-card</code></td>
+<td>Карточка с бордером, hover-тень</td>
+</tr>
+<tr>
+<td><code>.holiday-card__icon</code></td>
+<td>Эмодзи 2rem</td>
+</tr>
+<tr>
+<td><code>.holiday-card__name</code></td>
+<td>Название, primary, semibold</td>
+</tr>
+<tr>
+<td><code>.holiday-card__dates</code></td>
+<td>Даты, muted</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Где используется</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0 класс</td>
+<td>Каникулы</td>
+</tr>
+<tr>
+<td>Начальная школа</td>
+<td>Каникулы</td>
+</tr>
+<tr>
+<td>Средняя школа</td>
+<td>Каникулы</td>
+</tr>
+</tbody></table>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
+  </footer>
+</body>
+</html>

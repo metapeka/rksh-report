@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Program card — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../progress.html" class="nav__link">Ход проекта</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Program card</span></nav>
+  <div class="md-content">
+    <h1>10 · ProgramCard · Составной</h1>
+<p>Карточка программы: заголовок, бейджи (возраст, размер группы), описание, ссылка.</p>
+<p>→ Дизайн-гайд: <a href="../page-specs/01-design-guide.html">../page-specs/01-design-guide.md</a>
+→ Код: <code>src/components/ui/ProgramCard.astro</code>
+→ Showcase: <a href="http://localhost:4321/styleguide">/styleguide</a></p>
+<hr>
+<h2>Состав</h2>
+<p>ProgramCard = Card (surface) + Badge × N + Link</p>
+<hr>
+<h2>Использование (Astro)</h2>
+<pre><code class="language-astro">---
+import ProgramCard from &#39;../components/ui/ProgramCard.astro&#39;;
+---
+
+&lt;ProgramCard
+  title=&quot;Начальная школа&quot;
+  badges={[&quot;1–4 классы&quot;, &quot;до 15 человек&quot;]}
+  description=&quot;Классическое образование для младших школьников по системе РКШ&quot;
+  linkUrl=&quot;/nachalnaya-shkola&quot;
+  linkText=&quot;Подробнее →&quot;
+/&gt;
+</code></pre>
+<hr>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Заголовок (обязательный)</td>
+</tr>
+<tr>
+<td><code>badges</code></td>
+<td><code>string[]</code></td>
+<td><code>[]</code></td>
+<td>Массив текстов бейджей</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Описание программы</td>
+</tr>
+<tr>
+<td><code>linkUrl</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>URL ссылки</td>
+</tr>
+<tr>
+<td><code>linkText</code></td>
+<td><code>string</code></td>
+<td><code>&quot;Подробнее →&quot;</code></td>
+<td>Текст ссылки</td>
+</tr>
+<tr>
+<td><code>variant</code></td>
+<td><code>&#39;surface&#39; | &#39;muted&#39; | &#39;elevated&#39; | &#39;dark&#39;</code></td>
+<td><code>&#39;surface&#39;</code></td>
+<td>Вариант Card</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Дополнительные CSS-классы</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>CSS-справка</h2>
+<blockquote>
+<p>Это справочник. Единая точка правды — <code>src/components/ui/ProgramCard.astro</code>.</p>
+</blockquote>
+<pre><code>.pcard              /* корень — обёртка Card */
+.pcard__title       /* h3 — Playfair Display */
+.pcard__badges      /* flex-контейнер для Badge */
+.pcard__desc        /* описание — text-muted */
+.pcard__link        /* ссылка — accent */
+</code></pre>
+<p>Ключевые токены:</p>
+<ul>
+<li>title: <code>--font-family-heading</code>, <code>--font-size-xl</code></li>
+<li>badges gap: <code>--spacing-sm</code></li>
+<li>link: <code>--color-accent</code>, hover → <code>--color-primary</code></li>
+</ul>
+<hr>
+<h2>Где используется</h2>
+<table>
+<thead>
+<tr>
+<th>Страница</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Главная (/)</td>
+<td>Секция «Уровни обучения»</td>
+</tr>
+<tr>
+<td>Styleguide</td>
+<td>Демо</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Связанные</h2>
+<ul>
+<li><a href="01-card.html">01 · Card</a> — контейнер</li>
+<li><a href="03-badge.html">03 · Badge</a> — бейджи внутри</li>
+<li><a href="04-button.html">04 · Button</a> — CTA-кнопки</li>
+</ul>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
+  </footer>
+</body>
+</html>

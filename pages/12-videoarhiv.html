@@ -268,16 +268,49 @@
 <hr>
 <h2>TODO</h2>
 <ul>
+<li><input checked="" disabled="" type="checkbox"> <del>Создать отдельную страницу <code>/videoarhiv</code></del> → Оставлено вкладкой на <code>/media</code></li>
 <li><input disabled="" type="checkbox"> Обновить схему <code>media_videos</code> — заменить <code>youtube_id</code> на <code>url</code> (string), <code>description</code> на <code>thumbnail</code> (image), добавить <code>category</code> (string)</li>
 <li><input disabled="" type="checkbox"> Добавить записи-видео в CMS (пока коллекция пуста)</li>
-<li><input disabled="" type="checkbox"> Решить: создать отдельную страницу <code>/videoarhiv</code> или оставить вкладкой на <code>/media</code></li>
 <li><input disabled="" type="checkbox"> Рассмотреть встроенный YouTube-плеер вместо внешней ссылки</li>
 <li><input disabled="" type="checkbox"> Добавить страницу <code>pages/media</code> в CMS для SEO-мета</li>
 </ul>
+<hr>
+<h2>Эволюция URL (roadmap)</h2>
+<p>Сейчас: вкладка «Видео» на <code>/media</code> (табы Фото/Видео).</p>
+<p>При росте контента (&gt;5 альбомов) → хаб-структура:</p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Что</th>
+<th>Файл</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/media</code></td>
+<td>Хаб: блок-ссылки «Фотогалерея» + «Видеоархив»</td>
+<td><code>media.astro</code></td>
+</tr>
+<tr>
+<td><code>/media/foto</code></td>
+<td>Сетка альбомов (GalleryCard)</td>
+<td><code>media/foto.astro</code></td>
+</tr>
+<tr>
+<td><code>/media/foto/[album]</code></td>
+<td>Конкретный альбом</td>
+<td><code>media/foto/[album].astro</code></td>
+</tr>
+<tr>
+<td><code>/media/video</code></td>
+<td>Все видео (VideoCard grid)</td>
+<td><code>media/video.astro</code></td>
+</tr>
+</tbody></table>
 
   </div>
   <footer class="footer">
-    Сгенерировано: <code>node scripts/build-report.js</code> · 17 апреля 2026 г. в 19:19
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
   </footer>
 </body>
 </html>

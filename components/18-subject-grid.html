@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subject grid — РКШ Отчёт</title>
+  <link rel="stylesheet" href="../css/report.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a href="../index.html" class="header__logo">РКШ <span class="header__logo-badge">Отчёт</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-checkbox" aria-hidden="true">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Меню"><span class="nav-toggle__icon"></span></label>
+      <nav class="nav">
+        <a href="../index.html" class="nav__link">Дашборд</a>
+        <a href="../progress.html" class="nav__link">Ход проекта</a>
+        <a href="../index.html#pages" class="nav__link">Страницы</a>
+        <a href="../index.html#components" class="nav__link nav__link--active">Компоненты</a>
+        <a href="../index.html#cms" class="nav__link">CMS</a>
+      </nav>
+    </div>
+  </header>
+  <nav class="breadcrumbs"><a href="../index.html">Дашборд</a><span class="breadcrumbs__sep">/</span><a href="../index.html#components">Компоненты</a><span class="breadcrumbs__sep">/</span><span>Subject grid</span></nav>
+  <div class="md-content">
+    <h1>26 · SubjectGrid — предметная сетка</h1>
+<p>Отображает список учебных предметов с часами. 3 варианта визуализации × 3 стиля иконок.</p>
+<h2>Расположение</h2>
+<p><code>src/components/ui/SubjectGrid.astro</code></p>
+<h2>Пропсы</h2>
+<table>
+<thead>
+<tr>
+<th>Проп</th>
+<th>Тип</th>
+<th>Обязательный</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>items</code></td>
+<td><code>{ name: string; hours: number }[]</code></td>
+<td>✅</td>
+<td>—</td>
+<td>Список предметов</td>
+</tr>
+<tr>
+<td><code>variant</code></td>
+<td>`&#39;cards&#39;</td>
+<td>&#39;bars&#39;</td>
+<td>&#39;bubbles&#39;`</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>iconStyle</code></td>
+<td>`&#39;outline&#39;</td>
+<td>&#39;filled&#39;</td>
+<td>&#39;duotone&#39;`</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>duotoneBg</code></td>
+<td>`&#39;primary&#39;</td>
+<td>&#39;neutral&#39;</td>
+<td>&#39;none&#39;`</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>maxHours</code></td>
+<td><code>number</code></td>
+<td>❌</td>
+<td>auto (max из items)</td>
+<td>Максимум для шкалы</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>string</code></td>
+<td>❌</td>
+<td>—</td>
+<td>Дополнительный CSS-класс</td>
+</tr>
+</tbody></table>
+<h2>Варианты</h2>
+<h3>A · Cards (<code>variant=&quot;cards&quot;</code>)</h3>
+<p>Сетка карточек с иконкой, названием и часами. <code>grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))</code>.</p>
+<ul>
+<li>A1: <code>iconStyle=&quot;outline&quot;</code> — прозрачный фон иконки, stroke</li>
+<li>A2: <code>iconStyle=&quot;filled&quot;</code> — фон <code>--color-primary-soft</code>, solid fill</li>
+<li>A3: <code>iconStyle=&quot;duotone&quot;</code> — настраиваемый фон через <code>duotoneBg</code></li>
+</ul>
+<h3>B · Bars (<code>variant=&quot;bars&quot;</code>)</h3>
+<p>Вертикальный список с прогресс-барами. Ширина пропорциональна <code>hours/maxHours</code>. Градиент: <code>--color-primary</code> → <code>--color-accent-warm</code>. <code>max-width: --container-narrow</code>.</p>
+<h3>C · Bubbles (<code>variant=&quot;bubbles&quot;</code>)</h3>
+<p>Круги разного размера (60–120px), flex-wrap с <code>justify-content: center</code>.</p>
+<h2>Иконки</h2>
+<p>Использует <code>&lt;Icon&gt;</code> компонент с маппингом <code>subjectIconMap</code> из <code>src/icons/index.ts</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Предмет</th>
+<th>Иконка</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Русский язык</td>
+<td>book</td>
+</tr>
+<tr>
+<td>Арифметика</td>
+<td>calculator</td>
+</tr>
+<tr>
+<td>Английский язык</td>
+<td>chat</td>
+</tr>
+<tr>
+<td>История</td>
+<td>clock</td>
+</tr>
+<tr>
+<td>Литература</td>
+<td>bookOpen</td>
+</tr>
+<tr>
+<td>Трудовое воспитание</td>
+<td>wrench</td>
+</tr>
+<tr>
+<td>Информатика</td>
+<td>monitor</td>
+</tr>
+<tr>
+<td>Геометрия</td>
+<td>triangle</td>
+</tr>
+<tr>
+<td>Биология</td>
+<td>microscope</td>
+</tr>
+<tr>
+<td>География</td>
+<td>globe</td>
+</tr>
+<tr>
+<td>Обществознание</td>
+<td>people</td>
+</tr>
+<tr>
+<td>ОБЖ</td>
+<td>shield</td>
+</tr>
+</tbody></table>
+<p>Fallback: иконка <code>check</code>.</p>
+<h2>Использование</h2>
+<pre><code class="language-astro">&lt;SubjectGrid
+  variant=&quot;cards&quot;
+  iconStyle=&quot;duotone&quot;
+  duotoneBg=&quot;primary&quot;
+  items={[
+    { name: &#39;Русский язык&#39;, hours: 6 },
+    { name: &#39;Арифметика&#39;, hours: 5 },
+  ]}
+/&gt;
+</code></pre>
+<h2>Styleguide</h2>
+<p>Секция 25 в <code>/styleguide</code> — 5 демо: A1 outline, A2 filled, A3 duotone с переключателем фона, B bars, C bubbles.</p>
+
+  </div>
+  <footer class="footer">
+    Сгенерировано: <code>node scripts/build-report.js</code> · 19 апреля 2026 г. в 18:05
+  </footer>
+</body>
+</html>
