@@ -932,6 +932,149 @@ a:hover { text-decoration: underline; }
   .site-tree__sublist { padding-left: 1rem; }
 }
 
+/* ===== DELTA BADGES ===== */
+.delta-badge {
+  display: inline-block;
+  font-family: var(--font-base);
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 0.25rem;
+  vertical-align: middle;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.delta-badge--up {
+  background: #E8F5E9;
+  color: var(--success);
+}
+
+.delta-badge--down {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+/* ===== CHANGELOG ===== */
+.changelog {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+}
+
+.changelog__timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.25rem;
+  gap: 0;
+}
+
+.changelog__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.changelog__line {
+  width: 2px;
+  flex: 1;
+  background: var(--line);
+  min-height: 20px;
+}
+
+.changelog__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.changelog__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.changelog__date {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.changelog__arrow {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+}
+
+.changelog__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.changelog__item {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--surface-alt);
+}
+
+.changelog__item:last-child {
+  border-bottom: none;
+}
+
+.changelog__item::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.changelog__commits {
+  background: var(--primary);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.changelog__commits-title {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.changelog__commit {
+  font-size: 0.8125rem;
+  color: rgba(255,255,255,0.9);
+  padding: 0.25rem 0;
+}
+
+.changelog__commit code {
+  color: var(--accent-warm);
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .changelog { flex-direction: column; gap: 0.5rem; padding: 1rem; }
+  .changelog__timeline { flex-direction: row; }
+  .changelog__line { min-height: 2px; min-width: 20px; height: 2px; }
+  .changelog__header { flex-wrap: wrap; gap: 0.5rem; }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .nav-toggle { display: block; }
