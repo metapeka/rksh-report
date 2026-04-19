@@ -1247,22 +1247,42 @@ a:hover { text-decoration: underline; }
   margin-bottom: 0.75rem;
 }
 
-.change-card__commit {
+/* ===== TIMELINE COMMITS ===== */
+.timeline__commit {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
-  font-size: 0.8125rem;
-  color: rgba(255,255,255,0.9);
-  padding: 0.375rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.875rem;
+  color: #E8F5E9;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
-.change-card__commit:last-child { border-bottom: none; }
+.timeline__commit:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
 
-.change-card__commit code {
-  color: var(--accent-warm);
+.timeline__commit code {
+  color: #F9A825;
   font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.timeline__commit-msg {
+  color: rgba(255,255,255,0.95);
+  line-height: 1.4;
+}
+
+.timeline__commit-hash {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
